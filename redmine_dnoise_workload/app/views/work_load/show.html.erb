@@ -42,17 +42,19 @@ pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
 			</div>
 			<div class="header_content_bottom_center">
 				<div class="multiselect">
-						<label><%= t(:users)%></label>
-						<select name='usuarios_id[]' multiple='true'>
-						
-						<%
-						
-						 User.active.each do |user|
-						%><option <%=(@usuarios.include?(user.id.to_s) ) ? 'selected="selected"' : ''%> value='<%=user.id%>'><%=user.firstname%> <%=user.lastname%></option>
-						<% end
-						%>
-						</select>
-						</div>
+					<label><%= t(:users)%></label>
+					<select name='usuarios_id[]' multiple='true'>
+					<% User.active.each do |user| %>
+					  <option <%=(@usuarios.include?(user.id.to_s) ) ? 'selected="selected"' : ''%> value='<%=user.id%>'><%=user.firstname%> <%=user.lastname%></option>
+					<% end %>
+          </select>
+				</div>
+				<div class="issues">
+        	<span>
+        		<input type="hidden" name="show_issues" value="0" /><input type="checkbox" <%=(params[:show_issues]== "1") ? 'checked="checked"' : ''%> id="cb_issues_id" name="show_issues" value="1">
+        		<label for="cb_status_id"><%= t(:show_issues)%></label>
+        	</span>
+        </div>
 			</div>
 			<div class="header_content_bottom_right">
 				<div class="issues">
@@ -68,23 +70,10 @@ pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
 		</form>
 	</div>
 </div>
-<div class="issues">
-	<span>
-		<input type="hidden" name="show_issues" value="0" /><input type="checkbox" <%=(params[:show_issues]== "1") ? 'checked="checked"' : ''%> id="cb_issues_id" name="show_issues" value="1">
-		<label for="cb_status_id"><%= t(:show_issues)%></label>
-	</span>
-</div>
-<%= link_to_function l(:button_apply), '$("query_form").submit()', :class => 'icon icon-checked' %>	
-		
-
-
-
-
-
-
-
-
-<% end %>
+<p>
+  <%= link_to_function l(:button_apply), '$("query_form").submit()', :class => 'icon icon-checked' %>	
+</p>		
+<% end # end of form tag %>
 
 <%= error_messages_for 'query' %>
 
