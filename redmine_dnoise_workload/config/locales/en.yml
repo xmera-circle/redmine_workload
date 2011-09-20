@@ -1,3 +1,18 @@
 # English strings go here for Rails i18n
 en:
-  my_label: "My label"
+  range: Range
+  today: Today
+  users: Users
+  show_issues: Show Issues
+  remainder: Remainder
+  legend: Legend
+  timing: Timing
+  perfect: Perfect
+  on_time: On Time
+  overdue: Overdue
+  long_overdue: Long Overdue
+  no_timing: No Timing
+  parent_task: 'Parent Task (do not sum)'
+  time_spent: Time Spent
+  time_past: Past
+  over_time_budget: Over Time

@@ -2,7 +2,7 @@
 
 .controller-work_load .header_content { width:100%; float:left;}
 .controller-work_load .header_content_top { width:100%; float:left;}
-.controller-work_load #top_left {float:left; width:330px;height:54px;background:#eeeeee url(../images/logo_workload.png) no-repeat 30px 30px; position:relative; border-left: 1px solid #C0C0C0;}
+.controller-work_load #top_left {float:left; width:330px;height:54px;background:#eeeeee; position:relative; border-left: 1px solid #C0C0C0;}
 .controller-work_load .header_content_top_left { width:7%; float:left;}
 .controller-work_load .header_content_top_right { width:10%; float:right; min-width:140px;}
 .controller-work_load .header_content_top_right span { width:100px; float:left; font-size:9px; height:30px; margin-top:5px;}
