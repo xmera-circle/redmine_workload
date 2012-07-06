@@ -31,7 +31,7 @@ pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
 						        </div>
     						</div>
 							<div class="header_content_bottom">
-								<% form_tag({:controller => 'work_load', :action => 'show', :project_id => @project, :month => params[:month], :year => params[:year], :months => params[:months]}, :method => :get, :id => 'query_form', :class => 'content_form') do %>
+								<%= form_tag({:controller => 'work_load', :action => 'show', :project_id => @project, :month => params[:month], :year => params[:year], :months => params[:months]}, :method => :get, :id => 'query_form', :class => 'content_form') do %>
 									<div class="header_content_bottom_left">
 										<div class="buttons">
 											<label>Rango / Range</label>
@@ -94,7 +94,7 @@ pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
 <%= error_messages_for 'query' %>
 
 
-		
+
 					<div class="all">
 						
 						<div id="top">
@@ -119,7 +119,8 @@ pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
 			end 
 			width = ((month_f >> 1) - month_f) * zoom - 1
 			%>
-			<div style="left:<%= left %>px;width:<%= width %>px;height:<%= height %>px;" class="gantt_hdr <%=klass%>">
+			<%# was neccesary to round the value of left and width, because it was using a Rational value. %>
+			<div style="left:<%= left.round %>px;width:<%= width.round %>px;height:<%= height %>px;" class="gantt_hdr <%=klass%>">
 			<%="#{month_name(month_f.month)} #{month_f.year}"%>
 			</div>
 			<% 
@@ -516,6 +517,8 @@ end %>
     <%= render :partial => 'issues/sidebar' %>
 <% end %>
 
+
+
 <% html_title('WorkLoad') %>
 <%= javascript_include_tag "jquery", :plugin => "redmine_dnoise_workload" %>
 <%= javascript_include_tag "calendario_dw", :plugin => "redmine_dnoise_workload" %>
@@ -525,3 +528,6 @@ end %>
 		createCss(new Array(<%=@barras_days.join(',')%>));
 	});
 </script>
+
+
+
