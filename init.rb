@@ -11,7 +11,7 @@ Redmine::Plugin.register :redmine_workload do
   url ''
   author_url 'http://www.d-noise.net/'
   
-  menu :top_menu, :WorkLoad, { :controller => 'work_load', :action => 'show' }, :caption => 'WorkLoad'
+  menu :top_menu, :WorkLoad, { :controller => 'work_load', :action => 'show' }, :caption => :workload_title
   
   #permission :WorkLoad, {:work_load => [:index ] }, :public => true
   #menu :project_menu, :WorkLoad, { :controller => 'work_load', :action => 'index' }, :caption => 'WorkLoad'
