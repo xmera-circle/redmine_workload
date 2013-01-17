@@ -53,9 +53,8 @@ jQuery(".user_total_hours").each(function(){
 //OBTENER LA ALTURA DEL DIV USERS PARA APLICARSELO AL DIV TOTAL USER WORKLOAD
 
 jQuery(".user").each(function(i){
-	
-	
-	jQuery(".total_user_workload:eq("+i+")").height( jQuery(this).height());
+	var height = jQuery(this).height();
+	jQuery(".all_users_workload").find(".total_user_workload").eq(i).height(height);
 });
 
 

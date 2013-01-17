@@ -555,9 +555,8 @@ content_for :sidebar do
 end
 
 html_title('WorkLoad') %>
-<%= javascript_include_tag "jquery", :plugin          => "redmine_dnoise_workload" %>
-<%= javascript_include_tag "calendario_dw", :plugin   => "redmine_dnoise_workload" %>
-<%= javascript_include_tag "redmine_plugins", :plugin => "redmine_dnoise_workload" %>
+<%= javascript_include_tag "calendario_dw",   :plugin => "redmine_workload" %>
+<%= javascript_include_tag "redmine_plugins", :plugin => "redmine_workload" %>
 <script>
 	jQuery(document).ready(function($){
 		createCss(new Array(<%=@barras_days.join(',')%>));
