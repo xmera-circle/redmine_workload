@@ -1,12 +1,16 @@
 class WorkLoadController < ApplicationController
 
   unloadable
+
   helper :gantt
   helper :issues
   helper :projects
   helper :queries
 
   include QueriesHelper
+
+  before_filter :authorize_global, :except => [:index, :show]
+  before_filter :authorize_global, :only   => [:index, :show], :unless => :allow_anonymous_access?
 
   def show
     

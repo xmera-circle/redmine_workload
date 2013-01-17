@@ -4,19 +4,20 @@ require_dependency 'list_user'
 require_dependency 'calculos_tareas'
 
 Redmine::Plugin.register :redmine_workload do
-  name 'Redmine Dnoise Workload plugin'
-  author 'Dnoise Rafael Calleja'
-  description 'This is a plugin for Redmine Workload'
-  version '0.0.1'
-  url ''
+  name 'Redmine Workload plugin'
+  author 'Yann Bogdanovic'
+  description 'This is a plugin for Redmine Workload originaly developped by Dnoise Rafael Calleja'
+  version '0.1.0'
+  url 'https://github.com/ianbogda/redmine_workload'
   author_url 'http://www.d-noise.net/'
   
-  menu :top_menu, :WorkLoad, { :controller => 'work_load', :action => 'show' }, :caption => :workload_title
-  
-  #permission :WorkLoad, {:work_load => [:index ] }, :public => true
-  #menu :project_menu, :WorkLoad, { :controller => 'work_load', :action => 'index' }, :caption => 'WorkLoad'
+  project_module :workload do
+    permission :WorkLoad, {:work_load => [:index ] }, :public => true
+  end
 
-  
+  menu :top_menu, :WorkLoad, { :controller => 'work_load', :action => 'show' }, :caption => :workload_title,
+    :if =>  Proc.new { User.current.allowed_to?({ :controller => 'show'}, nil, :global:true) }
+
 end
 
 class RedmineToolbarHookListener < Redmine::Hook::ViewListener
