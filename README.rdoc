@@ -1,3 +1,36 @@
-= dnoise_workload
+= Redmine WorkLoad plugin
 
-Description goes here
+This plugin uses graphics to represent total workloads and also the workload involved in the following tasks:
+
+This plugin is a fork of {GitHub}[https://github.com/arkadius/Redmine-Workload-Dnoise-redmine-2.0.x.git] originally developed by {dnoise}[https://github.com/dnoise/Redmine-Wordkload-Dnoise]. It has been updated to be Rails 3/Redmine 2+ compatible. 
+
+== Features
+
+* Average time assigned to issues. The plugin shows the amount of hours per issues within a project as well as the total of hours assigned to that project. Different colours are assigned to each issue.
+* This application also represents the % of hours used against the % of hours estimated for a issue. It also indicates the amount of extra time used over the initial estimate. In addition to this, the plugin also advise if a project doesn’t have assigned and also beginning and end dates.
+* This plug-in determines the timing of an application, showing different status: on time, delayed, etc
+* This plugin is especially helpful in organisations with a high workload and/or a organisations with scarce human resources.
+
+== Todo
+
+* Plugin hook support for changing the behavior of the plugin
+
+== Getting the plugin
+
+A copy can be gotton from {GitHub}[https://github.com/ianbogda/redmine_workload]
+
+== Installation and Setup
+
+1. In your redmine root directory, run the command: `git clone https://github.com/ianbogda/redmine_workload plugins/redmine_workload`
+2. Restart web server
+3. Login and click the WorkLoad Link in the top left menu
+
+== Upgrade
+
+1. Open a shell to your Redmine's plugins/redmine_workload folder
+2. Update your Git copy with `git pull`
+3. Restart your Redmine
+
+== License
+
+This plugin is licensed under the GNU GPL v2.  See LICENSE.txt and GPL.txt for details.
