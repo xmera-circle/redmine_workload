@@ -3,7 +3,7 @@ require_dependency 'dateTools'
 require_dependency 'list_user'
 require_dependency 'calculos_tareas'
 
-Redmine::Plugin.register :redmine_dnoise_workload do
+Redmine::Plugin.register :redmine_workload do
   name 'Redmine Dnoise Workload plugin'
   author 'Dnoise Rafael Calleja'
   description 'This is a plugin for Redmine Workload'
@@ -21,6 +21,6 @@ end
 
 class RedmineToolbarHookListener < Redmine::Hook::ViewListener
    def view_layouts_base_html_head(context)
-     stylesheet_link_tag('style', :plugin => :redmine_dnoise_workload )
+     stylesheet_link_tag('style', :plugin => :redmine_workload )
    end
 end

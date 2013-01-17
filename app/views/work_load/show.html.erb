@@ -19,13 +19,13 @@ pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
 <div class="header_content">
 	<div class="header_content_top">
    		<div class="header_content_top_left">
-   			<h2>Workload</h2>
+   			<h2><%= l(:workload_show_lagel) %></h2>
 		</div>
 		<div class="header_content_top_right">
 			<span>
 				<a href="http://www.d-noise.net/" title="D-noise" target="_blank">www.d-noise.net</a>
 				<br />
-				<p>Powered by DNOiSE</p>
+				<p><%= l(:workload_show_poweredby) %> DNOiSE</p>
 			</span>
 			<div class="logo_dnoise">&nbsp;</div>
 		</div>
@@ -44,7 +44,7 @@ pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
 			:class  => 'content_form') do %>
 			<div class="header_content_bottom_left">
 				<div class="buttons">
-					<label>Rango / Range</label>
+					<label><%= l(:workload_show_range) %></label>
 					<p class="buttons">
 						<%= text_field_tag 'months', @gantt.months, :size => 2 %>
 						<%= l(:label_months_from) %>
@@ -55,15 +55,15 @@ pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
 				</div>
 				<div class="calendar">
 					<span>
-						<label>Fecha de c&aacute;lculo / Today</label>
+						<label><%= l(:workload_show_calendar_today) %></label>
 						<input type="text" value="<%=@fecha_actual.to_date.strftime("%d/%m/%Y")%>" autocomplete="off" class="campofecha" id="date1" name="fecha_actual">
-						<span class="calendar_icon">calendario</span> 
+						<span class="calendar_icon"><%= l(:workload_show_calendar_calendar) %></span> 
 					</span>
 				</div>
 			</div>
 			<div class="header_content_bottom_center">
 				<div class="multiselect">
-					<label>Usuarios / Users</label>
+					<label><%= l(:workload_show_filter_user) %></label>
 					<select name='usuarios_id[]' multiple='true'>
 						<% User.active.each do |user| %>
 							<option <%=(@usuarios.include?(user.id.to_s) ) ? 'selected="selected"' : ''%> value='<%=user.id%>'><%=user.firstname%> <%=user.lastname%></option>
@@ -75,7 +75,7 @@ pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
 				<div class="issues">
 					<span>
 						<input type="hidden" name="show_issues" value="0" /><input type="checkbox" <%=(params[:show_issues]== "1") ? 'checked="checked"' : ''%> id="cb_issues_id" name="show_issues" value="1">
-						<label for="cb_status_id">Mostrar Tareas / Show Issues</label>
+						<label for="cb_status_id"><%= l(:workload_show_issues) %></label>
 					</span>
 				</div>
 				<%= link_to_function l(:button_apply), '$("query_form").submit()', :class => 'icon icon-checked' %>
@@ -226,33 +226,31 @@ pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
 								<span><strong>#<%=issue.id%> -</strong>&nbsp; <%=issue.subject%></span>				
 								</div>	
 								<div class="priority">
-									<span><strong>Priority:</strong> <%=Enumeration.find(issue.priority_id).name%></span>
+									<span><strong><%= l(:workload_show_issue_priority) %>:</strong> <%=Enumeration.find(issue.priority_id).name%></span>
 								</div>	
 								<div class="date">
-									<span><strong>Start/End -</strong> <%=issue.start_date.to_date.strftime("%d/%m/%Y")
-										if issue.start_date.respond_to?(:to_date)%> - <%=issue.due_date.to_date.strftime("%d/%m/%Y")
-										if issue.due_date.respond_to?(:to_date)%>
+									<span><strong><%= l(:workload_show_issue_date) %> -</strong> <%=issue.start_date.to_date.strftime("%d/%m/%Y") if issue.start_date.respond_to?(:to_date)%> - <%=issue.due_date.to_date.strftime("%d/%m/%Y") if issue.due_date.respond_to?(:to_date)%>
 									</span>
 								</div>	
 								<div class="a_hours">
-									<span><strong>Estimated:</strong> <%=issue.estimated_hours%></span>
+									<span><strong><%= l(:workload_show_issue_estimated_hours) %>:</strong> <%=issue.estimated_hours%></span>
 								</div>	
 								<div class="d_hours">
-									<span><strong>Spent time:</strong> <%=sum%></span>
+									<span><strong><%= l(:workload_show_issue_spent_time) %>:</strong> <%=sum%></span>
 								</div>
 								<div class="separation"><hr /></div>
 								<div class="status">
-									<span><strong>Status:</strong> <%=IssueStatus.find(issue.status_id).name%></span>
+									<span><strong><%= l(:workload_show_issue_status) %>:</strong> <%=IssueStatus.find(issue.status_id).name%></span>
 								</div>	
 								<div class="percent"><div>
-								<strong>% done:</strong>
+								<strong><%= l(:workload_show_issue_percent_done) %>:</strong>
 								<div class="percent_div">
 									<span class="percent_img" style="width:<%=issue.done_ratio%>%"></span>
 								</div>
 								<span class="percent_text"><%=issue.done_ratio%>%</span>
 							</div>
 							<div>
-								<strong>% estim.:</strong>
+								<strong><%= l(:workload_show_issue_percent_estimated) %>:</strong>
 								<div class="percent_div">
 									<span class="percent_img2" style="width:<%=(calculos[issue.id].percent_horas_dedicado > 100 ) ? 100 : calculos[issue.id].percent_horas_dedicado%>%"></span>
 								</div>
@@ -261,29 +259,27 @@ pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
 						</div>
 						<div class="separation"><hr /></div>	
 						<div class="dcr">
-							<span><strong>Resource consumption diff:</strong> <%=calculos[issue.id].difftiempo.round%>%</span>
+							<span><strong><%= l(:workload_show_dcr) %>:</strong> <%=calculos[issue.id].difftiempo.round%>%</span>
 						</div>		
 						<div class="date">
-							<span><strong>Timing:</strong> <%=calculos[issue.id].diffhoras.round%>%</span>
+							<span><strong><%= l(:workload_show_date) %>:</strong> <%=calculos[issue.id].diffhoras.round%>%</span>
 						</div>	
 						<div class="a_hours">
-							<span><strong>Efficiency:</strong> <%=calculos[issue.id].eficacia_actual.round%></span>
+							<span><strong><%= l(:workload_show_a_hours) %>:</strong> <%=calculos[issue.id].eficacia_actual.round%></span>
 						</div>	
 					</div>
 				</div><%
 				end
 			end
-			if (params[:show_issues] == "1") then
+			if (params[:show_issues] == "1") then %>
 
-				%><div class="user_total_hours">
-					<span class="remanente"><strong><%=total_rem_by_user[user.id]%>h</strong> Remaining</span><%
+				<div class="user_total_hours">
+					<span class="remanente"><strong><%=total_rem_by_user[user.id]%>h</strong> <%= l(:workload_show_user_total_hours_remaining) %></span><%
 
 				issues_remanentes_by_user[user.id].each do |issue|
 					sum = 0
 
-					TimeEntry.find(
-						:all,
-						:conditions => ["issue_id = #{issue.id}"]).each do |h|
+					TimeEntry.find(:all, :conditions => ["issue_id = #{issue.id}"]).each do |h|
 
 						if h.hours.is_a?(Numeric) && h.hours > 0 then
 							sum+=h.hours
@@ -304,34 +300,32 @@ pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
 								<span><strong>#<%=issue.id%> -</strong>&nbsp; <%=issue.subject%></span>				
 							</div>	
 							<div class="priority">
-								<span><strong>Priority:</strong> <%=Enumeration.find(issue.priority_id).name%></span>
+								<span><strong><%= l(:workload_show_issue_priority) %>:</strong> <%=Enumeration.find(issue.priority_id).name%></span>
 							</div>	
 							<div class="date">
-								<span><strong>Start/End -</strong> <%=issue.start_date.to_date.strftime("%d/%m/%Y")
-								if issue.start_date.respond_to?(:to_date)%> - <%=issue.due_date.to_date.strftime("%d/%m/%Y")
-								if issue.due_date.respond_to?(:to_date)%>
+								<span><strong><%= l(:workload_show_issue_date) %> -</strong> <%=issue.start_date.to_date.strftime("%d/%m/%Y") if issue.start_date.respond_to?(:to_date)%> - <%=issue.due_date.to_date.strftime("%d/%m/%Y") if issue.due_date.respond_to?(:to_date)%>
 								</span>
 							</div>	
 							<div class="a_hours">
-								<span><strong>Estimated:</strong> <%=issue.estimated_hours%></span>
+								<span><strong><%= l(:workload_show_issue_estimated_hours) %>:</strong> <%=issue.estimated_hours%></span>
 							</div>	
 							<div class="d_hours">
-								<span><strong>Spent time:</strong> <%=sum%></span>
+								<span><strong><%= l(:workload_show_issue_spent_time) %>:</strong> <%=sum%></span>
 							</div>
 							<div class="separation"><hr /></div>
 							<div class="status">
-								<span><strong>Status:</strong> <%=IssueStatus.find(issue.status_id).name%></span>
+								<span><strong><%= l(:workload_show_issue_status) %>:</strong> <%=IssueStatus.find(issue.status_id).name%></span>
 							</div>	
 							<div class="percent">
 								<div>
-									<strong>% done:</strong>
+									<strong><%= l(:workload_show_issue_percent_done) %>:</strong>
 									<div class="percent_div">
 										<span class="percent_img" style="width:<%=issue.done_ratio%>%"></span>
 									</div>
 									<span class="percent_text"><%=issue.done_ratio%>%</span>
 								</div>
 								<div>
-									<strong>% estim.:</strong>
+									<strong><%= l(:workload_show_issue_percent_estimated) %>:</strong>
 									<div class="percent_div">
 										<span class="percent_img2"  style="width:0px" ></span>
 									</div>
@@ -340,13 +334,13 @@ pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
 							</div>
 							<div class="separation"><hr /></div>	
 							<div class="dcr">
-								<span><strong>Resource consumption diff:</strong> 0%</span>
+								<span><strong><%= l(:workload_show_dcr) %>:</strong> 0%</span>
 							</div>		
 							<div class="date">
-								<span><strong>Timing:</strong> 0%</span>
+								<span><strong><%= l(:workload_show_date) %>:</strong> 0%</span>
 							</div>	
 							<div class="a_hours">
-								<span><strong>Efficiency:</strong> </span>
+								<span><strong><%= l(:workload_show_a_hours) %>:</strong> </span>
 							</div>	
 						</div>
 					</div><%
@@ -354,8 +348,8 @@ pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
 				%></div><%
 			end
 			%></div><%
-		end
-		%></div>
+		end	%>
+		</div>
 		<div class="all_users_workload" style="background-position:<%=pos_background%>px 0px"><%
 
 		@usuarios.each do |user|
@@ -532,19 +526,19 @@ pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
 		</tr>
 	</table>
 	<div class="legend">
-		<span class="hours_graph" title="leyenda">Legend</span>
+		<span class="hours_graph" title="leyenda"><%= l(:workload_show_legend) %></span>
 		<div class="timing_graph">
-			<span class="title"><strong>Timing:</strong></span>
-			<span class="perfect" title="leyenda">Perfect</span>
-			<span class="normal" title="leyenda">On time</span>
-			<span class="retard" title="leyenda">Delay</span>
-			<span class="retard2" title="leyenda">Delay</span>
-			<span class="no_time" title="leyenda">No timing</span>
-			<span class="father" title="leyenda">Parent task (does not add up)</span>
+			<span class="title"><strong><%= l(:workload_show_legend_title) %>:</strong></span>
+			<span class="perfect" title="leyenda"><%= l(:workload_show_legend_perfect) %></span>
+			<span class="normal" title="leyenda"><%=  l(:workload_show_legend_normal)  %></span>
+			<span class="retard" title="leyenda"><%=  l(:workload_show_legend_retard)  %></span>
+			<span class="retard2" title="leyenda"><%= l(:workload_show_legend_retard2) %></span>
+			<span class="no_time" title="leyenda"><%= l(:workload_show_legend_no_time) %></span>
+			<span class="father" title="leyenda"><%=  l(:workload_show_legend_father)  %></span>
 		</div>
-		<span class="blue">Time spent</span>
-		<span class="gray">Past</span>
-		<span class="black">Out of time budget</span>
+		<span class="blue"><%=  l(:workload_show_legend_time_spent) %></span>
+		<span class="gray"><%=  l(:workload_show_legend_past)       %></span>
+		<span class="black"><%= l(:workload_show_legend_out)        %></span>
 	</div>
 	<div style="clear:both;"></div><%
 
