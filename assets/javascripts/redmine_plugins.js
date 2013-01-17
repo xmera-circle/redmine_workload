@@ -54,7 +54,11 @@ jQuery(".user_total_hours").each(function(){
 
 jQuery(".user").each(function(i){
 	var height = jQuery(this).height();
-	jQuery(".all_users_workload").find(".total_user_workload").eq(i).height(height);
+	var browser = window.chrome ? $.browser.chrome=!0 : ($.browser.webkit && ($.browser.safari = !0), $.browser.chrome=!1);
+	if (browser) then
+		jQuery(".all_users_workload").find(".total_user_workload").eq(i).height(height);
+	else
+		jQuery(".all_users_workload.eq("+i+")").height(height);
 });
 
 
