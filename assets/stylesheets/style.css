@@ -38,21 +38,21 @@
 .controller-work_load .workload.day span.tarea_a { float:left; background:url(../images/tarea9_border.png) repeat-y left; padding-left:30px; height:11px; width:100%; text-indent:-9999px;}
 .controller-work_load .workload.day span.tarea_g { float:left; background:url(../images/tarea10_border.png) repeat-y left; padding-left:30px; height:11px; width:100%; text-indent:-9999px;}
 .controller-work_load .workload.day span.remanente {float:left; background:url(../images/remanente.png) repeat-y left; height:11px; width:100%; text-indent:-9999px;}
-.controller-work_load .user {width:100%; float:left; height:auto; text-align:left; border-bottom:3px solid #999;  min-height: 82px;}
-.controller-work_load .user .user_name {float:left; margin-top:10px; width:100%;}
-.controller-work_load .user .user_name span{ font-size:15px; font-weight:bold; color:#666666;}
+.controller-work_load .userworkload {width:100%; float:left; height:auto; text-align:left; border-bottom:3px solid #999;  min-height: 82px;}
+.controller-work_load .userworkload .user_name {float:left; margin-top:10px; width:100%;}
+.controller-work_load .userworkload .user_name span{ font-size:15px; font-weight:bold; color:#666666;}
 
-.controller-work_load .user .user_total_hours {float:left; height:auto;}
-.controller-work_load .user .user_total_hours span.remanente { margin-top: 20px; float:left; background:url(../images/remanente.png) no-repeat left; padding-left:30px; height:11px; width:150px; color:#666;}
-.controller-work_load .user .user_total_hours strong {color:#6699ff;}
-.controller-work_load .user .user_each_hours { float:left; padding-top:12px; width:100%; }
-.controller-work_load .user .user_each_hours:last-child {padding-bottom:15px;}
-.controller-work_load .user .user_each_hours span.tarea1 { float:left; background:url(../images/perfect.png) no-repeat left; padding-left:30px; height:15px; max-width:265px; width:auto; color:#666;}
-.controller-work_load .user .user_each_hours span.tarea2 { float:left; background:url(../images/on_time.png) no-repeat left; padding-left:30px; height:15px; max-width:265px; width:auto; color:#666;}
-.controller-work_load .user .user_each_hours span.tarea3 { float:left; background:url(../images/retard2.png) no-repeat left; padding-left:30px; height:15px; max-width:265px; width:auto; color:#666;}
-.controller-work_load .user .user_each_hours span.tarea4 { float:left; background:url(../images/retard.png) no-repeat left; padding-left:30px; height:15px; max-width:265px; width:auto; color:#666;}
-.controller-work_load .user .user_each_hours span.tarea5 { float:left; background:url(../images/tarea_padre.png) no-repeat left; padding-left:30px; height:15px; max-width:265px; width:auto; color:#666;}
-.controller-work_load .user .user_each_hours span.tarea_remanente { float:left; background:url(../images/clock.png) no-repeat left; padding-left:30px; height:15px; max-width:265px; width:auto; color:#666;}
+.controller-work_load .userworkload .user_total_hours {float:left; height:auto;}
+.controller-work_load .userworkload .user_total_hours span.remanente { margin-top: 20px; float:left; background:url(../images/remanente.png) no-repeat left; padding-left:30px; height:11px; width:150px; color:#666;}
+.controller-work_load .userworkload .user_total_hours strong {color:#6699ff;}
+.controller-work_load .userworkload .user_each_hours { float:left; padding-top:12px; width:100%; }
+.controller-work_load .userworkload .user_each_hours:last-child {padding-bottom:15px;}
+.controller-work_load .userworkload .user_each_hours span.tarea1 { float:left; background:url(../images/perfect.png) no-repeat left; padding-left:30px; height:15px; max-width:265px; width:auto; color:#666;}
+.controller-work_load .userworkload .user_each_hours span.tarea2 { float:left; background:url(../images/on_time.png) no-repeat left; padding-left:30px; height:15px; max-width:265px; width:auto; color:#666;}
+.controller-work_load .userworkload .user_each_hours span.tarea3 { float:left; background:url(../images/retard2.png) no-repeat left; padding-left:30px; height:15px; max-width:265px; width:auto; color:#666;}
+.controller-work_load .userworkload .user_each_hours span.tarea4 { float:left; background:url(../images/retard.png) no-repeat left; padding-left:30px; height:15px; max-width:265px; width:auto; color:#666;}
+.controller-work_load .userworkload .user_each_hours span.tarea5 { float:left; background:url(../images/tarea_padre.png) no-repeat left; padding-left:30px; height:15px; max-width:265px; width:auto; color:#666;}
+.controller-work_load .userworkload .user_each_hours span.tarea_remanente { float:left; background:url(../images/clock.png) no-repeat left; padding-left:30px; height:15px; max-width:265px; width:auto; color:#666;}
 
 
 .controller-work_load .months_per_year {height:16px; width:100%; float:left;}
