@@ -9,8 +9,8 @@ class WorkLoadController < ApplicationController
 
   include QueriesHelper
 
-  before_filter :authorize_global, :except => [:index, :show]
-  before_filter :authorize_global, :only   => [:index, :show], :unless => :allow_anonymous_access?
+  before_filter :authorize_global, :except => [:show]
+  before_filter :authorize_global, :only   => [:show]
 
   def show
     
@@ -52,4 +52,14 @@ class WorkLoadController < ApplicationController
 
   end
 
+#########
+protected
+#########
+
+  def is_user_logged_in
+    if !User.current.logged?
+      render_403
+    end
+  end
+  
 end

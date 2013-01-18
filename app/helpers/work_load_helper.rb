@@ -8,5 +8,7 @@ module WorkLoadHelper
   end
 
   def authorized_globally(controller,action)
-    User.current.allowed_to?({:controller => controller, :action => action}, nil, :global => true)
+    User.current.admin?({:controller => controller, :action => action}, nil, :global => true)
   end
+
+end

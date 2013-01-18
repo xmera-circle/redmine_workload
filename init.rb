@@ -12,11 +12,11 @@ Redmine::Plugin.register :redmine_workload do
   author_url 'http://www.d-noise.net/'
   
   project_module :workload do
-    permission :WorkLoad, {:work_load => [:index ] }, :public => true
+    permission :WorkLoad, {:work_load => [:show ] }
   end
 
   menu :top_menu, :WorkLoad, { :controller => 'work_load', :action => 'show' }, :caption => :workload_title,
-    :if =>  Proc.new { User.current.allowed_to?({ :controller => 'show'}, nil, :global:true) }
+    :if =>  Proc.new { User.current.admin? }
 
 end
 
