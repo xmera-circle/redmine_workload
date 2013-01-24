@@ -5,8 +5,8 @@
 .controller-work_load #top_left {float:left; width:330px;height:54px;background:#eeeeee; position:relative; border-left: 1px solid #C0C0C0;}
 
 .controller-work_load .header_content_top_left { width:7%; float:left;}
-.controller-work_load .header_content_top_right { width:10%; float:right; min-width:140px;}
-.controller-work_load .header_content_top_right span { width:100px; float:left; font-size:9px; height:30px; margin-top:5px;}
+.controller-work_load .header_content_top_right { width:10%; float:right; min-width:150px;}
+.controller-work_load .header_content_top_right span { width:110px; float:left; font-size:9px; height:30px; margin-top:5px;}
 .controller-work_load .header_content_top_right span p {margin:0; padding:0; float:left;}
 .controller-work_load .header_content_top_right span a {color:#0083D7; font-weight:normal; margin-left:20px; margin-top:3px; float:left;}
 .controller-work_load .header_content_top_right span a:hover {color:#0083D7; font-weight:normal;}
@@ -108,9 +108,9 @@
 .controller-work_load .workload.tarea span.tarea_u { float:left; background:url(../images/tarea12_border.png) repeat-y left; padding-left:30px; height:11px; width:100%; text-indent:-9999px;}
 .controller-work_load .workload.tarea span.tarea_u.total { float:left; background:url(../images/tarea12.png) repeat-y left; padding-left:30px; height:25px; width:100%; text-indent:-9999px;}
 
-.controller-work_load .legend {width: 80%; float:left; height:95px; font-size:12px; color:#666666; height: auto;}
-.controller-work_load .hours_graph { background:url(../images/legend.gif) no-repeat left; float:left; text-indent:-9999px;  width: 30%; height:45px; margin-bottom:15px;}
-.controller-work_load .timing_graph { float:left; width: 66%; height:45px; margin-bottom:30px;}
+.controller-work_load .legend {width: 80%; float:left; height:95px; font-size:12px; color:#666666; height: auto; min-width:970px;}
+.controller-work_load .hours_graph { background:url(../images/legend.gif) no-repeat left; float:left; text-indent:-9999px;  width: 24%; height:45px; margin-bottom:15px;}
+.controller-work_load .timing_graph { float:left; width: 66%; height:45px; margin-bottom:30px; min-width:730px;}
 .controller-work_load .timing_graph .title { width:100%; float:left; margin-bottom:10px;}
 .controller-work_load .timing_graph .perfect { width:80px; float:left; padding-left:20px; background: url(../images/perfect.png) no-repeat left;}
 .controller-work_load .timing_graph .normal { width:80px; float:left; padding-left:20px; background: url(../images/on_time.png) no-repeat left;}
@@ -120,8 +120,8 @@
 .controller-work_load .timing_graph .father { width:170px; float:left; padding-left:20px; background: url(../images/tarea_padre.png) no-repeat left;}
 .controller-work_load .tareas {float:left;}
 
-.controller-work_load .blue { background:url(../images/tarea9_border.png) no-repeat left; padding-left:40px; float:left; margin-bottom:5px; width:20%; min-width:100px;}
-.controller-work_load .gray { background:url(../images/tarea10_border.png) no-repeat left; padding-left:40px; float:left;margin-bottom:5px; width:14%;}
+.controller-work_load .blue { background:url(../images/tarea9_border.png) no-repeat left; padding-left:40px; float:left; margin-bottom:5px; width:20%; min-width:110px; margin-top:5px; padding-right:20px;}
+.controller-work_load .gray { background:url(../images/tarea10_border.png) no-repeat left; padding-left:40px; float:left;margin-bottom:5px; width:14%; margin-top:5px;}
 
 
 .controller-work_load #today { background: #E5352C; position:relative; left:463px; width:3px;}
@@ -311,7 +311,7 @@ a.calencerrar span{
  
 /* Modificaciones 19/07/2011 */
 
-.controller-work_load .black { background:url(../images/tarea11.png) no-repeat left; padding-left:40px; float:left;width:30%;}
+.controller-work_load .black { background:url(../images/tarea11.png) no-repeat left; padding-left:40px; float:left;width:40%; margin-top:5px;}
 .controller-work_load .gantt_hdr.month_bg1 { background: #cccccc;}
 .controller-work_load .gantt_hdr.month_bg1 a { color: #ffffff;}
 .controller-work_load .undefined { margin-top:20px !important; float:left; height:auto !important;}
