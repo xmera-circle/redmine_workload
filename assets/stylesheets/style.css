@@ -38,7 +38,7 @@
 .controller-work_load .workload.day span.tarea_a { float:left; background:url(../images/tarea9_border.png) repeat-y left; padding-left:30px; height:11px; width:100%; text-indent:-9999px;}
 .controller-work_load .workload.day span.tarea_g { float:left; background:url(../images/tarea10_border.png) repeat-y left; padding-left:30px; height:11px; width:100%; text-indent:-9999px;}
 .controller-work_load .workload.day span.remanente {float:left; background:url(../images/remanente.png) repeat-y left; height:11px; width:100%; text-indent:-9999px;}
-.controller-work_load .userworkload {width:100%; float:left; height:auto; text-align:left; border-bottom:3px solid #999;  min-height: 82px; display:none;}
+.controller-work_load .userworkload {width:100%; float:left; height:auto; text-align:left; border-bottom:3px solid #999;  min-height: 82px;}
 .controller-work_load .userworkload .user_name {float:left; margin-top:10px; width:100%;}
 .controller-work_load .userworkload .user_name span{ font-size:15px; font-weight:bold; color:#666666;}
 
@@ -64,7 +64,7 @@
 .controller-work_load .days_per_month .day:last-child {width:15px !important; }
 
 .controller-work_load .all_users_workload {height: auto; overflow: hidden; width:2944px; float:left; background-image:url(../images/bg_calendar.png); background-repeat: repeat; background-position: -1px 0px;}
-.controller-work_load .total_user_workload { width:2942px; height:auto; float:left; border-bottom: 3px solid #999999; display:none;}
+.controller-work_load .total_user_workload { width:2942px; height:auto; float:left; border-bottom: 3px solid #999999;}
 .controller-work_load .user_workload_per_week { height: auto; left: 47px; position: relative; top: 0px; width: 112px; float:left; padding-bottom:13px;}
 .controller-work_load .workload.week { left: 0px; padding-top: 10px; height: 20px; padding-left:0; position:relative; float:left; z-index:1; border:0; width: 112px;}
 .controller-work_load .workload.remanente { left: 0px; padding-left:0; padding-top:10px; position: relative; width: 100%; border:0; height:17px;}
