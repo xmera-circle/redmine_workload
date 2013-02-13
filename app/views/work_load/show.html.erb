@@ -185,6 +185,10 @@ end %>
 				%><div class="userworkload">
 				<div class="user_name">
 					<span><%="#{user.firstname} #{user.lastname}"%></span>
+					<%= form_tag({:controller => 'work_load', :action => 'show'},:method => :get,:id => 'query_form', :class  => 'content_form') do %>
+					<input type="hidden" name="show_issues" value=user.id />
+					<%= link_to 'issues', "#", :onclick=>"$('.query_form').submit()" %>
+					<%end%>
 				</div><%
 
 				#remanentes_by_user[user.id]        = @utils.getRemanente(user.id, @fecha_actual)
@@ -210,7 +214,7 @@ end %>
 					workload_by_user[user.id].push(calculos[issue.id].dias_y_time_restantes)
 					len = 37 - ( issue.id.to_s.length - 1 )
 
-					if ("1" == params[:show_issues]) then
+					if (user.id == params[:show_issues]) then
 
 						%><div class="user_each_hours" id="_<%=issue.id%>">
 							<span class="<%= (@utils.issue_is_parent(issue)) ? 'tarea5' : "tarea#{calculos[issue.id].getTiming()}" %>"><a href="/issues/<%=issue.id%>" title="#<%=issue.id%>" class="tareas">#<%=issue.id%></a>&nbsp;<%=(issue.subject.length > len ) ? issue.subject[0, len] : issue.subject%></span>
@@ -269,7 +273,7 @@ end %>
 				end
 			end
 
-			if (params[:show_issues] == "1") then
+			if (params[:show_issues] == user.id) then
 
 				%><div class="user_total_hours">
 					<span class="remanente"><strong><%=total_rem_by_user[user.id]%>h</strong> <%= l(:workload_show_user_total_hours_remaining) %></span><%
@@ -405,7 +409,7 @@ end %>
 				counter     = 1
 				issues_by_user[user.id].each do |issue|
 
-					if ( params[:show_issues] == "1" ) then
+					if ( params[:show_issues] == user.id ) then
 						current_day = current_week.to_date
 
 						%><div class="workload tarea _<%=issue.id%>">
@@ -448,11 +452,11 @@ end %>
 						</div>
 					</div><%
 
-					elsif params[:show_issues] == "1"
+					elsif params[:show_issues] == user.id
 
 						%><div class="workload tarea tarea1"></div><%
 
-					elsif counter_worksloads == true && params[:show_issues] != "1"
+					elsif counter_worksloads == true && params[:show_issues] != user.id
 						counter_worksloads = false 
 
 						 %><div class="workload tarea"></div><%
@@ -461,7 +465,7 @@ end %>
 					counter = counter + 1
 				end
 
-				if issues_remanentes_by_user[user.id].length > 0 && params[:show_issues] == "1"  then
+				if issues_remanentes_by_user[user.id].length > 0 && params[:show_issues] == user.id  then
 
 					%><div class="workload tarea undefined">
 						<div class="workload tarea undefined header"></div><%
