@@ -184,9 +184,9 @@ end %>
 
 				%><div class="userworkload">
 				<div class="user_name">
-					<%= form_tag({:controller => 'work_load', :action => 'show'},:method => :get,:id => 'show_issues_form', :class  => 'content_form') do %>
+					<%= form_tag({:controller => 'work_load', :action => 'show'},:method => :get,:id => 'show_issues_form_'+user.id, :class  => 'content_form') do %>
 					<input type="hidden" name="show_issues" value="<%=user.id%>">
-					<span onclick="document.getElementById('show_issues_form').submit();"><%="#{user.firstname} #{user.lastname}"%></span>
+					<span onclick="document.getElementById('show_issues_form_'+<%=user.id%>).submit();"><%="#{user.firstname} #{user.lastname}"%></span>
 					<%end%>
 				</div><%
 
