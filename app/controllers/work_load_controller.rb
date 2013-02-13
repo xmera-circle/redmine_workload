@@ -22,7 +22,7 @@ class WorkLoadController < ApplicationController
       params[:year] = DateTime.now.year
     end
 
-    params[:show_issues] = ( params[:show_issues].nil? ) ? "4" : params[:show_issues]
+    params[:show_issues] = ( params[:show_issues].nil? ) ? "0" : params[:show_issues]
 
     @gantt = Redmine::Helpers::Gantt.new(params)
 
