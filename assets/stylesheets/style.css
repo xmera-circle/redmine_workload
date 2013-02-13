@@ -274,7 +274,7 @@ a.calencerrar span{
 	border: 0;
 }
  
-span:hover {text-decoration: underline; }
+span.username:hover {text-decoration: underline; }
  
 /* Modificaciones 19/07/2011 */
 
