@@ -186,7 +186,7 @@ end %>
 				<div class="user_name">
 					<span><%="#{user.firstname} #{user.lastname}"%></span>
 					<%= form_tag({:controller => 'work_load', :action => 'show'},:method => :get,:id => 'query_form', :class  => 'content_form') do %>
-					<input type="hidden" name="show_issues" value=user.id>
+					<input type="hidden" name="show_issues" value="_<%=user.id%>">
 					<input type="submit" value="Submit">
 					<%end%>
 				</div><%
