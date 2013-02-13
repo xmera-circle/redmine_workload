@@ -187,7 +187,7 @@ end %>
 					<span><%="#{user.firstname} #{user.lastname}"%></span>
 				</div><%
 
-				remanentes_by_user[user.id]        = @utils.getRemanente(user.id, @fecha_actual)
+				#remanentes_by_user[user.id]        = @utils.getRemanente(user.id, @fecha_actual)
 				issues_remanentes_by_user[user.id] = @utils.getIssuesOpenedWihtout(user.id, @gantt.date_from)
 				issues_by_user[user.id]            = @utils.getIssuesOpenedEntreFechas(user.id, @gantt.date_from, @gantt.date_to)
 

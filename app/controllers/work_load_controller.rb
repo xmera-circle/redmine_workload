@@ -18,7 +18,7 @@ class WorkLoadController < ApplicationController
 
     if ( params[:month].nil? ||   params[:months].nil? ||  params[:year].nil?   ) then
       params[:month] = DateTime.now.month
-      params[:months] = 6
+      params[:months] = 1
       params[:year] = DateTime.now.year
     end
 
