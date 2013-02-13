@@ -184,10 +184,9 @@ end %>
 
 				%><div class="userworkload">
 				<div class="user_name">
-					<span><%="#{user.firstname} #{user.lastname}"%></span>
-					<%= form_tag({:controller => 'work_load', :action => 'show'},:method => :get,:id => 'query_form', :class  => 'content_form') do %>
+					<%= form_tag({:controller => 'work_load', :action => 'show'},:method => :get,:id => 'show_issues_form', :class  => 'content_form') do %>
 					<input type="hidden" name="show_issues" value="<%=user.id%>">
-					<input type="submit" value="Submit">
+					<span onclick="document.show_issues_form.submit()"><%="#{user.firstname} #{user.lastname}"%></span>
 					<%end%>
 				</div><%
 
@@ -273,7 +272,7 @@ end %>
 				end
 			end
 
-			if (params[:show_issues] == user.id) then
+			if (Integer(params[:show_issues]) == user.id) then
 
 				%><div class="user_total_hours">
 					<span class="remanente"><strong><%=total_rem_by_user[user.id]%>h</strong> <%= l(:workload_show_user_total_hours_remaining) %></span><%
@@ -409,7 +408,7 @@ end %>
 				counter     = 1
 				issues_by_user[user.id].each do |issue|
 
-					if ( params[:show_issues] == user.id ) then
+					if ( Integer(params[:show_issues]) == user.id ) then
 						current_day = current_week.to_date
 
 						%><div class="workload tarea _<%=issue.id%>">
@@ -452,11 +451,11 @@ end %>
 						</div>
 					</div><%
 
-					elsif params[:show_issues] == user.id
+					elsif Integer(params[:show_issues]) == user.id
 
 						%><div class="workload tarea tarea1"></div><%
 
-					elsif counter_worksloads == true && params[:show_issues] != user.id
+					elsif counter_worksloads == true && Integer(params[:show_issues]) != user.id
 						counter_worksloads = false 
 
 						 %><div class="workload tarea"></div><%
@@ -465,7 +464,7 @@ end %>
 					counter = counter + 1
 				end
 
-				if issues_remanentes_by_user[user.id].length > 0 && params[:show_issues] == user.id  then
+				if issues_remanentes_by_user[user.id].length > 0 && Integer(params[:show_issues]) == user.id  then
 
 					%><div class="workload tarea undefined">
 						<div class="workload tarea undefined header"></div><%
