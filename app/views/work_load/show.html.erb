@@ -216,7 +216,7 @@ end %>
 					if (user.id == Integer(params[:show_issues])) then
 
 						%><div class="user_each_hours" id="_<%=issue.id%>">
-							<span class="<%= (@utils.issue_is_parent(issue)) ? 'tarea5' : "tarea#{calculos[issue.id].getTiming()}" %>"><a href="/issues/<%=issue.id%>" title="#<%=issue.id%>" class="tareas">#<%=issue.id%></a>&nbsp;<%=(issue.subject.length > len ) ? issue.subject[0, len] : issue.subject%></span>
+							<span class="<%= (@utils.issue_is_parent(issue)) ? 'tarea5' : "tarea#{calculos[issue.id].getTiming()}" %>"><a href="redmine/issues/<%=issue.id%>" title="#<%=issue.id%>" class="tareas">#<%=issue.id%></a>&nbsp;<%=(issue.subject.length > len ) ? issue.subject[0, len] : issue.subject%></span>
 							<div class="info_widget">
 							<div class="proyecto">
 								<span><strong><%=Project.find(issue.project_id).name%></strong></span>				
