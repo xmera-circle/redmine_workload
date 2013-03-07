@@ -45,10 +45,16 @@ class ListingUser
     return (issue.id == issue.root_id && issue.parent_id.nil? && issue.children.count > 0 )
   end
   
+  #def getIssuesOpenedEntreFechas(user_id, start_date, date_end )
+  #   date_end = date_end.to_date.strftime("%Y-%m-%d") if date_end.respond_to?(:to_date)
+  #   start_date = start_date.to_date.strftime("%Y-%m-%d") if start_date.respond_to?(:to_date)
+  #  return Issue.find_all_by_status_id( @openstatus ,:joins => :project, :conditions => [ " ( due_date <= '#{date_end}' OR start_date >= '#{start_date}') AND assigned_to_id = #{user_id} AND start_date IS NOT NULL AND due_date IS NOT NULL AND estimated_hours IS NOT NULL AND projects.status = 1" ],   :order => 'root_id asc, id asc' )
+  #end
+  
   def getIssuesOpenedEntreFechas(user_id, start_date, date_end )
      date_end = date_end.to_date.strftime("%Y-%m-%d") if date_end.respond_to?(:to_date)
      start_date = start_date.to_date.strftime("%Y-%m-%d") if start_date.respond_to?(:to_date)
-    return Issue.find_all_by_status_id( @openstatus ,:joins => :project, :conditions => [ " ( due_date <= '#{date_end}' OR start_date >= '#{start_date}') AND assigned_to_id = #{user_id} AND start_date IS NOT NULL AND due_date IS NOT NULL AND estimated_hours IS NOT NULL AND projects.status = 1" ],   :order => 'root_id asc, id asc' )
+    return Issue.find_all_by_status_id( @openstatus ,:joins => :project, :conditions => [ " due_date >= '#{start_end}' AND assigned_to_id = #{user_id} AND start_date IS NOT NULL AND due_date IS NOT NULL AND estimated_hours IS NOT NULL AND projects.status = 1" ],   :order => 'root_id asc, id asc' )
   end
   
    
