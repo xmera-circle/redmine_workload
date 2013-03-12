@@ -1,5 +1,17 @@
 class DateTools
 
+  @holidays = {
+	DateTime.new(2013,1,1),
+	DateTime.new(2013,1,2),
+	DateTime.new(2013,3,29),
+	DateTime.new(2013,4,1),
+	DateTime.new(2013,5,9),
+	DateTime.new(2013,5,20),
+	DateTime.new(2013,8,1),
+	DateTime.new(2013,9,16),
+	DateTime.new(2013,12,25)
+	}
+
   def distance_of_time_in_days(from_time, to_time = 0, inclusive = true)
     from_time = from_time.to_time if from_time.respond_to?(:to_time)
     if inclusive then
@@ -25,7 +37,7 @@ class DateTools
     end
 
     while (inicio.to_time <= fin.to_time ) do
-      if inicio.cwday != 7 && inicio.cwday != 6 then
+      if inicio.cwday < 6 && !@holidays.include?(inicio) then
           days = days + 1
       end
       
@@ -38,7 +50,7 @@ end
     fecha = fecha.to_date if fecha.respond_to?(:to_date)
     while days > 0
       fecha = fecha.next
-      if fecha.cwday < 6 then
+      if fecha.cwday < 6 && !@holidays.include?(fecha) then
         days = days - 1
       end
       

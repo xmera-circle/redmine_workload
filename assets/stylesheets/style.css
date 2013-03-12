@@ -19,9 +19,9 @@
 .controller-work_load .workload.day span.tarea2.total { float:left; background:url(../images/tarea2.png) repeat-y left; padding-left:30px; height:25px; width:100%; text-indent:-9999px;}
 .controller-work_load .workload.day span.tarea3.total { float:left; background:url(../images/tarea3.png) repeat-y left; padding-left:30px; height:25px; width:100%; text-indent:-9999px;}
 .controller-work_load .workload.day span.tarea4.total { float:left; background:url(../images/tarea4.png) repeat-y left; padding-left:30px; height:25px; width:100%; text-indent:-9999px;}
-.controller-work_load .workload.day span.tarea5.total { float:left; background:url(../images/tarea5.png) repeat-y left; padding-left:30px; height:25px; width:100%; text-indent:-9999px;}
-.controller-work_load .workload.day span.tarea6.total { float:left; background:url(../images/tarea6.png) repeat-y left; padding-left:30px; height:25px; width:100%; text-indent:-9999px;}
-.controller-work_load .workload.day span.tarea7.total { float:left; background:url(../images/tarea7.png) repeat-y left; padding-left:30px; height:25px; width:100%; text-indent:-9999px;}
+.controller-work_load .workload.day span.tarea5.total { float:left; background:url(../images/tarea5.png) repeat-y left; padding-left:0px; text-align: center; padding-top:7px; height:18px; font-size:10px; width:100%; color:#ffffff; text-indent:0px;}
+.controller-work_load .workload.day span.tarea6.total { float:left; background:url(../images/tarea6.png) repeat-y left; padding-left:0px; text-align: center; padding-top:7px; height:18px; font-size:10px; width:100%; color:#ffffff; text-indent:0px;}
+.controller-work_load .workload.day span.tarea7.total { float:left; background:url(../images/tarea7.png) repeat-y left; padding-left:0px; text-align: center; padding-top:7px; height:18px; font-size:10px; width:100%; color:#ffffff; text-indent:0px;}
 .controller-work_load .workload.day span.tarea8.total { float:left; background:url(../images/tarea8.png) repeat-y left; padding-left:0px; text-align: center; padding-top:7px; height:18px; font-size:10px; width:100%; color:#ffffff; text-indent:0px;}
 .controller-work_load .workload.day span.tarea9.total { float:left; background:url(../images/tarea_11.png) repeat-y left; padding-left:0px; text-align: center; padding-top:7px; height:18px; font-size:10px; width:100%; color:#f53705; text-indent:0px;}
 .controller-work_load .workload.day span.tarea_a.total { float:left; background:url(../images/tarea9.png) repeat-y left; padding-left:30px; height:25px; width:100%; text-indent:-9999px;}
