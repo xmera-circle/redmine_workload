@@ -3,8 +3,8 @@ class DateTools
  @holidays = {}
 	
  def init_holidays()
-	@holidays[DateTime.new(2013,1,1)] = true
-	@holidays[DateTime.new(2013,3,29)] = true
+	@holidays[DateTime.new(2013,1,1).strftime("%Y-%m-%d")] = true
+	@holidays[DateTime.new(2013,3,29).strftime("%Y-%m-%d")] = true
 	#DateTime.new(2013,1,1),
 	#DateTime.new(2013,1,2),
 	#DateTime.new(2013,3,29),
@@ -41,7 +41,7 @@ class DateTools
     end
 
     while (inicio.to_time <= fin.to_time ) do
-      if (inicio.cwday < 6 && !@holidays.include?(inicio) )then
+      if (inicio.cwday < 6 && !@holidays.include?(inicio.strftime("%Y-%m-%d")) )then
           days = days + 1
       end
       
@@ -54,7 +54,7 @@ end
     fecha = fecha.to_date if fecha.respond_to?(:to_date)
     while days > 0
       fecha = fecha.next
-      if (fecha.cwday < 6 && !@holidays.include?(fecha) ) then
+      if (fecha.cwday < 6 && !@holidays.include?(fecha.strftime("%Y-%m-%d")) ) then
         days = days - 1
       end
       
