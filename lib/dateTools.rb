@@ -1,20 +1,20 @@
 class DateTools
-/*
-  @holidays = {}
+
+ # @holidays = {}
 	
-  def init_holidays()
-	@holidays[DateTime.new(2013,1,1)] = true
-	DateTime.new(2013,1,1),
-	DateTime.new(2013,1,2),
-	DateTime.new(2013,3,29),
-	DateTime.new(2013,4,1),
-	DateTime.new(2013,5,9),
-	DateTime.new(2013,5,20),
-	DateTime.new(2013,8,1),
-	DateTime.new(2013,9,16),
-	DateTime.new(2013,12,25)
-  end
-*/
+ # def init_holidays()
+	#@holidays[DateTime.new(2013,1,1)] = true
+	#DateTime.new(2013,1,1),
+	#DateTime.new(2013,1,2),
+	#DateTime.new(2013,3,29),
+	#DateTime.new(2013,4,1),
+	#DateTime.new(2013,5,9),
+	#DateTime.new(2013,5,20),
+	#DateTime.new(2013,8,1),
+	#DateTime.new(2013,9,16),
+	#DateTime.new(2013,12,25)
+ # end
+
   def distance_of_time_in_days(from_time, to_time = 0, inclusive = true)
     from_time = from_time.to_time if from_time.respond_to?(:to_time)
     if inclusive then
