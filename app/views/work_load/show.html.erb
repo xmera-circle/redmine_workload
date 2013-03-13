@@ -150,18 +150,17 @@ end %>
 
 						left   = 0
 						height = g_height + header_heigth - 1
-						cday   = @gantt.date_from
+						wday   = @gantt.date_from.cwday
 
 						(@gantt.date_to - @gantt.date_from + 1).to_i.times do 
 							width = zoom - 1
-							gray = holidays.include?(cday.strftime("%Y-%m-%d") ) ? 1 : 0
-							%><div style="left:<%= left %>px;top:37px;width:<%= width %>px;height:<%= height %>px;font-size:0.7em;<%= "background:#f1f1f1;" if gray == 1 %>" class="gantt_hdr">
-								<%= day_name(cday.cwday).first %>
+							%><div style="left:<%= left %>px;top:37px;width:<%= width %>px;height:<%= height %>px;font-size:0.7em;" class="gantt_hdr">
+								<%= day_name(wday).first %>
 							</div><% 
 
 							left = left + width+1
-							cday = cday.next
-							#wday = 1 if wday > 7
+							wday = wday + 1
+							wday = 1 if wday > 7
 						end
 
 					end
@@ -392,6 +391,8 @@ end %>
 								dia[x] = "tarea#{level}"
 							end	
 						end
+					elsif (holidays.include?(current_day.strftime("%Y-%m-%d"))) then
+						dia[x] = "tarea_a"
 					end
 
 					current_day = current_day.next
