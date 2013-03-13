@@ -1,6 +1,6 @@
 class DateTools
 
- @holidays = ["2013-01-01","2013-03-29"]
+ $holidays = ["2013-01-01","2013-03-29"]
 	
  #def init_holidays()
 	#@holidays = ["2013-01-01","2013-03-29"]
@@ -41,7 +41,7 @@ class DateTools
     end
 
     while (inicio.to_time <= fin.to_time ) do
-      if (inicio.cwday < 6 && !@holidays.include?(inicio.strftime("%Y-%m-%d") )then
+      if (inicio.cwday < 6 && !$holidays.include?(inicio.strftime("%Y-%m-%d") )then
           days = days + 1
       end
       
