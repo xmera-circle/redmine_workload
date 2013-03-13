@@ -1,10 +1,10 @@
 class DateTools
 
- @holidays = {}
+ @holidays = ["2013-01-01","2013-03-29"]
 	
- def init_holidays()
-	@holidays[DateTime.new(2013,1,1).strftime("%Y-%m-%d")] = true
-	@holidays[DateTime.new(2013,3,29).strftime("%Y-%m-%d")] = true
+ #def init_holidays()
+	#@holidays = ["2013-01-01","2013-03-29"]
+	#@holidays[DateTime.new(2013,3,29).strftime("%Y-%m-%d")] = true
 	#DateTime.new(2013,1,1),
 	#DateTime.new(2013,1,2),
 	#DateTime.new(2013,3,29),
@@ -14,7 +14,7 @@ class DateTools
 	#DateTime.new(2013,8,1),
 	#DateTime.new(2013,9,16),
 	#DateTime.new(2013,12,25)
- end
+ #end
 
   def distance_of_time_in_days(from_time, to_time = 0, inclusive = true)
     from_time = from_time.to_time if from_time.respond_to?(:to_time)
@@ -41,7 +41,7 @@ class DateTools
     end
 
     while (inicio.to_time <= fin.to_time ) do
-      if (inicio.cwday < 6  )then
+      if (inicio.cwday < 6 && !@holidays.include?(inicio.strftime("%Y-%m-%d") )then
           days = days + 1
       end
       
