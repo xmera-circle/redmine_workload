@@ -54,7 +54,7 @@ end
     fecha = fecha.to_date if fecha.respond_to?(:to_date)
     while days > 0
       fecha = fecha.next
-      if (fecha.cwday < 6  !$holidays.include?(fecha.strftime("%Y-%m-%d") )) then
+      if (fecha.cwday < 6 && !$holidays.include?(fecha.strftime("%Y-%m-%d") )) then
         days = days - 1
       end
       
