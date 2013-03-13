@@ -7,6 +7,7 @@ show_weeks = true
 show_days = true
 headers_height = 3*header_heigth
 zoom = 16
+holidays = ["2013-01-01","2013-01-02","2013-03-29","2013-04-01","2013-05-09","2013-05-20","2013-08-01","2013-09-16","2013-12-25"]
 
 g_width = (@gantt.date_to - @gantt.date_from + 1)*zoom
 g_height = [(20 * (10 + 6))+150, 206].max
@@ -154,7 +155,7 @@ end %>
 						(@gantt.date_to - @gantt.date_from + 1).to_i.times do 
 							width = zoom - 1
 						
-							%><div style="left:<%= left %>px;top:37px;width:<%= width %>px;height:<%= height %>px;font-size:0.7em;<%= "background:#f1f1f1;" if (cday.cwday > 5 || $holidays.include?(cday.strftime("%Y-%m-%d"))) %>" class="gantt_hdr">
+							%><div style="left:<%= left %>px;top:37px;width:<%= width %>px;height:<%= height %>px;font-size:0.7em;<%= "background:#f1f1f1;" if (cday.cwday > 5 || holidays.include?(cday.strftime("%Y-%m-%d"))) %>" class="gantt_hdr">
 								<%= day_name(cday.cwday).first %>
 							</div><% 
 
