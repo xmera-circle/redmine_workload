@@ -113,7 +113,8 @@ end %>
 							week_f = @gantt.date_from
 						else
 							# find next monday after @date_from
-							week_f = @gantt.date_from + (7 - @gantt.date_from.cwday + 1)
+							# week_f = @gantt.date_from + (7 - @gantt.date_from.cwday + 1)
+							week_f = @gantt.date_from - @gantt.date_from.cwday
 							width = (7 - @gantt.date_from.cwday + 1) * zoom-1
 							%><div style="left:<%= left %>px;top:19px;width:<%= width %>px;height:<%= height %>px;" class="gantt_hdr">&nbsp;</div><%
 							left = left + width+1
