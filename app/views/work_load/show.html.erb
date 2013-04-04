@@ -111,7 +111,7 @@ end %>
 						if @gantt.date_from.cwday == 1
 							# @date_from is monday
 							week_f = @gantt.date_from
-						else if @gantt.date_from.cwday > 5
+						elsif @gantt.date_from.cwday > 5
 							week_f = @gantt.date_from + (7 - @gantt.date_from.cwday + 1)
 							width = (7 - @gantt.date_from.cwday + 1) * zoom-1
 							%><div style="left:<%= left %>px;top:19px;width:<%= width %>px;height:<%= height %>px;" class="gantt_hdr">&nbsp;</div><%
