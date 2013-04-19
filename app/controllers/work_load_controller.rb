@@ -29,7 +29,7 @@ class WorkLoadController < ApplicationController
     retrieve_query
     @gantt.query = @query if @query.valid? 
 
-    @usuarios   = (!params[:usuarios_id].nil?) ?  User.find_all_by_id(params[:usuarios_id]) : User.active
+    @usuarios   = (!params[:usuarios_id].nil?) ?  User.find_all_by_id(params[:usuarios_id].split(',')) : [User.current]
     @utils      = ListingUser.new(IssueStatus.find_all_by_is_closed(false, :select => 'id').map(&:id))
     @total_days = @utils.tools.distance_of_time_in_days(@gantt.date_from, @gantt.date_to)
 
@@ -49,6 +49,10 @@ class WorkLoadController < ApplicationController
       @barras_days.push( 16 * @utils.tools.distance_of_time_in_days( @gantt.date_from.to_date.strftime("%Y-%m-%d"), current_date.to_date.end_of_month.strftime("%Y-%m-%d") ) )
       current_date = current_date.to_date.end_of_month + 1
     end
+
+  end
+
+  def sort_clear
 
   end
 
