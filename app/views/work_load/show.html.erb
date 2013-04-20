@@ -51,22 +51,24 @@ form_tag({
 		<label><%= l(:workload_show_filter_user) %></label>
 		<select name='usuarios_id[]' multiple='true'> <%
 
+			@userIds = @usuarios.collect {|item| item.id}
+
 			User.active.each do |user|
-				%><option <%=(@usuarios.include?(user.id.to_s) ) ? 'selected="selected"' : ''%> value='<%=user.id%>'><%=user.firstname%> <%=user.lastname%></option><%
+				%><option <%=(@userIds.include?(user.id) ) ? 'selected="selected"' : ''%> value='<%=user.id%>'><%=user.firstname%> <%=user.lastname%></option><%
 			end
 		%></select>
 	</div>
 	<div class="issues">
 		<span>
 			<input type="hidden" name="show_issues" value="0" />
-			<input type="checkbox" <%=(params[:show_issues]== "1") ? 'checked="checked"' : ''%> id="cb_issues_id" name="show_issues" value="1" />
+			<input type="checkbox" <%=(Integer(params[:show_issues]) == 1) ? 'checked="checked"' : ''%> id="cb_issues_id" name="show_issues" value="1" />
 			<label for="cb_status_id"><%= l(:workload_show_issues) %></label>
 		</span>
 	</div>
-	<%= link_to_function l(:button_apply), '$("query_form").submit()', :class => 'icon icon-checked' %>
-</form><%
-
-end %>
+	<%= link_to_function l(:button_apply), 'jQuery("#query_form").submit()', :class => 'icon icon-checked' %>
+<%
+end
+%>
 
 <%= error_messages_for 'query' %>
 <div class="all">
@@ -190,10 +192,7 @@ end %>
 
 				%><div class="userworkload">
 				<div class="user_name">
-					<%= form_tag({:controller => 'work_load', :action => 'show'},:method => :get,:id => 'show_issues_form_'+"#{user.id}", :class  => 'content_form') do %>
-					<input type="hidden" name="show_issues" value="<%=user.id%>">
-					<span class="username" onclick="document.getElementById('show_issues_form_'+<%=user.id%>).submit();"><%="#{user.firstname} #{user.lastname}"%></span>
-					<%end%>
+					<span class="username"><%="#{user.firstname} #{user.lastname}"%></span>
 				</div><%
 
 				#remanentes_by_user[user.id]        = @utils.getRemanente(user.id, @fecha_actual)
@@ -219,7 +218,7 @@ end %>
 					workload_by_user[user.id].push(calculos[issue.id].dias_y_time_restantes)
 					len = 37 - ( issue.id.to_s.length - 1 )
 
-					if (user.id == Integer(params[:show_issues])) then
+					if 1 == Integer(params[:show_issues]) then
 
 						%><div class="user_each_hours" id="_<%=issue.id%>">
 							<span class="<%= (@utils.issue_is_parent(issue)) ? 'tarea5' : "tarea#{calculos[issue.id].getTiming()}" %>"><a href="../issues/<%=issue.id%>" title="#<%=issue.id%>" class="tareas">#<%=issue.id%></a>&nbsp;<%=(issue.subject.length > len ) ? issue.subject[0, len] : issue.subject%></span>
@@ -278,7 +277,7 @@ end %>
 				end
 			end
 
-			if (Integer(params[:show_issues]) == user.id) then
+			if 1 == Integer(params[:show_issues]) then
 
 				%><div class="user_total_hours">
 					<span class="remanente"><strong><%=total_rem_by_user[user.id]%>h</strong> <%= l(:workload_show_user_total_hours_remaining) %></span><%
@@ -416,7 +415,7 @@ end %>
 				counter     = 1
 				issues_by_user[user.id].each do |issue|
 
-					if ( Integer(params[:show_issues]) == user.id ) then
+					if ( Integer(params[:show_issues]) == 1 ) then
 						current_day = current_week.to_date
 
 						%><div class="workload tarea _<%=issue.id%>">
@@ -459,7 +458,7 @@ end %>
 						</div>
 					</div><%
 
-					elsif Integer(params[:show_issues]) == user.id
+					elsif Integer(params[:show_issues]) == 1
 
 						%><div class="workload tarea tarea1"></div><%
 
@@ -472,7 +471,7 @@ end %>
 					counter = counter + 1
 				end
 
-				if issues_remanentes_by_user[user.id].length > 0 && Integer(params[:show_issues]) == user.id  then
+				if issues_remanentes_by_user[user.id].length > 0 && Integer(params[:show_issues]) == 1  then
 
 					%><div class="workload tarea undefined">
 						<div class="workload tarea undefined header"></div><%
