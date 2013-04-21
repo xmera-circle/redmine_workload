@@ -83,11 +83,11 @@
 .controller-work_load .timing_graph .retard { width:80px; float:left; padding-left:20px; background: url(../images/retard2.png) no-repeat left;}
 .controller-work_load .timing_graph .retard2 { width: 100px; float:left; padding-left:20px; background: url(../images/retard.png) no-repeat left;}
 .controller-work_load .timing_graph .no_time { width:80px; float:left; padding-left:20px; background: url(../images/clock.png) no-repeat left;}
-.controller-work_load .timing_graph .father { width:170px; float:left; padding-left:20px; background: url(../images/tarea_padre.png) no-repeat left;}
+.controller-work_load .timing_graph .father { float:left; padding: 5px 0 5px 20px; background: url(../images/tarea_padre.png) no-repeat left;}
 .controller-work_load .tareas {float:left;}
 
 .controller-work_load .blue { background:url(../images/tarea9_border.png) no-repeat left; padding-left:40px; float:left; margin-bottom:5px; width:20%; min-width:100px;}
-.controller-work_load .gray { background:url(../images/tarea10_border.png) no-repeat left; padding-left:40px; float:left;margin-bottom:5px; width:14%;}
+.controller-work_load .gray { background:url(../images/tarea10_border.png) no-repeat left; padding-left:40px; float:left;margin-bottom:5px;}
 
 
 .controller-work_load #today { background: #E5352C; position:relative; left:463px; width:3px;}
@@ -278,7 +278,7 @@ span.username:hover {text-decoration: underline; }
  
 /* Modificaciones 19/07/2011 */
 
-.controller-work_load .black { background:url(../images/tarea11.png) no-repeat left; padding-left:40px; float:left;width:30%;}
+.controller-work_load .black { background:url(../images/tarea11.png) no-repeat left; padding-left:40px; float:left; margin-left: 50px;}
 .controller-work_load .gantt_hdr.month_bg1 { background: #cccccc;}
 .controller-work_load .gantt_hdr.month_bg1 a { color: #ffffff;}
 .controller-work_load .undefined { margin-top:20px !important; float:left; height:auto !important;}
