@@ -1,5 +1,5 @@
-# English strings go here
-en:
+# German strings go here
+de:
   workload_title: "Workload"
   workload_show_label: "Workload"
   workload_show_poweredby: "Powered by"
