@@ -5,18 +5,14 @@ require_dependency 'calculos_tareas'
 
 Redmine::Plugin.register :redmine_workload do
   name 'Redmine Workload plugin'
-  author 'Yann Bogdanovic'
-  description 'This is a plugin for Redmine Workload originaly developped by Dnoise Rafael Calleja'
-  version '0.1.0'
-  url 'https://github.com/ianbogda/redmine_workload'
+  author 'Yann Bogdanovic, Jost Baron'
+  description 'This is a plugin for Redmine, originally developed by Dnoise Rafael Calleja'
+  version '0.2.0'
+  url 'https://github.com/JostBaron/Redmine-Workload-Dnoise'
   author_url 'http://www.d-noise.net/'
-  
-  project_module :workload do
-    permission :WorkLoad, {:work_load => [:show ] }
-  end
 
   menu :top_menu, :WorkLoad, { :controller => 'work_load', :action => 'show' }, :caption => :workload_title,
-    :if =>  Proc.new { User.current.admin? }
+    :if =>  Proc.new { User.current.logged? }
 
 end
 

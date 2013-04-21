@@ -9,9 +9,6 @@ class WorkLoadController < ApplicationController
 
   include QueriesHelper
 
-  before_filter :authorize_global, :except => [:show]
-  before_filter :authorize_global, :only   => [:show]
-
   def show
     
     @fecha_actual = ( !params[:fecha_actual].nil? && params[:fecha_actual].respond_to?(:to_date)  ) ? params[:fecha_actual].gsub('/', '-').to_date.strftime("%Y-%m-%d") : DateTime.now.strftime("%Y-%m-%d")
