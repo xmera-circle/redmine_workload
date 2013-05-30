@@ -42,7 +42,7 @@ class CalculosTareas
       #@hdias_restantes = @datetools.stimated_days(@hrestantes, @dias_restantes - @dias_trabajados_virtuales + 1);
       @dias_trabajados_virtuales.times {
       |x|
-       dia = @datetools.add_commercial_days(@finicio, x)
+       dia = @datetools.addCommercialDays(@finicio, x)
        @dias_azules[dia] = true
        
        
@@ -84,7 +84,7 @@ class CalculosTareas
         tiempo_estimado_dedicado = (horas_al_dia > 0 && horas_dedicadas > 0 ) ? (horas_dedicadas / horas_al_dia).round : 0
        dias_trabajados.times{
         |i|
-        day = @datetools.add_commercial_days(finicio, i)
+        day = @datetools.addCommercialDays(finicio, i)
         if( day.to_time >= @finicio.to_time && day.to_time <= @ffin.to_time && day.to_time < @factual.to_time  ) then
           #dias_y_time[day] = (counter <= tiempo_estimado_dedicado ) ?  9 : 10
           #dias_y_time[day] = 0
@@ -195,7 +195,7 @@ class CalculosTareas
 
        num_dias.times{
         |i|
-        day = @datetools.add_commercial_days(start_date, i)
+        day = @datetools.addCommercialDays(start_date, i)
         if( day.to_time >= @finicio.to_time && day.to_time <= @ffin.to_time && horas_al_dia > 0 ) then
           #dias_y_time[day] = (@dias_azules.include?(day) ) ? 0 : horas_al_dia
           dias_y_time[day] = (@parent == false) ? horas_al_dia : 0 
