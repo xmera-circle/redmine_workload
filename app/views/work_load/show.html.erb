@@ -51,7 +51,7 @@ form_tag({
 		<label><%= l(:workload_show_filter_user) %></label>
 		<select name='usuarios_id[]' multiple='true'> <%
 
-			@userIds = @usuarios.collect {|item| item.id}
+			@userIds = @usersToDisplay.collect {|item| item.id}
 
 			User.active.each do |user|
 				%><option <%=(@userIds.include?(user.id) ) ? 'selected="selected"' : ''%> value='<%=user.id%>'><%=user.firstname%> <%=user.lastname%></option><%
@@ -186,7 +186,7 @@ end
 			workload_by_user          = {}
 			total_rem_by_user         = {}
 
-			@usuarios.each do |user|
+			@usersToDisplay.each do |user|
 
 				workload_by_user[user.id] = []
 
@@ -364,7 +364,7 @@ end
 		%></div>
 		<div class="all_users_workload" style="background-position:<%=pos_background%>px 0px"><%
 
-		@usuarios.each do |user|
+		@usersToDisplay.each do |user|
 			workload = @utils.sumIssuesTimes(workload_by_user[user.id])
 										
 			%><div class="total_user_workload"><%
