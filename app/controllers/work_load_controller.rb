@@ -30,10 +30,10 @@ class WorkLoadController < ApplicationController
     @utils      = ListingUser.new(IssueStatus.find_all_by_is_closed(false, :select => 'id').map(&:id))
     @totalDays = @utils.tools.distance_of_time_in_days(@gantt.date_from, @gantt.date_to)
 
-    @dias_hasta_el_lunes = (( 7 - @gantt.date_from.cwday ) + 1)
+    @daysUntilMonday = (( 7 - @gantt.date_from.cwday ) + 1)
     @lunes               = @gantt.date_from.to_date
 
-    @dias_hasta_el_lunes.times do
+    @daysUntilMonday.times do
 		@lunes = @lunes.next
 	end
 
