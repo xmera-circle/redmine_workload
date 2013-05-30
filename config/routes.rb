@@ -5,4 +5,3 @@ if Rails::VERSION::MAJOR < 3
 else
   match 'work_load/(:action(/:id))', :controller => 'work_load'
 end
-

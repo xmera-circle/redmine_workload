@@ -19,13 +19,13 @@ class DateTools
   def self.distance_of_time_in_days(from_time, to_time = 0, inclusive = true)
     from_time = from_time.to_time if from_time.respond_to?(:to_time)
     if inclusive then
-      from_time = from_time - 86400 
+      from_time = from_time - 86400
     end
     to_time = to_time.to_time if to_time.respond_to?(:to_time)
     distance_in_days = (((to_time.to_i - from_time.to_i).abs)/86400).round
     return (from_time > to_time ) ? "-#{distance_in_days}".to_i : distance_in_days
   end
-  
+
   def self.stimated_days(  hours, days )
     return hours/days
   end
@@ -35,14 +35,14 @@ class DateTools
     lastDay = lastDay.to_date   if lastDay.respond_to?(:to_date)
 
     workingDays = self::getWorkingDays()
-    
+
     days = 0
 
     while (firstDay <= lastDay ) do
       if workingDays.include?(firstDay.cwday) then
           days += 1
       end
-      
+
       firstDay = firstDay.next
     end
 
@@ -57,7 +57,7 @@ class DateTools
         days = days - 1
       end
     end
-    
+
     return fecha.strftime("%Y-%m-%d")
   end
 end

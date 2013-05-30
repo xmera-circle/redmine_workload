@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper', __FILE__)
 class DateToolsTest < ActiveSupport::TestCase
 
   test "getRealDistanceInDays returns 1 if start and end day are equal and no holiday." do
-    
+
     # Set friday to be a working day.
     Setting.plugin_redmine_workload['general_workday_friday'] = 'checked';
 
@@ -21,7 +21,7 @@ class DateToolsTest < ActiveSupport::TestCase
   end
 
   test "getRealDistanceInDays returns 0 if start day before end day." do
-    
+
     startDate = Date.new(2005, 12, 30); # A friday
     endDate = Date.new(2005, 12, 28);   # A wednesday
     assert_equal 0, DateTools::getRealDistanceInDays(startDate, endDate);

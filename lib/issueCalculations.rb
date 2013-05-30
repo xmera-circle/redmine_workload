@@ -1,6 +1,6 @@
 class IssueCalculations
   attr_accessor :id, :finicio, :ffin, :factual, :fcierre, :hasignadas, :hdedicadas, :realizado, :priority, :duracion_tarea, :dias_restantes, :percent_dedicado, :eficacia_actual, :horas_dias, :difftiempo, :diffhoras, :hrestantes, :hdias_restantes, :start_date, :horas_dias_realizadas, :dias_trabajados, :dias_y_time_restantes,:percent_dias_dedicado, :percent_horas_dedicado, :dias_trabajados_virtuales
-  
+
   def initialize(id, finicio, ffin, hasignadas, hdedicadas, realizado, priority, factual = 0, parent = false)
 
     @id = id
@@ -8,13 +8,13 @@ class IssueCalculations
     @ffin = ffin.to_date.strftime("%Y-%m-%d")
     @factual = (factual == 0 ) ? DateTime.now.strftime("%Y-%m-%d") : factual.to_date.strftime("%Y-%m-%d")
     @parent = parent
-    
+
     if (@finicio.to_time > @factual.to_time ) then
       @start_date = @finicio
     else
       @start_date = @factual
     end
-    
+
     @hasignadas =  hasignadas
     @hdedicadas =  hdedicadas
     @realizado =  realizado
@@ -29,10 +29,10 @@ class IssueCalculations
     @eficacia_actual = eficacia_actual
     @horas_dias = horas_by_day
     @hrestantes = @hasignadas - @hdedicadas
-    
-    @dias_trabajados =  trabajados 
+
+    @dias_trabajados =  trabajados
     @dias_trabajados_virtuales = virtuales
-    
+
     @dias_azules = {}
     @dias_grises = {}
     @dias_restar = {}
@@ -43,41 +43,41 @@ class IssueCalculations
       |x|
        dia = DateTools::addCommercialDays(@finicio, x)
        @dias_azules[dia] = true
-       
-       
+
+
       }
-    
-      
+
+
     end
-    
-    
+
+
     #@horas_dias_realizadas = horas_by_day_realizadas(@hdedicadas, @dias_trabajados)
-    
+
    # if(@dias_trabajados_virtuales > 0)then
    #   @factual = (@factual.to_time+(86400*@dias_trabajados_virtuales)).to_date.strftime("%Y-%m-%d")
-   #   @start_date = @factual 
+   #   @start_date = @factual
    # end
-    
+
     @dias_y_time_restantes = TimeDaysIssues(@dias_restantes, @hdias_restantes, @start_date)
     if (@finicio.to_time < @factual.to_time ) then
       @dias_y_time_realizados =  asignar_horas_trabajadas_a_dias_trabajdos(@dias_trabajados, @hdedicadas, @horas_dias, @finicio)
-      @dias_y_time_restantes = @dias_y_time_restantes.merge(@dias_y_time_realizados)  
+      @dias_y_time_restantes = @dias_y_time_restantes.merge(@dias_y_time_realizados)
     end
-    
-    
+
+
   end
-  
-  def virtuales 
+
+  def virtuales
     if (@hasignadas > 0 && @dias_restantes > 0 && @hdedicadas > 0 ) then
-       return  (@hdedicadas / ( @hasignadas / @dias_restantes )).round  
+       return  (@hdedicadas / ( @hasignadas / @dias_restantes )).round
     end
     return 0
   end
-  
-  
-  
+
+
+
   def asignar_horas_trabajadas_a_dias_trabajdos(dias_trabajados, horas_dedicadas, horas_al_dia, finicio)
-	
+
        dias_y_time = {}
         counter = 1
         tiempo_estimado_dedicado = (horas_al_dia > 0 && horas_dedicadas > 0 ) ? (horas_dedicadas / horas_al_dia).round : 0
@@ -89,72 +89,72 @@ class IssueCalculations
           #dias_y_time[day] = 0
           if (counter > tiempo_estimado_dedicado && !@dias_azules.include?(day) ) then
             @dias_grises[day] = true
-            
+
           else
             @dias_azules[day] = true
           end
           @dias_y_time_restantes[day] = 0
           counter = counter + 1
         end
-          
+
        }
-      return dias_y_time  
+      return dias_y_time
   end
-  
+
   def horas_by_day
     return DateTools::stimated_days(@hasignadas, @duracion_tarea);
   end
-  
+
   def horas_by_day_realizadas
     return DateTools::stimated_days(@hasignadas, @duracion_tarea);
   end
-  
+
   def duracion
     return DateTools::getRealDistanceInDays(@finicio, @ffin)
   end
-  
+
   def trabajados
     return DateTools::getRealDistanceInDays(@finicio, @factual)
   end
-  
+
   def restantes
     return DateTools::getRealDistanceInDays(@start_date, @ffin)
   end
-  
+
   def percent_dedicado
     return (@duracion_tarea > 0 ) ? (( @duracion_tarea - @dias_restantes  ) * 100) / @duracion_tarea : 0
   end
-  
+
   def diff_horas
      return @realizado - @percent_horas_dedicado
   end
-  
+
   def diff_tiempo
      return @realizado -  @percent_dias_dedicado
   end
-  
+
   def eficacia_actual
     return  @difftiempo + @diffhoras
   end
-  
+
   def getTiming(perfecto = 30, entiempo = -10 , retraso = -30 )
-	
+
     if @eficacia_actual >= perfecto
         return 1
-    elsif  @eficacia_actual > entiempo  
+    elsif  @eficacia_actual > entiempo
         return 2
-    elsif  @eficacia_actual > retraso 
+    elsif  @eficacia_actual > retraso
         return 3
     else
         return 4
     end
 
   end
-  
-  
+
+
   def tengo_trabajo(dia)
-	
-    5.times do 
+
+    5.times do
       if( dia.to_time >= @finicio.to_time && dia.to_time <= @ffin.to_time ) then
         return true
       end
@@ -162,7 +162,7 @@ class IssueCalculations
     end
     return false
   end
-  
+
   def get_load_by_day(dia)
 
       if( dia.to_time >= @finicio.to_time && dia.to_time <= @ffin.to_time ) then
@@ -187,9 +187,9 @@ class IssueCalculations
       end
       return 0
   end
-  
+
   def TimeDaysIssues(num_dias, horas_al_dia, start_date)
-	
+
        dias_y_time = {}
 
        num_dias.times{
@@ -197,7 +197,7 @@ class IssueCalculations
         day = DateTools::addCommercialDays(start_date, i)
         if( day.to_time >= @finicio.to_time && day.to_time <= @ffin.to_time && horas_al_dia > 0 ) then
           #dias_y_time[day] = (@dias_azules.include?(day) ) ? 0 : horas_al_dia
-          dias_y_time[day] = (@parent == false) ? horas_al_dia : 0 
+          dias_y_time[day] = (@parent == false) ? horas_al_dia : 0
           if @parent == true then
             @dias_restar[day] = horas_al_dia
           end
@@ -206,7 +206,7 @@ class IssueCalculations
       return dias_y_time
       #dias_y_time
   end
-  
-  
- 
+
+
+
 end

@@ -10,7 +10,7 @@ class WorkLoadController < ApplicationController
   include QueriesHelper
 
   def show
-    
+
     @currentDay = ( !params[:fecha_actual].nil? && params[:fecha_actual].respond_to?(:to_date)  ) ? params[:fecha_actual].gsub('/', '-').to_date.strftime("%Y-%m-%d") : DateTime.now.strftime("%Y-%m-%d")
 
     if ( params[:month].nil? ||   params[:months].nil? ||  params[:year].nil?   ) then
@@ -24,7 +24,7 @@ class WorkLoadController < ApplicationController
     @gantt = Redmine::Helpers::Gantt.new(params)
 
     retrieve_query
-    @gantt.query = @query if @query.valid? 
+    @gantt.query = @query if @query.valid?
 
     @usersToDisplay   = (!params[:usuarios_id].nil?) ?  User.find_all_by_id(params[:usuarios_id].split(',')) : []
     @utils      = ListUser.new(IssueStatus.find_all_by_is_closed(false, :select => 'id').map(&:id))
@@ -62,5 +62,5 @@ protected
       render_403
     end
   end
-  
+
 end

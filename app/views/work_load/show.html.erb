@@ -43,7 +43,7 @@ form_tag({
 		<span>
 			<label><%= l(:workload_show_calendar_today) %></label>
 			<input type="text" value="<%=@currentDay.to_date.strftime("%d/%m/%Y")%>" autocomplete="off" class="campofecha" id="date1" name="fecha_actual">
-			<span class="calendar_icon"><%= l(:workload_show_calendar_calendar) %></span> 
+			<span class="calendar_icon"><%= l(:workload_show_calendar_calendar) %></span>
 		</span>
 	</div>
 
@@ -88,9 +88,9 @@ end
 						klass = 'month_bg1'
 						if (counter%2 == 0 ) then
 							klass = ''
-						end 
+						end
 						width = ((month_f >> 1) - month_f) * zoom - 1
-						
+
 						%><div style="left:<%= left.to_i %>px;width:<%= width.to_i %>px;height:<%= height.to_i %>px;" class="gantt_hdr <%=klass%>">
 								<%="#{month_name(month_f.month)} #{month_f.year}"%>
 						</div><%
@@ -137,10 +137,10 @@ end
 
 								%><div class="day"><%=s.day%></div><%
 
-								s = s.next	 
+								s = s.next
 							end
 
-							%></div><% 
+							%></div><%
 
 							left   = left + width+1
 							week_f = week_f+7
@@ -160,11 +160,11 @@ end
 						height = g_height + header_heigth - 1
 						wday   = @gantt.date_from.cwday
 
-						(@gantt.date_to - @gantt.date_from + 1).to_i.times do 
+						(@gantt.date_to - @gantt.date_from + 1).to_i.times do
 							width = zoom - 1
 							%><div style="left:<%= left %>px;top:37px;width:<%= width %>px;height:<%= height %>px;font-size:0.7em;" class="gantt_hdr">
 								<%= day_name(wday).first %>
-							</div><% 
+							</div><%
 
 							left = left + width+1
 							wday = wday + 1
@@ -224,28 +224,28 @@ end
 							<span class="<%= (@utils.issue_is_parent(issue)) ? 'tarea5' : "tarea#{calculos[issue.id].getTiming()}" %>"><a href="../issues/<%=issue.id%>" title="#<%=issue.id%>" class="tareas">#<%=issue.id%></a>&nbsp;<%=(issue.subject.length > len ) ? issue.subject[0, len] : issue.subject%></span>
 							<div class="info_widget">
 							<div class="proyecto">
-								<span><strong><%=Project.find(issue.project_id).name%></strong></span>				
+								<span><strong><%=Project.find(issue.project_id).name%></strong></span>
 							</div>
 							<div class="tarea<%=calculos[issue.id].getTiming()%>">
-								<span><strong>#<%=issue.id%> -</strong>&nbsp; <%=issue.subject%></span>				
-								</div>	
+								<span><strong>#<%=issue.id%> -</strong>&nbsp; <%=issue.subject%></span>
+								</div>
 								<div class="priority">
 									<span><strong><%= l(:workload_show_issue_priority) %>:</strong> <%=Enumeration.find(issue.priority_id).name%></span>
-								</div>	
+								</div>
 								<div class="date">
 									<span><strong><%= l(:workload_show_issue_date) %> -</strong> <%=issue.start_date.to_date.strftime("%d/%m/%Y") if issue.start_date.respond_to?(:to_date)%> - <%=issue.due_date.to_date.strftime("%d/%m/%Y") if issue.due_date.respond_to?(:to_date)%>
 									</span>
-								</div>	
+								</div>
 								<div class="a_hours">
 									<span><strong><%= l(:workload_show_issue_estimated_hours) %>:</strong> <%=issue.estimated_hours%></span>
-								</div>	
+								</div>
 								<div class="d_hours">
 									<span><strong><%= l(:workload_show_issue_spent_time) %>:</strong> <%=sum%></span>
 								</div>
 								<div class="separation"><hr /></div>
 								<div class="status">
 									<span><strong><%= l(:workload_show_issue_status) %>:</strong> <%=IssueStatus.find(issue.status_id).name%></span>
-								</div>	
+								</div>
 								<div class="percent"><div>
 								<strong><%= l(:workload_show_issue_percent_done) %>:</strong>
 								<div class="percent_div">
@@ -261,16 +261,16 @@ end
 								<span class="percent_text"><%=calculos[issue.id].percent_horas_dedicado.round%>%</span>
 							</div>
 						</div>
-						<div class="separation"><hr /></div>	
+						<div class="separation"><hr /></div>
 						<div class="dcr">
 							<span><strong><%= l(:workload_show_dcr) %>:</strong> <%=calculos[issue.id].difftiempo.round%>%</span>
-						</div>		
+						</div>
 						<div class="date">
 							<span><strong><%= l(:workload_show_date) %>:</strong> <%=calculos[issue.id].diffhoras.round%>%</span>
-						</div>	
+						</div>
 						<div class="a_hours">
 							<span><strong><%= l(:workload_show_a_hours) %>:</strong> <%=calculos[issue.id].eficacia_actual.round%></span>
-						</div>	
+						</div>
 					</div>
 				</div><%
 
@@ -300,28 +300,28 @@ end
 						</span>
 						<div class="info_widget">
 							<div class="proyecto">
-								<span><strong><%=Project.find(issue.project_id).name%></strong></span>				
+								<span><strong><%=Project.find(issue.project_id).name%></strong></span>
 							</div>
 							<div class="tarea1">
-								<span><strong>#<%=issue.id%> -</strong>&nbsp; <%=issue.subject%></span>				
-							</div>	
+								<span><strong>#<%=issue.id%> -</strong>&nbsp; <%=issue.subject%></span>
+							</div>
 							<div class="priority">
 								<span><strong><%= l(:workload_show_issue_priority) %>:</strong> <%=Enumeration.find(issue.priority_id).name%></span>
-							</div>	
+							</div>
 							<div class="date">
 								<span><strong><%= l(:workload_show_issue_date) %> -</strong> <%=issue.start_date.to_date.strftime("%d/%m/%Y") if issue.start_date.respond_to?(:to_date)%> - <%=issue.due_date.to_date.strftime("%d/%m/%Y") if issue.due_date.respond_to?(:to_date)%>
 								</span>
-							</div>	
+							</div>
 							<div class="a_hours">
 								<span><strong><%= l(:workload_show_issue_estimated_hours) %>:</strong> <%=issue.estimated_hours%></span>
-							</div>	
+							</div>
 							<div class="d_hours">
 								<span><strong><%= l(:workload_show_issue_spent_time) %>:</strong> <%=sum%></span>
 							</div>
 							<div class="separation"><hr /></div>
 							<div class="status">
 								<span><strong><%= l(:workload_show_issue_status) %>:</strong> <%=IssueStatus.find(issue.status_id).name%></span>
-							</div>	
+							</div>
 							<div class="percent">
 								<div>
 									<strong><%= l(:workload_show_issue_percent_done) %>:</strong>
@@ -338,16 +338,16 @@ end
 									<span class="percent_text">%</span>
 								</div>
 							</div>
-							<div class="separation"><hr /></div>	
+							<div class="separation"><hr /></div>
 							<div class="dcr">
 								<span><strong><%= l(:workload_show_dcr) %>:</strong> 0%</span>
-							</div>		
+							</div>
 							<div class="date">
 								<span><strong><%= l(:workload_show_date) %>:</strong> 0%</span>
-							</div>	
+							</div>
 							<div class="a_hours">
 								<span><strong><%= l(:workload_show_a_hours) %>:</strong> </span>
-							</div>	
+							</div>
 						</div>
 					</div><%
 
@@ -366,7 +366,7 @@ end
 
 		@usersToDisplay.each do |user|
 			workload = @utils.sumIssuesTimes(workload_by_user[user.id])
-										
+
 			%><div class="total_user_workload"><%
 
 			@numberOfWeeks.times do |c|
@@ -387,14 +387,14 @@ end
 					elsif (workload.has_key?(current_day.strftime("%Y-%m-%d"))) then
 						level = workload[current_day.strftime("%Y-%m-%d")].round
 						if current_day.to_time > @currentDay.to_time - 86400 then
-							execeded_time[x] = level	
+							execeded_time[x] = level
 							if level > 7 && level < 12 then
 								dia[x] = 'tarea8'
 							elsif level > 11 then
 								dia[x] = 'tarea9'
 							else
 								dia[x] = "tarea#{level}"
-							end	
+							end
 						end
 					elsif (holidays.include?(current_day.strftime("%Y-%m-%d"))) then
 						dia[x] = "tarea_a"
@@ -402,7 +402,7 @@ end
 
 					current_day = current_day.next
 				}
-											 
+
 				%><div class="workload week">
 					<div class="workload day"><span class="<%=dia[0]%> total"><%=execeded_time[0]%></span></div>
 					<div class="workload day"><span class="<%=dia[1]%> total"><%=execeded_time[1]%></span></div>
@@ -463,7 +463,7 @@ end
 						%><div class="workload tarea tarea1"></div><%
 
 					elsif counter_worksloads == true && Integer(params[:show_issues]) != user.id
-						counter_worksloads = false 
+						counter_worksloads = false
 
 						 %><div class="workload tarea"></div><%
 
@@ -476,7 +476,7 @@ end
 					%><div class="workload tarea undefined">
 						<div class="workload tarea undefined header"></div><%
 
-					issues_remanentes_by_user[user.id].each do |issue|  
+					issues_remanentes_by_user[user.id].each do |issue|
 						current_day = current_week.to_date
 
 						%><div class="workload tarea _<%=issue.id%>">
@@ -493,7 +493,7 @@ end
 						</div><%
 
 						current_day = current_day.next
-							
+
 						%><div class="workload day wed">
 							<span class="tarea <%=(@utils.issue_have_work(issue, current_day.strftime('%Y-%m-%d'))) ? 'tarea_u' :'blank' %>">
 							</span>
@@ -519,7 +519,7 @@ end
 					%></div><%
 
 				end
-										 
+
 				%></div><%
 
 			end
