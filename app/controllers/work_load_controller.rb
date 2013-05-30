@@ -37,7 +37,7 @@ class WorkLoadController < ApplicationController
 		  @monday = @monday.next
 	  end
 
-    @num_semanas = (@totalDays / 7).round
+    @numberOfWeeks = (@totalDays / 7).round
 
     current_date = @gantt.date_from
     final_date   = @gantt.date_to

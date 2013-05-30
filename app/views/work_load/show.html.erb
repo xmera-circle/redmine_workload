@@ -369,7 +369,7 @@ end
 										
 			%><div class="total_user_workload"><%
 
-			@num_semanas.times do |c|
+			@numberOfWeeks.times do |c|
 				current_week       = @monday.to_time + ( (  c  )  * ( 86400 * 7 ) )
 				current_day        = current_week.to_date
 				counter_worksloads = true
