@@ -28,7 +28,7 @@ class WorkLoadController < ApplicationController
 
     @usersToDisplay   = (!params[:usuarios_id].nil?) ?  User.find_all_by_id(params[:usuarios_id].split(',')) : []
     @utils      = ListingUser.new(IssueStatus.find_all_by_is_closed(false, :select => 'id').map(&:id))
-    @total_days = @utils.tools.distance_of_time_in_days(@gantt.date_from, @gantt.date_to)
+    @totalDays = @utils.tools.distance_of_time_in_days(@gantt.date_from, @gantt.date_to)
 
     @dias_hasta_el_lunes = (( 7 - @gantt.date_from.cwday ) + 1)
     @lunes               = @gantt.date_from.to_date
@@ -37,7 +37,7 @@ class WorkLoadController < ApplicationController
 		@lunes = @lunes.next
 	end
 
-    @num_semanas = (@total_days / 7).round
+    @num_semanas = (@totalDays / 7).round
 
     current_date = @gantt.date_from
     final_date   = @gantt.date_to
