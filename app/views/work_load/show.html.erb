@@ -3,8 +3,6 @@
 subject_width = 330
 header_heigth = 18
 headers_height = header_heigth
-show_weeks = true
-show_days = true
 headers_height = 3*header_heigth
 zoom = 16
 holidays = ["2013-01-01","2013-01-02","2013-03-29","2013-04-01","2013-05-09","2013-05-20","2013-08-01","2013-09-16","2013-12-25"]
@@ -80,24 +78,22 @@ end
 					#
 					# Months headers
 					#
-					month_f = @gantt.date_from
+					currentMonth = @gantt.date_from
 					left = 0
-					height = (show_weeks ? header_heigth : header_heigth + g_height)
-					counter = 1
-					@gantt.months.times do
-						klass = 'month_bg1'
-						if (counter%2 == 0 ) then
-							klass = ''
-						end
-						width = ((month_f >> 1) - month_f) * zoom - 1
+					height = header_heigth
+					@gantt.months.times do |i|
 
-						%><div style="left:<%= left.to_i %>px;width:<%= width.to_i %>px;height:<%= height.to_i %>px;" class="gantt_hdr <%=klass%>">
-								<%="#{month_name(month_f.month)} #{month_f.year}"%>
+                        # Class for month header
+						klass = (i % 2 == 0) ? ' month_bg1' : ''
+                        # Width is the number of days in that month, scaled by the width of a day.
+						width = Time::days_in_month(currentMonth.month, currentMonth.year) * zoom
+
+						%><div style="left:<%= left.to_i %>px;width:<%= width.to_i - 1 %>px;height:<%= height.to_i %>px;" class="gantt_hdr<%=klass%>">
+								<%="#{month_name(currentMonth.month)} #{currentMonth.year}"%>
 						</div><%
 
-						left = left + width + 1
-						month_f = month_f >> 1
-						counter = counter + 1
+						left += width
+						currentMonth = currentMonth.next_month
 					end
 				%></div>
 				<div class="days_per_month" style='position:absolute;'><%
@@ -105,47 +101,19 @@ end
 					#
 					# Weeks headers
 					#
-					if show_weeks
+                    currentDay = @gantt.date_from
 
-						left   = 0
-						height = (show_days ? header_heigth-1 : header_heigth-1 + g_height)
+                    while currentDay <= @gantt.date_to do
 
-						if @gantt.date_from.cwday == 1
-							# @date_from is monday
-							week_f = @gantt.date_from
-						elsif @gantt.date_from.cwday > 5
-							week_f = @gantt.date_from + (7 - @gantt.date_from.cwday + 1)
-							width = (7 - @gantt.date_from.cwday + 1) * zoom-1
-							%><div style="left:<%= left %>px;top:19px;width:<%= width %>px;height:<%= height %>px;" class="gantt_hdr">&nbsp;</div><%
-							left = left + width+1
-						else
-							# find next monday after @date_from
-							# week_f = @gantt.date_from + (7 - @gantt.date_from.cwday + 1)
-							week_f = @gantt.date_from - @gantt.date_from.cwday + 1
-							width = (@gantt.date_from.cwday) * zoom-1
-							%><div style="left:<%= left %>px;top:19px;width:<%= width %>px;height:<%= height %>px;" class="gantt_hdr">&nbsp;</div><%
-							left = left + width+1
-						end
+                      # The first day of the week is always the current day
+                      firstDay = currentDay
+                      # The last day of the current week might be the last date that should be displayed.
+                      lastDay = [currentDay + (7 - currentDay.cwday), @gantt.date_to].min
 
-						while week_f <= @gantt.date_to
-							width = (week_f + 6 <= @gantt.date_to) ? 7 * zoom -1 : (@gantt.date_to - week_f + 1) * zoom-1
+                      %><%=  render :partial => "week_header", :locals => {:firstDay => firstDay, :lastDay => lastDay} %><%
 
-							%><div style="left:<%= left %>px;top:19px;width:<%= width %>px;height:<%= height %>px;" class="gantt_hdr"><%
-
-							s = week_f
-							7.times do |x|
-
-								%><div class="day"><%=s.day%></div><%
-
-								s = s.next
-							end
-
-							%></div><%
-
-							left   = left + width+1
-							week_f = week_f+7
-						end
-					end
+                      currentDay = lastDay + 1
+                    end
 
 				%></div>
 				<div class="days_per_week" style='position:absolute;'><%
@@ -154,25 +122,20 @@ end
 					#
 					# Days headers
 					#
-					if show_days
+                    left   = 0
+                    height = g_height + header_heigth - 1
+                    wday   = @gantt.date_from.cwday
 
-						left   = 0
-						height = g_height + header_heigth - 1
-						wday   = @gantt.date_from.cwday
+                    (@gantt.date_to - @gantt.date_from + 1).to_i.times do
+                        width = zoom - 1
+                        %><div style="left:<%= left %>px;top:37px;width:<%= width %>px;height:<%= height %>px;font-size:0.7em;" class="gantt_hdr">
+                            <%= day_name(wday).first %>
+                        </div><%
 
-						(@gantt.date_to - @gantt.date_from + 1).to_i.times do
-							width = zoom - 1
-							%><div style="left:<%= left %>px;top:37px;width:<%= width %>px;height:<%= height %>px;font-size:0.7em;" class="gantt_hdr">
-								<%= day_name(wday).first %>
-							</div><%
-
-							left = left + width+1
-							wday = wday + 1
-							wday = 1 if wday > 7
-						end
-
-					end
-
+                        left = left + width+1
+                        wday = wday + 1
+                        wday = 1 if wday > 7
+                    end
 				%></div>
 			</div>
 		</div>
@@ -204,7 +167,7 @@ end
 					sum = 0
 					TimeEntry.find(:all, :conditions => ["issue_id = #{issue.id}"]).each do |h| sum+=h.hours end
 					total_rem_by_user[user.id] = sum
-					calculos[issue.id] = CalculosTareas.new(
+					calculos[issue.id] = IssueCalculations.new(
 						issue.id,
 						issue.start_date,
 						issue.due_date,
