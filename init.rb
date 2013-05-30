@@ -8,11 +8,13 @@ Redmine::Plugin.register :redmine_workload do
   author 'Yann Bogdanovic, Jost Baron'
   description 'This is a plugin for Redmine, originally developed by Dnoise Rafael Calleja'
   version '0.2.0'
-  url 'https://github.com/JostBaron/Redmine-Workload-Dnoise'
+  url 'https://github.com/JostBaron/redmine_workload'
   author_url 'http://www.d-noise.net/'
 
   menu :top_menu, :WorkLoad, { :controller => 'work_load', :action => 'show' }, :caption => :workload_title,
     :if =>  Proc.new { User.current.logged? }
+
+  settings :default => {'empty' => true}, :partial => 'settings/workload_settings'
 
 end
 

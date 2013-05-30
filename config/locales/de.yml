@@ -30,3 +30,13 @@ de:
   workload_show_legend_time_spent: "Aufgewendete Zeit"
   workload_show_legend_past: "In der Vergangenheit"
   workload_show_legend_out: "Budget verbraucht"
+
+  workload_settings_general_workdays: "Wöchentliche Arbeitstage"
+  workload_settings_general_workdays_explanation: "Diese Tage werden bei der Berechnung der Arbeitsbelastung als Arbeitstage angenommen:"
+  workload_settings_general_workdays_monday:    "Montag"
+  workload_settings_general_workdays_tuesday:   "Dienstag"
+  workload_settings_general_workdays_wednesday: "Mittwoch"
+  workload_settings_general_workdays_thursday:  "Donnerstag"
+  workload_settings_general_workdays_friday:    "Freitag"
+  workload_settings_general_workdays_saturday:  "Samstag"
+  workload_settings_general_workdays_sunday:    "Sonntag"
