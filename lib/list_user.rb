@@ -1,4 +1,4 @@
-class ListingUser
+class ListUser
   unloadable
   attr_accessor :tools
   @tools = nil

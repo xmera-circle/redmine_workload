@@ -27,7 +27,7 @@ class WorkLoadController < ApplicationController
     @gantt.query = @query if @query.valid? 
 
     @usersToDisplay   = (!params[:usuarios_id].nil?) ?  User.find_all_by_id(params[:usuarios_id].split(',')) : []
-    @utils      = ListingUser.new(IssueStatus.find_all_by_is_closed(false, :select => 'id').map(&:id))
+    @utils      = ListUser.new(IssueStatus.find_all_by_is_closed(false, :select => 'id').map(&:id))
     @totalDays = @utils.tools.distance_of_time_in_days(@gantt.date_from, @gantt.date_to)
 
     @daysUntilMonday = (( 7 - @gantt.date_from.cwday ) + 1)
