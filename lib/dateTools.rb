@@ -16,7 +16,7 @@ class DateTools
     return hours/days
   end
 
-  def getRealDistanceInDays(firstDay, lastDay)
+  def self.getRealDistanceInDays(firstDay, lastDay)
     firstDay = firstDay.to_date
     lastDay = lastDay.to_date
     
