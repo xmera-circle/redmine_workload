@@ -1,6 +1,18 @@
 class DateTools
 
-  $holidays = []
+  def self.getWorkingDays()
+    result = []
+
+    result.push(1) if Setting.plugin_redmine_workload['general_workday_monday'] != ''
+    result.push(2) if Setting.plugin_redmine_workload['general_workday_tuesday'] != ''
+    result.push(3) if Setting.plugin_redmine_workload['general_workday_wednesday'] != ''
+    result.push(4) if Setting.plugin_redmine_workload['general_workday_thursday'] != ''
+    result.push(5) if Setting.plugin_redmine_workload['general_workday_friday'] != ''
+    result.push(6) if Setting.plugin_redmine_workload['general_workday_saturday'] != ''
+    result.push(7) if Setting.plugin_redmine_workload['general_workday_sunday'] != ''
+
+    return result
+  end
 
   def distance_of_time_in_days(from_time, to_time = 0, inclusive = true)
     from_time = from_time.to_time if from_time.respond_to?(:to_time)
@@ -19,22 +31,21 @@ class DateTools
   def self.getRealDistanceInDays(firstDay, lastDay)
     firstDay = firstDay.to_date
     lastDay = lastDay.to_date
+
+    workingDays = self::getWorkingDays()
     
     days = 0
-    
-    if firstDay.to_time == lastDay.to_time then
-	    return 1
-    end
 
-    while (firstDay.to_time <= lastDay.to_time ) do
-      if (firstDay.cwday < 6 && !$holidays.include?(firstDay.strftime("%Y-%m-%d") ))then
-          days = days + 1
+    while (firstDay <= lastDay ) do
+      if workingDays.include?(firstDay.cwday) then
+          days += 1
       end
       
       firstDay = firstDay.next
     end
-  return days  
-end
+
+    return days
+  end
 
   def addCommercialDays(fecha,days)
     fecha = fecha.to_date if fecha.respond_to?(:to_date)
