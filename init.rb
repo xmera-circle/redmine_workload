@@ -1,7 +1,7 @@
 require 'redmine'
 require_dependency 'dateTools'
 require_dependency 'list_user'
-require_dependency 'calculos_tareas'
+require_dependency 'issueCalculations'
 
 Redmine::Plugin.register :redmine_workload do
   name 'Redmine Workload plugin'

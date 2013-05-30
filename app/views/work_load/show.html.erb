@@ -150,7 +150,7 @@ end
 				%></div>
 				<div class="days_per_week" style='position:absolute;'><%
 
-					today = 16 * (@utils.tools.distance_of_time_in_days(@gantt.date_from, @currentDay) - 1)
+					today = 16 * (DateTools::distance_of_time_in_days(@gantt.date_from, @currentDay) - 1)
 					#
 					# Days headers
 					#

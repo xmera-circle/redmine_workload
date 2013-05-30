@@ -1,10 +1,7 @@
 class ListUser
   unloadable
-  attr_accessor :tools
-  @tools = nil
   
   def initialize(openstatus)
-      @tools = DateTools.new
       @openstatus = openstatus
   end
   

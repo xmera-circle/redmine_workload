@@ -28,7 +28,7 @@ class WorkLoadController < ApplicationController
 
     @usersToDisplay   = (!params[:usuarios_id].nil?) ?  User.find_all_by_id(params[:usuarios_id].split(',')) : []
     @utils      = ListUser.new(IssueStatus.find_all_by_is_closed(false, :select => 'id').map(&:id))
-    @totalDays = @utils.tools.distance_of_time_in_days(@gantt.date_from, @gantt.date_to)
+    @totalDays = DateTools::distance_of_time_in_days(@gantt.date_from, @gantt.date_to)
 
     @daysUntilMonday = (( 7 - @gantt.date_from.cwday ) + 1)
     @monday          = @gantt.date_from.to_date
@@ -43,7 +43,7 @@ class WorkLoadController < ApplicationController
     final_date   = @gantt.date_to
     @barras_days = []
     while ( current_date.to_time < final_date.to_time ) do
-      @barras_days.push( 16 * @utils.tools.distance_of_time_in_days( @gantt.date_from.to_date.strftime("%Y-%m-%d"), current_date.to_date.end_of_month.strftime("%Y-%m-%d") ) )
+      @barras_days.push( 16 * DateTools::distance_of_time_in_days( @gantt.date_from.to_date.strftime("%Y-%m-%d"), current_date.to_date.end_of_month.strftime("%Y-%m-%d") ) )
       current_date = current_date.to_date.end_of_month + 1
     end
 
