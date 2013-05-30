@@ -11,7 +11,7 @@ class WorkLoadController < ApplicationController
 
   def show
     
-    @fecha_actual = ( !params[:fecha_actual].nil? && params[:fecha_actual].respond_to?(:to_date)  ) ? params[:fecha_actual].gsub('/', '-').to_date.strftime("%Y-%m-%d") : DateTime.now.strftime("%Y-%m-%d")
+    @currentDay = ( !params[:fecha_actual].nil? && params[:fecha_actual].respond_to?(:to_date)  ) ? params[:fecha_actual].gsub('/', '-').to_date.strftime("%Y-%m-%d") : DateTime.now.strftime("%Y-%m-%d")
 
     if ( params[:month].nil? ||   params[:months].nil? ||  params[:year].nil?   ) then
       params[:month] = DateTime.now.month

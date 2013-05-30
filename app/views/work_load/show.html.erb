@@ -42,7 +42,7 @@ form_tag({
 	<div class="calendar">
 		<span>
 			<label><%= l(:workload_show_calendar_today) %></label>
-			<input type="text" value="<%=@fecha_actual.to_date.strftime("%d/%m/%Y")%>" autocomplete="off" class="campofecha" id="date1" name="fecha_actual">
+			<input type="text" value="<%=@currentDay.to_date.strftime("%d/%m/%Y")%>" autocomplete="off" class="campofecha" id="date1" name="fecha_actual">
 			<span class="calendar_icon"><%= l(:workload_show_calendar_calendar) %></span> 
 		</span>
 	</div>
@@ -150,7 +150,7 @@ end
 				%></div>
 				<div class="days_per_week" style='position:absolute;'><%
 
-					today = 16 * (@utils.tools.distance_of_time_in_days(@gantt.date_from, @fecha_actual) - 1) 
+					today = 16 * (@utils.tools.distance_of_time_in_days(@gantt.date_from, @currentDay) - 1)
 					#
 					# Days headers
 					#
@@ -195,7 +195,7 @@ end
 					<span class="username"><%="#{user.firstname} #{user.lastname}"%></span>
 				</div><%
 
-				#remanentes_by_user[user.id]        = @utils.getRemanente(user.id, @fecha_actual)
+				#remanentes_by_user[user.id]        = @utils.getRemanente(user.id, @currentDay)
 				issues_remanentes_by_user[user.id] = @utils.getIssuesOpenedWihtout(user.id, @gantt.date_from)
 				issues_by_user[user.id]            = @utils.getIssuesOpenedEntreFechas(user.id, @gantt.date_from, @gantt.date_to)
 
@@ -212,7 +212,7 @@ end
 						sum,
 						issue.done_ratio,
 						issue.priority_id,
-						@fecha_actual,
+						@currentDay,
 						@utils.issue_is_parent(issue)
 					)
 					workload_by_user[user.id].push(calculos[issue.id].dias_y_time_restantes)
@@ -382,11 +382,11 @@ end
 					dia[x] = 'tarea1 blank'
 					execeded_time[x] = ''
 
-					if (workload.include?(current_day.strftime("%Y-%m-%d")) && current_day.to_time < @fecha_actual.to_time - 86400 ) then
+					if (workload.include?(current_day.strftime("%Y-%m-%d")) && current_day.to_time < @currentDay.to_time - 86400 ) then
 						dia[x] = 'tarea_g'
 					elsif (workload.has_key?(current_day.strftime("%Y-%m-%d"))) then
 						level = workload[current_day.strftime("%Y-%m-%d")].round
-						if current_day.to_time > @fecha_actual.to_time - 86400 then
+						if current_day.to_time > @currentDay.to_time - 86400 then
 							execeded_time[x] = level	
 							if level > 7 && level < 12 then
 								dia[x] = 'tarea8'
