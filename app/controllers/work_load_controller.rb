@@ -31,11 +31,11 @@ class WorkLoadController < ApplicationController
     @totalDays = @utils.tools.distance_of_time_in_days(@gantt.date_from, @gantt.date_to)
 
     @daysUntilMonday = (( 7 - @gantt.date_from.cwday ) + 1)
-    @lunes               = @gantt.date_from.to_date
+    @monday          = @gantt.date_from.to_date
 
     @daysUntilMonday.times do
-		@lunes = @lunes.next
-	end
+		  @monday = @monday.next
+	  end
 
     @num_semanas = (@totalDays / 7).round
 
