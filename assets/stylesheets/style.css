@@ -54,14 +54,55 @@
 .controller-work_load .userworkload .user_each_hours span.tarea5 { float:left; background:url(../images/tarea_padre.png) no-repeat left; padding-left:30px; height:15px; max-width:265px; width:auto; color:#666;}
 .controller-work_load .userworkload .user_each_hours span.tarea_remanente { float:left; background:url(../images/clock.png) no-repeat left; padding-left:30px; height:15px; max-width:265px; width:auto; color:#666;}
 
+/*******************************************************************************
+ * Styles for the header of the gantt diagram.
+ ******************************************************************************/
+.controller-work_load .month-header {
+    display:        inline-block;
 
-.controller-work_load .months_per_year {height:16px; width:100%; float:left;}
-.controller-work_load .days_per_month {height:16px; width:100%; float:left; position: relative;}
-.controller-work_load .days_per_month .gantt_hdr { float: left; font-size: 0.7em; top: 4px; }
-.controller-work_load .days_per_week { height:16px; width:100%; float:left; position:relative;}
-.controller-work_load .days_per_week .gantt_hdr {top:5px; width:15px; font-size:0.7em; float:left; }
-.controller-work_load .days_per_month .day {float:left; display:inline; width:16px; text-align:center; font-weight:bold; padding-top: 3px;}
-.controller-work_load .days_per_month .day:last-child {width:15px !important; }
+    text-align:     center;
+
+    border-top:     1px solid #c0c0c0;
+    border-bottom:  1px solid #c0c0c0;
+}
+
+.controller-work_load .month-header .month {
+    border-right:   1px solid #c0c0c0;
+    border-bottom:  1px solid #c0c0c0;
+}
+
+.controller-work_load .days {
+    border-left:    1px solid #c0c0c0;
+}
+
+.controller-work_load .days:first-child {
+    border-left:    none;
+}
+
+.controller-work_load .day {
+    display:        inline-block;
+    width:          16px;
+}
+
+.controller-work_load .day .dayOfMonth,
+.controller-work_load .day .dayOfWeek {
+    display:        block;
+    height:         18px;
+
+    font-size:      .7em;
+
+    vertical-align: middle;
+}
+
+.controller-work_load .day .dayOfMonth {
+    font-weight:    bold;
+
+    border-bottom:  1px solid #c0c0c0;
+}
+
+.controller-work_load .day .dayOfWeek {
+    border-right:   1px solid #c0c0c0;
+}
 
 .controller-work_load .all_users_workload {height: auto; overflow: hidden; width:2944px; float:left; background-image:url(../images/bg_calendar.png); background-repeat: repeat; background-position: -1px 0px;}
 .controller-work_load .total_user_workload { width:2942px; height:auto; float:left; border-bottom: 3px solid #999999;}
@@ -274,9 +315,9 @@ a.calencerrar span{
 .capaselanos a.ultimo{
 	border: 0;
 }
- 
+
 span.username:hover {text-decoration: underline; }
- 
+
 /* Modificaciones 19/07/2011 */
 
 .controller-work_load .black { background:url(../images/tarea11.png) no-repeat left; padding-left:40px; float:left; margin-left: 50px;}

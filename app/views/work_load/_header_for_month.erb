@@ -1,0 +1,17 @@
+<div class="month-header">
+  <div class="month">
+    <%="#{month_name(currentMonth.month)} #{currentMonth.year}"%>
+  </div>
+  <div class="days">
+    <%
+      currentMonth.beginning_of_month.upto(currentMonth.end_of_month) do |currentDay|
+    %>
+        <span class="day">
+          <span class="dayOfMonth"><%= currentDay.day.to_s%></span>
+          <span class="dayOfWeek"><%= currentDay.strftime('%A').first %></span>
+        </span>
+    <%
+      end
+    %>
+  </div>
+</div>
