@@ -30,23 +30,26 @@ class DateTools
     return hours/days
   end
 
-  def self.getRealDistanceInDays(firstDay, lastDay)
-    firstDay = firstDay.to_date if firstDay.respond_to?(:to_date)
-    lastDay = lastDay.to_date   if lastDay.respond_to?(:to_date)
+  def self.getWorkingDaysInTimespan(timeSpan)
+    raise ArgumentError unless timeSpan.kind_of?(Range)
 
     workingDays = self::getWorkingDays()
 
-    days = 0
+    result = []
 
-    while (firstDay <= lastDay ) do
-      if workingDays.include?(firstDay.cwday) then
-          days += 1
+    timeSpan.each do |day|
+      if workingDays.include?(day.cwday) then
+        result.push(day)
       end
-
-      firstDay = firstDay.next
     end
 
-    return days
+    return result
+  end
+
+  def self.getRealDistanceInDays(timeSpan)
+    raise ArgumentError unless timeSpan.kind_of?(Range)
+    
+    return self::getWorkingDaysInTimespan(timeSpan).count
   end
 
   def self.addCommercialDays(fecha,days)

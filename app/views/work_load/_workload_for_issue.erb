@@ -1,0 +1,31 @@
+<%
+# Renders the workload data for one single issue.
+# Parameters:
+#  * user: The user to render the data for.
+#  * issue: The issue to render the data for.
+#  * data: The data to render. A hash with days as keys.
+%>
+
+<tr class="issue-workload">
+  <th class="issue-description" scope="row">
+    <%= issue.subject %>
+  </th>
+  <%
+    data.keys.sort.each do |day|
+      dataForDay = data[day]
+
+      klass  = ''
+      klass += ' active'        if  dataForDay[:active]
+      klass += ' not-active'    if !dataForDay[:active]
+      klass += ' holiday'       if  dataForDay[:holiday]
+      klass += ' workingday'    if !dataForDay[:holiday]
+      klass += ' not-estimated' if  dataForDay[:noEstimate]
+      klass += ' estimated'     if !dataForDay[:noEstimate]
+
+      klass.strip!
+  %>
+    <td class="<%= klass %>">
+      <%= sprintf("%.1f", dataForDay[:hours]) %>
+    </td>
+  <% end %>
+</tr>

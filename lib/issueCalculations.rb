@@ -110,15 +110,15 @@ class IssueCalculations
   end
 
   def duracion
-    return DateTools::getRealDistanceInDays(@finicio, @ffin)
+    return DateTools::getRealDistanceInDays(@finicio..@ffin)
   end
 
   def trabajados
-    return DateTools::getRealDistanceInDays(@finicio, @factual)
+    return DateTools::getRealDistanceInDays(@finicio..@factual)
   end
 
   def restantes
-    return DateTools::getRealDistanceInDays(@start_date, @ffin)
+    return DateTools::getRealDistanceInDays(@start_date..@ffin)
   end
 
   def percent_dedicado
