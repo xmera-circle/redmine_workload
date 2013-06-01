@@ -1,0 +1,19 @@
+<%
+# Parameters:
+#  dayOfMonth: Any day of the month to render the header for.
+%>
+
+<% dayOfMonth.beginning_of_month.upto(dayOfMonth.end_of_month) do |currentDay|%>
+  <%
+    if (currentDay.day == 1) then
+      klass = ' firstDayOfMonth'
+    elsif (currentDay.day == dayOfMonth.end_of_month.day) then
+      klass = ' lastDayOfMonth'
+    else
+      klass = ''
+    end
+  %>
+  <th class="day-of-month<%= klass %>">
+    <%= currentDay.day.to_s %>
+  </th>
+<% end %>

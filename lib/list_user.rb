@@ -5,6 +5,11 @@ class ListUser
       @openstatus = openstatus
   end
 
+  # Returns all issues that fulfill the following conditions:
+  #  * They are open,
+  #  * The project they belong to is active,
+  #  * Due date and start date are set,
+  #  * They have at least on day in the given timespan.
   def self.getOpenIssuesForUsersActiveInGivenTimeSpan(users, firstDay, lastDay)
 
     firstDay = firstDay.to_date if firstDay.respond_to?(:to_date)
@@ -28,9 +33,39 @@ class ListUser
                         where(issue[:due_date].not_eq(nil)).        # Have an end date
                         where(issue[:start_date].gt(lastDay).not).  # Start *not* after the given time span
                         where(issue[:due_date].lt(firstDay).not).   # End *not* before the given time span
-                        where(issue_status[:is_closed].eq(false))      # Is open
+                        where(issue_status[:is_closed].eq(false))   # Is open
 
     return issues
+  end
+
+  # Returns one day of each month between the given dates, including the months
+  # of the dates. It is not specified which day of the month will be returned.
+  def self.getMonthsBetween(firstDay, lastDay)
+
+    firstDay  = firstDay.to_date  if firstDay.respond_to?(:to_date)
+    lastDay   = lastDay.to_date   if lastDay.respond_to?(:to_date)
+
+    # Abort if the given time span is empty.
+    return [] if firstDay > lastDay
+
+    firstOfCurrentMonth = firstDay.beginning_of_month
+    firstOfLastMonth    = lastDay.beginning_of_month
+
+    result = []
+    while firstOfCurrentMonth <= firstOfLastMonth do
+      result.push(firstOfCurrentMonth)
+
+      firstOfCurrentMonth = firstOfCurrentMonth.next_month
+    end
+
+    return result
+  end
+
+  # Returns the number of days of the month of the given day.
+  def self.getDaysInMonth(day)
+    day = day.to_date if day.respond_to?(:to_date)
+
+    return day.end_of_month.day
   end
 
   def getRemanente(user_id, date_end )

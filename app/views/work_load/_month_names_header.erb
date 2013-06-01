@@ -1,0 +1,7 @@
+<%
+# Parameters:
+#  dayOfMonth: Any day of the month to render the header for.
+%>
+<th class="month-name" colspan="<%= ListUser::getDaysInMonth(dayOfMonth) %>">
+  <%= "#{month_name(dayOfMonth.month)} #{dayOfMonth.year}"  %>
+</th>

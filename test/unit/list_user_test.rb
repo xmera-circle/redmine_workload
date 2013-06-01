@@ -153,4 +153,51 @@ class ListUserTest < ActiveSupport::TestCase
 
     assert_equal [issue1], ListUser::getOpenIssuesForUsersActiveInGivenTimeSpan([user], firstDay, lastDay)
   end
+
+  test "getMonthsBetween returns [] if last day after first day" do
+    firstDay = Date::new(2012, 3, 29)
+    lastDay = Date::new(2012, 3, 28)
+
+    assert_equal [], ListUser::getMonthsBetween(firstDay, lastDay).map(&:month)
+  end
+
+  test "getMonthsBetween returns [3] if both days in march 2012 and equal" do
+    firstDay = Date::new(2012, 3, 27)
+    lastDay = Date::new(2012, 3, 27)
+
+    assert_equal [3], ListUser::getMonthsBetween(firstDay, lastDay).map(&:month)
+  end
+
+  test "getMonthsBetween returns [3] if both days in march 2012 and different" do
+    firstDay = Date::new(2012, 3, 27)
+    lastDay = Date::new(2012, 3, 28)
+
+    assert_equal [3], ListUser::getMonthsBetween(firstDay, lastDay).map(&:month)
+  end
+
+  test "getMonthsBetween returns [3, 4, 5] if first day in march and last day in may" do
+    firstDay = Date::new(2012, 3, 31)
+    lastDay = Date::new(2012, 5, 1)
+
+    assert_equal [3, 4, 5], ListUser::getMonthsBetween(firstDay, lastDay).map(&:month)
+  end
+
+  test "getMonthsBetween returns correct result timespan overlaps year boundary" do
+    firstDay = Date::new(2011, 3, 3)
+    lastDay = Date::new(2012, 5, 1)
+
+    assert_equal (3..12).to_a.concat((1..5).to_a), ListUser::getMonthsBetween(firstDay, lastDay).map(&:month)
+  end
+
+  test "getDaysInMonth returns 31 for december 2012" do
+    assert_equal 31, ListUser::getDaysInMonth(Date::new(2012, 12, 6))
+  end
+
+  test "getDaysInMonth returns 29 for february 2012" do
+    assert_equal 29, ListUser::getDaysInMonth(Date::new(2012, 2, 23))
+  end
+
+  test "getDaysInMonth returns 28 for february 2013" do
+    assert_equal 28, ListUser::getDaysInMonth(Date::new(2013, 2, 1))
+  end
 end

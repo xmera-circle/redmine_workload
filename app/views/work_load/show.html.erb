@@ -69,6 +69,30 @@ end
 %>
 
 <%= error_messages_for 'query' %>
+<%
+  monthsToRender = ListUser::getMonthsBetween(@gantt.date_from, @gantt.date_to)
+%>
+<table class="workload-data">
+  <thead>
+    <tr class="month-names">
+      <td class="logo" rowspan="3">&nbsp;<!--Contains logo or empty space --></td>
+      <% monthsToRender.each do |someDayOfMonth| %>
+        <%= render :partial => 'month_names_header', :locals => {:dayOfMonth => someDayOfMonth} %>
+      <% end %>
+    </tr>
+    <tr class="days-of-month">
+      <% monthsToRender.each do |someDayOfMonth| %>
+        <%= render :partial => 'day_of_month_header', :locals => {:dayOfMonth => someDayOfMonth} %>
+      <% end %>
+    </tr>
+    <tr class="days-of-week">
+      <% monthsToRender.each do |someDayOfMonth| %>
+        <%= render :partial => 'day_of_week_header', :locals => {:dayOfMonth => someDayOfMonth} %>
+      <% end %>
+    </tr>
+  </thead>
+</table>
+
 <div class="all">
 	<div id="top">
 		<div id="top_left">&nbsp;</div>

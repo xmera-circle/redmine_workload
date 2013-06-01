@@ -1,0 +1,19 @@
+<%
+# Parameters:
+#  dayOfMonth: Any day of the month to render the header for.
+%>
+
+<% dayOfMonth.beginning_of_month.upto(dayOfMonth.end_of_month) do |currentDay|%>
+  <%
+    if (currentDay.cwday == 1) then
+      klass = ' firstDayOfWeek'
+    elsif (currentDay.cwday == 7) then
+      klass = ' lastDayOfWeek'
+    else
+      klass = ''
+    end
+  %>
+  <th class="day-of-week <%= klass %>">
+    <%= day_name(currentDay.cwday).first %>
+  </th>
+<% end %>
