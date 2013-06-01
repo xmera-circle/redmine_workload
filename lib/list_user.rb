@@ -5,6 +5,34 @@ class ListUser
       @openstatus = openstatus
   end
 
+  def self.getOpenIssuesForUsersActiveInGivenTimeSpan(users, firstDay, lastDay)
+
+    firstDay = firstDay.to_date if firstDay.respond_to?(:to_date)
+    lastDay  = lastDay.to_date  if lastDay.respond_to?(:to_date)
+
+    # Check that the given time span is valid.
+    return [] if lastDay < firstDay
+
+    userIDs = users.map(&:id)
+
+    issue = Issue.arel_table
+    project = Project.arel_table
+    issue_status = IssueStatus.arel_table
+
+    # Fetch all issues that ...
+    issues = Issue.joins(:project).
+                   joins(:status).
+                        where(issue[:assigned_to_id].in(userIDs)).  # Are assigned to one of the interesting users
+                        where(project[:status].eq(1)).              # Do not belong to an inactive project
+                        where(issue[:start_date].not_eq(nil)).      # Have a start date
+                        where(issue[:due_date].not_eq(nil)).        # Have an end date
+                        where(issue[:start_date].gt(lastDay).not).  # Start *not* after the given time span
+                        where(issue[:due_date].lt(firstDay).not).   # End *not* before the given time span
+                        where(issue_status[:is_closed].eq(false))      # Is open
+
+    return issues
+  end
+
   def getRemanente(user_id, date_end )
     issues_opened = getIssuesOpened(user_id, date_end)
     total = 0
@@ -52,8 +80,6 @@ class ListUser
      start_date = start_date.to_date.strftime("%Y-%m-%d") if start_date.respond_to?(:to_date)
     return Issue.find_all_by_status_id( @openstatus ,:joins => :project, :conditions => [ " start_date <= '#{date_end}' AND due_date >= '#{start_date}' AND assigned_to_id = #{user_id} AND start_date IS NOT NULL AND due_date IS NOT NULL AND estimated_hours IS NOT NULL AND projects.status = 1" ],   :order => 'root_id asc, id asc' )
   end
-
-
 
   def sumIssuesTimes(merged)
     results = {}
