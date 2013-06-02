@@ -219,6 +219,39 @@ class ListUser
     return day.end_of_month.day
   end
 
+  # Adds the total workload for each day for a user. The first parameter must be
+  # a data structure returned by getHoursPerUserIssueAndDay.
+  # In this data structure, each used gets an additional key, :total_workload.
+  # The result for this key is a hash that has the same structure as returned
+  # by the function getHoursForIssuesPerDay.
+  def self.calculateTotalUserWorkloads(hourDataStructure, timeSpan)
+
+    workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
+
+    hourDataStructure.keys.each do |user|
+      # Get a list of all issues of the user. Filter, because other keys than
+      # issues might be present.
+      issuesOfUser = hourDataStructure[user].keys.select{|key| key.kind_of?(Issue)}
+
+      hourDataStructure[user][:totalWorkload] = Hash::new
+      totalWorkload = hourDataStructure[user][:totalWorkload]
+
+      timeSpan.each do |day|
+
+        # Initialize workload for day
+        totalWorkload[day] = {
+          :hours => 0.0,
+          :holiday => !workingDays.include?(day)
+        }
+
+        # Go over all issues and sum workload
+        issuesOfUser.each do |issue|
+          totalWorkload[day][:hours] += hourDataStructure[user][issue][day][:hours]
+        end
+      end
+    end
+  end
+
   def getRemanente(user_id, date_end )
     issues_opened = getIssuesOpened(user_id, date_end)
     total = 0

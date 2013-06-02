@@ -7,8 +7,13 @@
 
 <tr class="user-total-workload">
   <th class="user-description" scope="row"><%= "#{user.firstname} #{user.lastname}" %> </th>
+  <% # Print the total workload for this user for each day %>
+  <%= render :partial => 'total_workload_for_user', :locals => {:user => user, :totalWorkload => data[:totalWorkload]} %>
 </tr>
 <% # Iterate over all issues for the user %>
-<% data.keys.each do |issue| %>
-  <%= render :partial => 'workload_for_issue', :locals => {:user => user, :issue => issue, :data => data[issue]} %>
+<% issuesForUser = data.keys.select{|x| x.kind_of?(Issue)}
+   issuesForUser.each do |issue|
+%>
+
+   <%= render :partial => 'workload_for_issue', :locals => {:user => user, :issue => issue, :data => data[issue]} %>
 <% end %>

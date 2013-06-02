@@ -1,0 +1,17 @@
+<%
+# Renders the workload data for one single issue.
+# Parameters:
+#  * user: The user to render the data for.
+#  * totalWorkload: Hash that contains the total workload for each day.
+%>
+
+<% totalWorkload.keys.sort.each do |day| %>
+  <%
+     klass  = ''
+     klass += 'holiday' if totalWorkload[day][:holiday]
+  %>
+  <td class="<%= klass %>">
+    <%= sprintf("%.1f", totalWorkload[day][:hours]) %>
+  </td>
+<% end %>
+

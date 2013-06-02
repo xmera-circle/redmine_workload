@@ -74,9 +74,8 @@ end
 
   monthsToRender = ListUser::getMonthsIn(timeSpanToDisplay)
   workloadData   = ListUser::getHoursPerUserIssueAndDay(@usersToDisplay, timeSpanToDisplay, Date::today)
+  ListUser::calculateTotalUserWorkloads(workloadData, timeSpanToDisplay)
 
-  issues = ListUser::getOpenIssuesForUsersActiveInTimeSpan(@usersToDisplay, timeSpanToDisplay)
-  puts issues.map(&:subject).inspect
 %>
 <table class="workload-data">
   <thead>
