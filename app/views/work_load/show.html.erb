@@ -72,7 +72,7 @@ end
 <%
   timeSpanToDisplay = @gantt.date_from..@gantt.date_to
 
-  monthsToRender = ListUser::getMonthsIn(timeSpanToDisplay)
+  monthsToRender = ListUser::getMonthsInTimespan(timeSpanToDisplay)
   workloadData   = ListUser::getHoursPerUserIssueAndDay(@usersToDisplay, timeSpanToDisplay, Date::today)
   ListUser::calculateTotalUserWorkloads(workloadData, timeSpanToDisplay)
 
