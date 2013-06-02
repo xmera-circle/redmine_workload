@@ -655,7 +655,7 @@ class ListUserTest < ActiveSupport::TestCase
     assertIssueTimesHashEquals expectedResult, ListUser::getHoursForIssuesPerDay(issue, firstDay..lastDay, today)
   end
 
-  test "foobar" do
+  test "getHoursPerUserIssueAndDay returns correct structure" do
     user = User.generate!
 
     issue1 = Issue.generate!(
@@ -680,6 +680,51 @@ class ListUserTest < ActiveSupport::TestCase
     lastDay = Date::new(2013, 6, 4)
     today = Date::new(2013, 5, 31)
 
-    puts "foobar: " + ListUser::getHoursPerUserIssueAndDay([user], firstDay..lastDay, today).inspect
+    workloadData = ListUser::getHoursPerUserIssueAndDay([user], firstDay..lastDay, today)
+
+    assert workloadData.has_key?(user)
+
+    # Check that issue1 and 2 are the only keys for the user.
+    assert_equal 2, workloadData[user].keys.count
+    assert workloadData[user].has_key?(issue1)
+    assert workloadData[user].has_key?(issue2)
+  end
+
+  test "getEstimatedTimeForIssue works for issue without children." do
+    issue = Issue.generate!(:estimated_hours => 13.2)
+    assert_in_delta 13.2, ListUser::getEstimatedTimeForIssue(issue), 1e-4
+  end
+
+  test "getEstimatedTimeForIssue works for issue with children." do
+    parent = Issue.generate!(:estimated_hours => 3.6)
+    child1 = Issue.generate!(:estimated_hours => 5.0, :parent_issue_id => parent.id, :done_ratio => 90)
+    child2 = Issue.generate!(:estimated_hours => 9.0, :parent_issue_id => parent.id)
+
+    # Force parent to reload so the data from the children is incorporated.
+    parent.reload
+
+    puts "Parent hours: " + parent.estimated_hours.to_s
+
+    assert_in_delta 0.0, ListUser::getEstimatedTimeForIssue(parent), 1e-4
+    assert_in_delta 0.5, ListUser::getEstimatedTimeForIssue(child1), 1e-4
+    assert_in_delta 9.0, ListUser::getEstimatedTimeForIssue(child2), 1e-4
+  end
+
+  test "getEstimatedTimeForIssue works for issue with grandchildren." do
+    parent = Issue.generate!(:estimated_hours => 4.5)
+    child = Issue.generate!(:estimated_hours => 5.0, :parent_issue_id => parent.id)
+    grandchild = Issue.generate!(:estimated_hours => 9.0, :parent_issue_id => child.id, :done_ratio => 40)
+
+    # Force parent and child to reload so the data from the children is
+    # incorporated.
+    parent.reload
+    child.reload
+
+    puts "Parent hours: " + parent.estimated_hours.to_s
+    puts "Child hours: " + child.estimated_hours.to_s
+
+    assert_in_delta 0.0, ListUser::getEstimatedTimeForIssue(parent), 1e-4
+    assert_in_delta 0.0, ListUser::getEstimatedTimeForIssue(child), 1e-4
+    assert_in_delta 5.4, ListUser::getEstimatedTimeForIssue(grandchild), 1e-4
   end
 end

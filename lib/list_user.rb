@@ -5,6 +5,15 @@ class ListUser
       @openstatus = openstatus
   end
 
+  def self.getEstimatedTimeForIssue(issue)
+    raise ArgumentError unless issue.kind_of?(Issue)
+
+    return 0.0 if issue.estimated_hours.nil?
+    return 0.0 if issue.children.any?
+
+    return issue.estimated_hours*((100.0 - issue.done_ratio)/100.0)
+  end
+
   # Returns all issues that fulfill the following conditions:
   #  * They are open,
   #  * The project they belong to is active,
@@ -60,16 +69,10 @@ class ListUser
     raise ArgumentError unless timeSpan.kind_of?(Range)
     raise ArgumentError unless today.kind_of?(Date)
 
-    # Calculate the number of remaining hours for the issue, if possible.
-    if !issue.estimated_hours.nil? then
-      hoursRemaining = issue.estimated_hours.to_f * (1.0 - issue.done_ratio.to_f/100.0)
-    else
-      hoursRemaining = 0.0
-    end
+    hoursRemaining = ListUser::getEstimatedTimeForIssue(issue)
+    workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
 
     result = Hash::new
-
-    workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
 
     # If issue is overdue and the remaining time may be estimated, all
     # remaining hours are put on first working day.
@@ -318,7 +321,4 @@ class ListUser
   def parse_date(date)
     Date.parse date.gsub(/[{}\s]/, "").gsub(",", ".")
   end
-
-
-
 end
