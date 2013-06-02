@@ -8,7 +8,9 @@
 
 <tr class="issue-workload">
   <th class="issue-description" scope="row">
-    <%= issue.subject %>
+    <div class="tooltip"><%= link_to_issue(issue) %>
+      <span class="tip"><%= render_issue_tooltip(issue) %></span>
+    </div>
   </th>
   <%
     data.keys.sort.each do |day|
