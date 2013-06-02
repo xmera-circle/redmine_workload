@@ -158,35 +158,35 @@ class ListUserTest < ActiveSupport::TestCase
     firstDay = Date::new(2012, 3, 29)
     lastDay = Date::new(2012, 3, 28)
 
-    assert_equal [], ListUser::getMonthsIn(firstDay..lastDay).map(&:month)
+    assert_equal [], ListUser::getMonthsInTimespan(firstDay..lastDay).map(&:month)
   end
 
   test "getMonthsBetween returns [3] if both days in march 2012 and equal" do
     firstDay = Date::new(2012, 3, 27)
     lastDay = Date::new(2012, 3, 27)
 
-    assert_equal [3], ListUser::getMonthsIn(firstDay..lastDay).map(&:month)
+    assert_equal [3], ListUser::getMonthsInTimespan(firstDay..lastDay).map(&:month)
   end
 
   test "getMonthsBetween returns [3] if both days in march 2012 and different" do
     firstDay = Date::new(2012, 3, 27)
     lastDay = Date::new(2012, 3, 28)
 
-    assert_equal [3], ListUser::getMonthsIn(firstDay..lastDay).map(&:month)
+    assert_equal [3], ListUser::getMonthsInTimespan(firstDay..lastDay).map(&:month)
   end
 
   test "getMonthsBetween returns [3, 4, 5] if first day in march and last day in may" do
     firstDay = Date::new(2012, 3, 31)
     lastDay = Date::new(2012, 5, 1)
 
-    assert_equal [3, 4, 5], ListUser::getMonthsIn(firstDay..lastDay).map(&:month)
+    assert_equal [3, 4, 5], ListUser::getMonthsInTimespan(firstDay..lastDay).map(&:month)
   end
 
   test "getMonthsBetween returns correct result timespan overlaps year boundary" do
     firstDay = Date::new(2011, 3, 3)
     lastDay = Date::new(2012, 5, 1)
 
-    assert_equal (3..12).to_a.concat((1..5).to_a), ListUser::getMonthsIn(firstDay..lastDay).map(&:month)
+    assert_equal (3..12).to_a.concat((1..5).to_a), ListUser::getMonthsInTimespan(firstDay..lastDay).map(&:month)
   end
 
   test "getDaysInMonth returns 31 for december 2012" do

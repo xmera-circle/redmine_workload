@@ -192,7 +192,7 @@ class ListUser
 
   # Returns one day of each month between the given dates, including the months
   # of the dates. It is not specified which day of the month will be returned.
-  def self.getMonthsIn(timeSpan)
+  def self.getMonthsInTimespan(timeSpan)
 
     raise ArgumentError unless timeSpan.kind_of?(Range)
 
