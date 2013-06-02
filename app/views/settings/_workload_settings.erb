@@ -90,3 +90,30 @@
          <%= "checked" if settings['general_workday_sunday'] != '' %>
   >
 </p>
+
+<h2><%=  l(:workload_settings_hours) %></h2>
+
+<p>
+  <%= l(:workload_settings_leastdailyworkload) %>
+</p>
+<p>
+  <label><%= l(:workload_settings_hours_low_min) %></label>
+  <input type="text"
+         name="settings[threshold_lowload_min]"
+         value="<%= settings['threshold_lowload_min'] %>"
+  >
+</p>
+<p>
+  <label><%= l(:workload_settings_hours_normal_min) %></label>
+  <input type="text"
+         name="settings[threshold_normalload_min]"
+         value="<%= settings['threshold_normalload_min'] %>"
+  >
+</p>
+<p>
+  <label><%= l(:workload_settings_hours_high_min) %></label>
+  <input type="text"
+         name="settings[threshold_highload_min]"
+         value="<%= settings['threshold_highload_min'] %>"
+  >
+</p>

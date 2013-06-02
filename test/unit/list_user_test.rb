@@ -727,4 +727,36 @@ class ListUserTest < ActiveSupport::TestCase
     assert_in_delta 0.0, ListUser::getEstimatedTimeForIssue(child), 1e-4
     assert_in_delta 5.4, ListUser::getEstimatedTimeForIssue(grandchild), 1e-4
   end
+
+  test "getLoadClassForHours returns \"none\" for workloads below threshold for low workload" do
+    Setting.plugin_redmine_workload['threshold_lowload_min'] = 0.1
+    Setting.plugin_redmine_workload['threshold_normalload_min'] = 5.0
+    Setting.plugin_redmine_workload['threshold_highload_min'] = 7.0
+
+    assert_equal "none", ListUser::getLoadClassForHours(0.05)
+  end
+
+  test "getLoadClassForHours returns \"low\" for workloads between thresholds for low and normal workload" do
+    Setting.plugin_redmine_workload['threshold_lowload_min'] = 0.1
+    Setting.plugin_redmine_workload['threshold_normalload_min'] = 5.0
+    Setting.plugin_redmine_workload['threshold_highload_min'] = 7.0
+
+    assert_equal "low", ListUser::getLoadClassForHours(3.5)
+  end
+
+  test "getLoadClassForHours returns \"normal\" for workloads between thresholds for normal and high workload" do
+    Setting.plugin_redmine_workload['threshold_lowload_min'] = 0.1
+    Setting.plugin_redmine_workload['threshold_normalload_min'] = 2.0
+    Setting.plugin_redmine_workload['threshold_highload_min'] = 7.0
+
+    assert_equal "normal", ListUser::getLoadClassForHours(3.5)
+  end
+
+  test "getLoadClassForHours returns \"high\" for workloads above threshold for high workload" do
+    Setting.plugin_redmine_workload['threshold_lowload_min'] = 0.1
+    Setting.plugin_redmine_workload['threshold_normalload_min'] = 2.0
+    Setting.plugin_redmine_workload['threshold_highload_min'] = 7.0
+
+    assert_equal "high", ListUser::getLoadClassForHours(10.5)
+  end
 end

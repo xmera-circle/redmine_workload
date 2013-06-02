@@ -255,6 +255,23 @@ class ListUser
     end
   end
 
+  # Returns the color encoding for a given amount of working hours that
+  # need to be done.
+  def self.getLoadClassForHours(hours)
+    raise ArgumentError unless hours.respond_to?(:to_f)
+    hours = hours.to_f
+
+    if hours < Setting.plugin_redmine_workload['threshold_lowload_min'].to_f then
+      return "none"
+    elsif hours < Setting.plugin_redmine_workload['threshold_normalload_min'].to_f then
+      return "low"
+    elsif hours < Setting.plugin_redmine_workload['threshold_highload_min'].to_f then
+      return "normal"
+    else
+      return "high"
+    end
+  end
+
   def getRemanente(user_id, date_end )
     issues_opened = getIssuesOpened(user_id, date_end)
     total = 0

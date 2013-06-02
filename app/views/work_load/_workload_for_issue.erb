@@ -23,6 +23,7 @@
       klass += ' workingday'    if !dataForDay[:holiday]
       klass += ' not-estimated' if  dataForDay[:noEstimate]
       klass += ' estimated'     if !dataForDay[:noEstimate]
+      klass += ' ' + ListUser::getLoadClassForHours(dataForDay[:hours])
 
       klass.strip!
   %>
