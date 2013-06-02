@@ -12,8 +12,8 @@
 </tr>
 <% # Iterate over all issues for the user %>
 <% issuesForUser = data.keys.select{|x| x.kind_of?(Issue)}
-   issuesForUser.each do |issue|
+   issuesForUser.each_with_index do |issue, index|
 %>
 
-   <%= render :partial => 'workload_for_issue', :locals => {:user => user, :issue => issue, :data => data[issue]} %>
+   <%= render :partial => 'workload_for_issue', :locals => {:user => user, :issue => issue, :data => data[issue], :index => index} %>
 <% end %>

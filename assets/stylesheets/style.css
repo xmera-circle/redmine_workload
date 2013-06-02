@@ -104,6 +104,107 @@
     border-right:   1px solid #c0c0c0;
 }
 
+/*******************************************************************************
+ * Styles for the workload table.
+ ******************************************************************************/
+
+.controller-work_load .wrapper {
+    overflow-x: auto;
+}
+
+.controller-work_load .data {
+    table-layout: fixed;
+    border-spacing: 0 3px;
+}
+
+.controller-work_load .data thead {
+    font-size: .9em;
+}
+
+.controller-work_load .data tbody .user-description,
+.controller-work_load .data tbody .issue-description {
+    width:     250px;
+    min-width: 250px;
+    max-width: 250px;
+
+    text-align: left;
+    font-size: .9em;
+}
+
+.controller-work_load .data td {
+    height: 30px;
+}
+
+.controller-work_load .user-total-workload {
+    background-color: #F6F7F8;
+}
+
+.controller-work_load .issue-workload.odd {
+    background-color: #F6F7F8;
+}
+
+.controller-work_load .issue-workload.even {
+    background-color: white;
+}
+
+.controller-work_load .issue-workload:hover,
+.controller-work_load .user-total-workload:hover {
+    background-color: #D7D7D7;
+}
+
+.controller-work_load .data .issue-description {
+    padding-left: 10px;
+}
+
+.controller-work_load .data td {
+    padding: 0;
+
+    font-size: .8em;
+    line-height: 1;
+
+    text-align: center;
+
+    width: 30px;
+    min-width: 30px;
+    max-width: 30px;
+}
+
+.controller-work_load .user-total-workload th,
+.controller-work_load .user-total-workload td {
+    border-top: 1px solid #C0C0C0;
+    padding-top: 5px;
+}
+
+.controller-work_load .hours {
+    display: block;
+
+    padding-top: .6em;
+    padding-bottom: .3em;
+    height: 1em;
+
+    color: white;
+}
+
+.controller-work_load .hours.none {
+    color: black;
+}
+
+.controller-work_load .none {
+    background: transparent;
+}
+
+.controller-work_load .low {
+    background: green;
+}
+
+.controller-work_load .normal {
+    background: yellow;
+}
+
+.controller-work_load .high {
+    background: red;
+}
+
 .controller-work_load .all_users_workload {height: auto; overflow: hidden; width:2944px; float:left; background-image:url(../images/bg_calendar.png); background-repeat: repeat; background-position: -1px 0px;}
 .controller-work_load .total_user_workload { width:2942px; height:auto; float:left; border-bottom: 3px solid #999999;}
 .controller-work_load .user_workload_per_week { height: auto; left: 47px; position: relative; top: 0px; width: 112px; float:left; padding-bottom:13px;}

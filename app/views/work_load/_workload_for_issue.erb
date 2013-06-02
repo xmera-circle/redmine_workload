@@ -4,9 +4,10 @@
 #  * user: The user to render the data for.
 #  * issue: The issue to render the data for.
 #  * data: The data to render. A hash with days as keys.
+#  * index: Index of the issue for this user.
 %>
 
-<tr class="issue-workload">
+<tr class="issue-workload <%= (index % 2 == 0) ? "even" : "odd" %>">
   <th class="issue-description" scope="row">
     <div class="tooltip"><%= link_to_issue(issue) %>
       <span class="tip"><%= render_issue_tooltip(issue) %></span>
@@ -16,7 +17,7 @@
     data.keys.sort.each do |day|
       dataForDay = data[day]
 
-      klass  = ''
+      klass  = 'hours'
       klass += ' active'        if  dataForDay[:active]
       klass += ' not-active'    if !dataForDay[:active]
       klass += ' holiday'       if  dataForDay[:holiday]
@@ -24,11 +25,11 @@
       klass += ' not-estimated' if  dataForDay[:noEstimate]
       klass += ' estimated'     if !dataForDay[:noEstimate]
       klass += ' ' + ListUser::getLoadClassForHours(dataForDay[:hours])
-
-      klass.strip!
   %>
-    <td class="<%= klass %>">
-      <%= sprintf("%.1f", dataForDay[:hours]) %>
+    <td>
+      <span class="<%= klass %>">
+        <%= sprintf("%.1f", dataForDay[:hours]) %>
+      </span>
     </td>
   <% end %>
 </tr>

@@ -7,13 +7,14 @@
 
 <% totalWorkload.keys.sort.each do |day| %>
   <%
-     klass  = ''
+     klass  = 'hours'
      klass += ' holiday' if totalWorkload[day][:holiday]
      klass += ' ' + ListUser::getLoadClassForHours(totalWorkload[day][:hours])
-     klass.strip!
   %>
-  <td class="<%= klass %>">
-    <%= sprintf("%.1f", totalWorkload[day][:hours]) %>
+  <td>
+      <span class="<%= klass %>">
+        <%= sprintf("%.1f", totalWorkload[day][:hours]) %>
+      </span>
   </td>
 <% end %>
 

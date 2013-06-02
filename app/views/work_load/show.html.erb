@@ -77,32 +77,34 @@ end
   ListUser::calculateTotalUserWorkloads(workloadData, timeSpanToDisplay)
 
 %>
-<table class="workload-data">
-  <thead>
-    <tr class="month-names">
-      <td class="logo" rowspan="3">&nbsp;<!--Contains logo or empty space --></td>
-      <% monthsToRender.each do |someDayOfMonth| %>
-        <%= render :partial => 'month_names_header', :locals => {:dayOfMonth => someDayOfMonth} %>
+<div class="wrapper">
+  <table class="data">
+    <thead>
+      <tr class="month-names">
+        <td class="logo" rowspan="3">&nbsp;<!--Contains logo or empty space --></td>
+        <% monthsToRender.each do |someDayOfMonth| %>
+          <%= render :partial => 'month_names_header', :locals => {:dayOfMonth => someDayOfMonth} %>
+        <% end %>
+      </tr>
+      <tr class="days-of-month">
+        <% monthsToRender.each do |someDayOfMonth| %>
+          <%= render :partial => 'day_of_month_header', :locals => {:dayOfMonth => someDayOfMonth} %>
+        <% end %>
+      </tr>
+      <tr class="days-of-week">
+        <% monthsToRender.each do |someDayOfMonth| %>
+          <%= render :partial => 'day_of_week_header', :locals => {:dayOfMonth => someDayOfMonth} %>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% # Iterate over all users:
+         workloadData.keys.each do |user| %>
+         <%= render :partial => 'workload_for_user', :locals => { :user => user, :data => workloadData[user] } %>
       <% end %>
-    </tr>
-    <tr class="days-of-month">
-      <% monthsToRender.each do |someDayOfMonth| %>
-        <%= render :partial => 'day_of_month_header', :locals => {:dayOfMonth => someDayOfMonth} %>
-      <% end %>
-    </tr>
-    <tr class="days-of-week">
-      <% monthsToRender.each do |someDayOfMonth| %>
-        <%= render :partial => 'day_of_week_header', :locals => {:dayOfMonth => someDayOfMonth} %>
-      <% end %>
-    </tr>
-  </thead>
-  <tbody>
-    <% # Iterate over all users:
-       workloadData.keys.each do |user| %>
-       <%= render :partial => 'workload_for_user', :locals => { :user => user, :data => workloadData[user] } %>
-    <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</div>
 
 
 <table width="100%">
