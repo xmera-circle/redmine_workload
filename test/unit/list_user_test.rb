@@ -703,8 +703,6 @@ class ListUserTest < ActiveSupport::TestCase
     # Force parent to reload so the data from the children is incorporated.
     parent.reload
 
-    puts "Parent hours: " + parent.estimated_hours.to_s
-
     assert_in_delta 0.0, ListUser::getEstimatedTimeForIssue(parent), 1e-4
     assert_in_delta 0.5, ListUser::getEstimatedTimeForIssue(child1), 1e-4
     assert_in_delta 9.0, ListUser::getEstimatedTimeForIssue(child2), 1e-4
@@ -719,9 +717,6 @@ class ListUserTest < ActiveSupport::TestCase
     # incorporated.
     parent.reload
     child.reload
-
-    puts "Parent hours: " + parent.estimated_hours.to_s
-    puts "Child hours: " + child.estimated_hours.to_s
 
     assert_in_delta 0.0, ListUser::getEstimatedTimeForIssue(parent), 1e-4
     assert_in_delta 0.0, ListUser::getEstimatedTimeForIssue(child), 1e-4
