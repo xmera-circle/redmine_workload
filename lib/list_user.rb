@@ -19,12 +19,9 @@ class ListUser
   #  * The project they belong to is active,
   #  * Due date and start date are set,
   #  * They have at least on day in the given timespan.
-  def self.getOpenIssuesForUsersActiveInTimeSpan(users, timeSpan)
+  def self.getOpenIssuesForUsers(users)
 
-    raise ArgumentError unless timeSpan.kind_of?(Range)
     raise ArgumentError unless users.kind_of?(Array)
-
-    return [] unless timeSpan.any?
 
     userIDs = users.map(&:id)
 
@@ -38,13 +35,11 @@ class ListUser
                    joins(:assigned_to).
                         where(issue[:assigned_to_id].in(userIDs)).      # Are assigned to one of the interesting users
                         where(project[:status].eq(1)).                  # Do not belong to an inactive project
-                        where(issue[:start_date].not_eq(nil)).          # Have a start date
-                        where(issue[:due_date].not_eq(nil)).            # Have an end date
-                        where(issue[:start_date].gt(timeSpan.end).not). # Start *not* after the given time span
-                        where(issue[:due_date].lt(timeSpan.begin).not). # End *not* before the given time span
                         where(issue_status[:is_closed].eq(false))       # Is open
 
-    return issues
+    #  Filter out all issues that have children; They do not *directly* add to
+    # the workload
+    return issues.select { |x| x.leaf? }
   end
 
   # Returns the hours per day for the given issue. The result is only computed
@@ -181,7 +176,7 @@ class ListUser
     raise ArgumentError unless timeSpan.kind_of?(Range)
     raise ArgumentError unless today.kind_of?(Date)
 
-    issues = getOpenIssuesForUsersActiveInTimeSpan(users, timeSpan)
+    issues = getOpenIssuesForUsers(users)
 
     result = {}
 
