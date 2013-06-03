@@ -74,7 +74,8 @@ end
 
   monthsToRender = ListUser::getMonthsInTimespan(timeSpanToDisplay)
   workloadData   = ListUser::getHoursPerUserIssueAndDay(@usersToDisplay, timeSpanToDisplay, Date::today)
-  ListUser::calculateTotalUserWorkloads(workloadData, timeSpanToDisplay)
+
+  totalWorkloadPerUser = ListUser::calculateTotalUserWorkloads(workloadData, timeSpanToDisplay)
 
 %>
 <div class="wrapper">
@@ -100,7 +101,12 @@ end
     <tbody>
       <% # Iterate over all users:
          workloadData.keys.each do |user| %>
-         <%= render :partial => 'workload_for_user', :locals => { :user => user, :data => workloadData[user] } %>
+         <%= render :partial => 'workload_for_user',
+                    :locals => { :user => user,
+                                 :data => workloadData[user],
+                                 :totalWorkload => totalWorkloadPerUser[user]
+                               }
+         %>
       <% end %>
     </tbody>
   </table>

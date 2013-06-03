@@ -226,28 +226,31 @@ class ListUser
 
     workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
 
+    totalWorkload = Hash::new
+
     hourDataStructure.keys.each do |user|
       # Get a list of all issues of the user. Filter, because other keys than
       # issues might be present.
       issuesOfUser = hourDataStructure[user].keys.select{|key| key.kind_of?(Issue)}
 
-      hourDataStructure[user][:totalWorkload] = Hash::new
-      totalWorkload = hourDataStructure[user][:totalWorkload]
+      totalWorkload[user] = Hash::new
 
       timeSpan.each do |day|
 
         # Initialize workload for day
-        totalWorkload[day] = {
+        totalWorkload[user][day] = {
           :hours => 0.0,
           :holiday => !workingDays.include?(day)
         }
 
         # Go over all issues and sum workload
         issuesOfUser.each do |issue|
-          totalWorkload[day][:hours] += hourDataStructure[user][issue][day][:hours]
+          totalWorkload[user][day][:hours] += hourDataStructure[user][issue][day][:hours]
         end
       end
     end
+
+    return totalWorkload
   end
 
   # Returns the color encoding for a given amount of working hours that

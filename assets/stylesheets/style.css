@@ -143,13 +143,21 @@
     background-color: #F6F7F8;
 }
 
+.controller-work_load .issue-workload.odd.overdue {
+    background-color: #ecb4b4;
+}
+
 .controller-work_load .issue-workload.even {
     background-color: white;
 }
 
+.controller-work_load .issue-workload.even.overdue {
+    background-color: #f8d0d0;
+}
+
 .controller-work_load .issue-workload:hover,
 .controller-work_load .user-total-workload:hover {
-    background-color: #D7D7D7;
+    background-color: #D7D7D7!important;
 }
 
 .controller-work_load .data .issue-description {
