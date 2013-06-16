@@ -193,6 +193,10 @@
     color: white;
 }
 
+.controller-work_load .today {
+    border-left: 2px solid red;
+}
+
 .controller-work_load .hours.none {
     color: black;
 }

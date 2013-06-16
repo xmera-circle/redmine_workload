@@ -10,42 +10,42 @@ class WorkLoadController < ApplicationController
   include QueriesHelper
 
   def show
+    workloadParameters = params[:workload]
 
-    @currentDay = ( !params[:fecha_actual].nil? && params[:fecha_actual].respond_to?(:to_date)  ) ? params[:fecha_actual].gsub('/', '-').to_date.strftime("%Y-%m-%d") : DateTime.now.strftime("%Y-%m-%d")
+    # If no date is given for the start date, use today.
+    @today = workloadParameters[:start_date].respond_to?(:to_date) ?
+                    workloadParameters[:start_date].to_date :
+                    Date::today
 
-    if ( params[:month].nil? ||   params[:months].nil? ||  params[:year].nil?   ) then
-      params[:month] = DateTime.now.month
-      params[:months] = 2
-      params[:year] = DateTime.now.year
-    end
 
-    params[:show_issues] = ( params[:show_issues].nil? ) ? "1" : params[:show_issues]
+    # Set the first day to display (must be begin of a month)
+    @first_day = workloadParameters[:first_day].respond_to?(:to_date) ?
+                    workloadParameters[:first_day].to_date.at_beginning_of_month :
+                    Date::today.at_beginning_of_month
 
-    @gantt = Redmine::Helpers::Gantt.new(params)
+    # Use given number of months to display, or 2 if number cannot be parsed.
+    num_months = Integer(workloadParameters[:num_months]) rescue 2
 
-    retrieve_query
-    @gantt.query = @query if @query.valid?
+    # Limit number of months to 12 to hold down runtimes.
+    num_months = [num_months, 12].min
 
-    @usersToDisplay   = (!params[:usuarios_id].nil?) ?  User.find_all_by_id(params[:usuarios_id].split(',')) : []
-    @utils      = ListUser.new(IssueStatus.find_all_by_is_closed(false, :select => 'id').map(&:id))
-    @totalDays = DateTools::distance_of_time_in_days(@gantt.date_from, @gantt.date_to)
+    # Last day is num_months after first day
+    @last_day = @first_day >> num_months
 
-    @daysUntilMonday = (( 7 - @gantt.date_from.cwday ) + 1)
-    @monday          = @gantt.date_from.to_date
+    # Should issues be shown, or only total workload per user?
+    @show_issues = workloadParameters[:show_issues] ? '1' : ''
 
-    @daysUntilMonday.times do
-		  @monday = @monday.next
-	  end
 
-    @numberOfWeeks = (@totalDays / 7).round
+    # Get list of users that are allowed to display by this user
+    @usersAllowedToDisplay = User.active
 
-    current_date = @gantt.date_from
-    final_date   = @gantt.date_to
-    @barras_days = []
-    while ( current_date.to_time < final_date.to_time ) do
-      @barras_days.push( 16 * DateTools::distance_of_time_in_days( @gantt.date_from.to_date.strftime("%Y-%m-%d"), current_date.to_date.end_of_month.strftime("%Y-%m-%d") ) )
-      current_date = current_date.to_date.end_of_month + 1
-    end
+    # Get list of users that should be displayed.
+    @usersToDisplay = workloadParameters[:users].nil? ?
+                        [] :
+                        User.find_all_by_id(workloadParameters[:users].split(','))
+
+    # Intersect the list with the list of users that are allowed to be displayed.
+    @usersToDisplay = @usersToDisplay & @usersAllowedToDisplay
 
   end
 

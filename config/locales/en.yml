@@ -4,6 +4,7 @@ en:
   workload_show_label: "Workload"
   workload_show_poweredby: "Powered by"
   workload_show_range: "Range"
+  workload_show_rangefrom: "from"
   workload_show_calendar_today: "Today"
   workload_show_calendar_calendar: "calendar"
   workload_show_filter_user: "Users"

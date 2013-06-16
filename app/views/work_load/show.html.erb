@@ -1,76 +1,9 @@
-<%
-@gantt.view = self
-subject_width = 330
-header_heigth = 18
-headers_height = header_heigth
-headers_height = 3*header_heigth
-zoom = 16
-holidays = ["2013-01-01","2013-01-02","2013-03-29","2013-04-01","2013-05-09","2013-05-20","2013-08-01","2013-09-16","2013-12-25"]
-
-g_width = (@gantt.date_to - @gantt.date_from + 1)*zoom
-g_height = [(20 * (10 + 6))+150, 206].max
-t_height = g_height + headers_height
-calculos = {}
-pos_background = (16 * (8 - @gantt.date_from.to_date.cwday ))-1
-
-%><h2><%= l(:workload_show_label) %></h2><%=
-
-form_tag({
-	:controller => 'work_load',
-	:action     => 'show',
-	:project_id => @project,
-	:month      => params[:month],
-	:year       => params[:year],
-	:months     => params[:months]
-	},
-	:method => :get,
-	:id     => 'query_form',
-	:class  => 'content_form') do
-
-	%><div class="buttons">
-		<label><%= l(:workload_show_range) %></label>
-		<p class="buttons">
-			<%= text_field_tag 'months', @gantt.months, :size => 2 %>
-			<%= l(:label_months_from) %>
-			<%= select_month(@gantt.month_from, :prefix => "month", :discard_type => true) %>
-			<%= select_year(@gantt.year_from, :prefix => "year", :discard_type => true) %>
-			<%= hidden_field_tag 'zoom', @gantt.zoom %>
-		</p>
-	</div>
-	<div class="calendar">
-		<span>
-			<label><%= l(:workload_show_calendar_today) %></label>
-			<input type="text" value="<%=@currentDay.to_date.strftime("%d/%m/%Y")%>" autocomplete="off" class="campofecha" id="date1" name="fecha_actual">
-			<span class="calendar_icon"><%= l(:workload_show_calendar_calendar) %></span>
-		</span>
-	</div>
-
-	<div class="multiselect">
-		<label><%= l(:workload_show_filter_user) %></label>
-		<select name='usuarios_id[]' multiple='true'> <%
-
-			@userIds = @usersToDisplay.collect {|item| item.id}
-
-			User.active.each do |user|
-				%><option <%=(@userIds.include?(user.id) ) ? 'selected="selected"' : ''%> value='<%=user.id%>'><%=user.firstname%> <%=user.lastname%></option><%
-			end
-		%></select>
-	</div>
-	<div class="issues">
-		<span>
-			<input type="hidden" name="show_issues" value="0" />
-			<input type="checkbox" <%=(Integer(params[:show_issues]) == 1) ? 'checked="checked"' : ''%> id="cb_issues_id" name="show_issues" value="1" />
-			<label for="cb_status_id"><%= l(:workload_show_issues) %></label>
-		</span>
-	</div>
-	<%= link_to_function l(:button_apply), 'jQuery("#query_form").submit()', :class => 'icon icon-checked' %>
-<%
-end
-%>
+<h2><%= l(:workload_show_label) %></h2>
+  <%= render :partial => 'filters' %>
 
 <%= error_messages_for 'query' %>
 <%
-  timeSpanToDisplay = @gantt.date_from..@gantt.date_to
+  timeSpanToDisplay = @first_day..@last_day
 
   monthsToRender = ListUser::getMonthsInTimespan(timeSpanToDisplay)
   workloadData   = ListUser::getHoursPerUserIssueAndDay(@usersToDisplay, timeSpanToDisplay, Date::today)
@@ -113,15 +46,6 @@ end
 </div>
 
 
-<table width="100%">
-	<tr>
-		<td align="left">
-			<a href='show?<%= params.merge({:year => (@gantt.date_from << @gantt.months).year, :month => (@gantt.date_from << @gantt.months).month, :zoom => zoom, :months => @gantt.months }).to_query%>'><%=l(:label_previous)%></a>
-		</td>
-		<td align="right"><a href='show?<%= params.merge({:year => (@gantt.date_from >> @gantt.months).year, :month => (@gantt.date_from >> @gantt.months).month, :zoom => zoom, :months => @gantt.months }).to_query%>'><%=l(:label_next)%></a>
-		</td>
-	</tr>
-</table>
 <div class="legend">
 	<span class="hours_graph" title="leyenda"><%= l(:workload_show_legend) %></span>
 	<div class="timing_graph">
@@ -144,10 +68,4 @@ content_for :sidebar do
 end
 
 html_title('WorkLoad') %>
-<%= javascript_include_tag "calendario_dw",   :plugin => "redmine_workload" %>
-<%= javascript_include_tag "redmine_plugins", :plugin => "redmine_workload" %>
-<script>
-	jQuery(document).ready(function($){
-		createCss(new Array(<%=@barras_days.join(',')%>));
-	});
-</script>
+

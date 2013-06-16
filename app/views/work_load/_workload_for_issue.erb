@@ -29,6 +29,7 @@
       klass += ' workingday'    if !dataForDay[:holiday]
       klass += ' not-estimated' if  dataForDay[:noEstimate]
       klass += ' estimated'     if !dataForDay[:noEstimate]
+      klass += ' today'         if  @today === day
       klass += ' ' + ListUser::getLoadClassForHours(dataForDay[:hours])
   %>
     <td>
