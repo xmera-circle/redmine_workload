@@ -1,5 +1,9 @@
 # French strings go here
 fr:
+  permission_view_own_workload: "Show own workload"
+  permission_view_project_workload: "Show workload of own projects"
+  permission_view_all_workload: "Show workload of all users"
+  
   workload_title: "Charge de Travail"
   workload_site_title: "Charge"
   workload_show_label: "Charge"

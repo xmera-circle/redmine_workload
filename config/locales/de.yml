@@ -1,5 +1,9 @@
 # German strings go here
 de:
+  permission_view_own_workload: "Eigenen Workload anzeigen"
+  permission_view_project_workload: "Workload der Mitglieder in eigenen Projekten anzeigen"
+  permission_view_all_workload: "Workload aller Nutzer anzeigen"
+
   workload_title: "Workload"
   workload_site_title: "Workload"
   workload_show_label: "Workload"
