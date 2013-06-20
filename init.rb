@@ -1,15 +1,16 @@
 require 'redmine'
 require_dependency 'dateTools'
 require_dependency 'list_user'
-require_dependency 'issueCalculations'
 
 Redmine::Plugin.register :redmine_workload do
   name 'Redmine Workload plugin'
-  author 'Yann Bogdanovic, Jost Baron'
-  description 'This is a plugin for Redmine, originally developed by Dnoise Rafael Calleja'
-  version '0.2.0'
+  author 'Jost Baron'
+  description 'This is a plugin for Redmine, originally developed by Rafael Calleja. It ' +
+              'displays the estimated number of hours users have to perform for each day to finish ' +
+              'all their assigned issus on time.'
+  version '0.3.0'
   url 'https://github.com/JostBaron/redmine_workload'
-  author_url 'http://www.d-noise.net/'
+  author_url 'http://netzkönig.de/'
 
   menu :top_menu, :WorkLoad, { :controller => 'work_load', :action => 'show' }, :caption => :workload_title,
     :if =>  Proc.new { User.current.logged? }
