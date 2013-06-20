@@ -6,6 +6,7 @@ class WorkLoadController < ApplicationController
   helper :issues
   helper :projects
   helper :queries
+  helper :filters
 
   include QueriesHelper
 

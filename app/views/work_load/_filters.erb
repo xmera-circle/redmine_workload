@@ -13,10 +13,9 @@
       <%= text_field_tag :workload_start_date, @today, :name => 'workload[start_date]', :size => 10 %>
       <%= calendar_for('workload_start_date') %>
     </div>
-
     <div class="users">
       <%= label_tag :workload_users, l(:workload_show_filter_user) %>
-      <%= select_tag :workload_users, options_from_collection_for_select(@usersAllowedToDisplay, 'id', "name", @usersToDisplay.map(&:id)), :name => 'workload[users][]', :multiple => true %>
+      <%= select_tag :workload_users, get_option_tags_for_userselection(@usersAllowedToDisplay, @usersToDisplay), :name => 'workload[users][]', :multiple => true %>
     </div>
     <div class="issues">
       <%= label_tag :check_box_tagworkload_show_issues, l(:workload_show_issues) %>
