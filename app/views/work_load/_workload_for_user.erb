@@ -11,9 +11,11 @@
   <% # Print the total workload for this user for each day %>
   <%= render :partial => 'total_workload_for_user', :locals => {:user => user, :totalWorkload => totalWorkload} %>
 </tr>
-<% # Iterate over all issues for the user %>
-<% issuesForUser = data.keys.select{|x| x.kind_of?(Issue)} %>
-   <% issuesForUser.each_with_index do |issue, index| %>
+<% if @show_issues then %>
+  <% # Iterate over all issues for the user %>
+  <% issuesForUser = data.keys.select{|x| x.kind_of?(Issue)} %>
+     <% issuesForUser.each_with_index do |issue, index| %>
 
-   <%= render :partial => 'workload_for_issue', :locals => {:user => user, :issue => issue, :data => data[issue], :index => index} %>
+     <%= render :partial => 'workload_for_issue', :locals => {:user => user, :issue => issue, :data => data[issue], :index => index} %>
+  <% end %>
 <% end %>
