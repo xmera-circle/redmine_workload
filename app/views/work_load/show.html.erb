@@ -1,3 +1,5 @@
+<% html_title(l(:workload_site_title)) %>
+
 <h2><%= l(:workload_show_label) %></h2>
   <%= render :partial => 'filters' %>
 
@@ -45,27 +47,6 @@
   </table>
 </div>
 
-
-<div class="legend">
-	<span class="hours_graph" title="leyenda"><%= l(:workload_show_legend) %></span>
-	<div class="timing_graph">
-		<span class="title"><strong><%= l(:workload_show_legend_title) %>:</strong></span>
-		<span class="perfect" title="leyenda"><%= l(:workload_show_legend_perfect) %></span>
-		<span class="normal" title="leyenda"><%=  l(:workload_show_legend_normal)  %></span>
-		<span class="retard" title="leyenda"><%=  l(:workload_show_legend_retard)  %></span>
-		<span class="retard2" title="leyenda"><%= l(:workload_show_legend_retard2) %></span>
-		<span class="no_time" title="leyenda"><%= l(:workload_show_legend_no_time) %></span>
-		<span class="father" title="leyenda"><%=  l(:workload_show_legend_father)  %></span>
-	</div>
-	<span class="blue"><%=  l(:workload_show_legend_time_spent) %></span>
-	<span class="gray"><%=  l(:workload_show_legend_past)       %></span>
-	<span class="black"><%= l(:workload_show_legend_out)        %></span>
-</div>
-<div style="clear:both;"></div><%
-
-content_for :sidebar do
-	render :partial => 'issues/sidebar'
-end
-
-html_title('WorkLoad') %>
-
+<% content_for :sidebar do %>
+  <%  render :partial => 'issues/sidebar' %>
+<% end %>

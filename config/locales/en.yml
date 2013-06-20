@@ -1,6 +1,7 @@
 # English strings go here
 en:
   workload_title: "Workload"
+  workload_site_title: "Workload"
   workload_show_label: "Workload"
   workload_show_poweredby: "Powered by"
   workload_show_range: "Range"

@@ -50,19 +50,4 @@ class WorkLoadController < ApplicationController
     @usersToDisplay = @usersToDisplay & @usersAllowedToDisplay
 
   end
-
-  def sort_clear
-
-  end
-
-#########
-protected
-#########
-
-  def is_user_logged_in
-    if !User.current.logged?
-      render_403
-    end
-  end
-
 end

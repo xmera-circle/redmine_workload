@@ -1,6 +1,7 @@
 # French strings go here
 fr:
   workload_title: "Charge de Travail"
+  workload_site_title: "Charge"
   workload_show_label: "Charge"
   workload_show_poweredby: "Propulsé par"
   workload_show_range: "Écart"
