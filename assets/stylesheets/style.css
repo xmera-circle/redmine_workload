@@ -1,4 +1,30 @@
 /*******************************************************************************
+ * Styles for the filter form.
+ ******************************************************************************/
+
+.controller-work_load .filters > div,
+.controller-work_load .filters .apply {
+    margin-top: 8px;
+}
+
+.controller-work_load .filters label:first-child {
+    display: inline-block;
+    width: 150px;
+}
+
+.controller-work_load .filters .apply {
+    display: inline-block;
+}
+
+/*******************************************************************************
+ * Styles for the filter form.
+ ******************************************************************************/
+
+.controller-work_load .wrapper {
+    margin-top: 30px;
+}
+
+/*******************************************************************************
  * Styles for the header of the gantt diagram.
  ******************************************************************************/
 

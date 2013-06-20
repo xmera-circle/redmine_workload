@@ -1,26 +1,30 @@
-<%= form_tag({}, {:method => :get, :id => 'filter_form'}) do %>
-  <div class="timespan">
-    <%= label_tag :workload_months, l(:workload_show_range) %>
-    <%= text_field_tag :workload_num_months, @num_months, :name => 'workload[num_months]', :size => 2 %>
-    <%= label_tag :workload_first_day, l(:workload_show_rangefrom) %>
-    <%= text_field_tag :workload_first_day, @first_day, :name => 'workload[first_day]', :size => 10 %>
-    <%= calendar_for('workload_first_day') %>
-  </div>
-  <div class="calendar">
-    <%= text_field_tag :workload_start_date, @today, :name => 'workload[start_date]', :size => 10 %>
-    <%= calendar_for('workload_start_date') %>
-  </div>
+<%= form_tag({}, {:method => :get, :id => 'filter_form', :class => 'filters'}) do %>
+  <fieldset>
+    <legend><%= l(:workload_show_filters) %></legend>
+    <div class="timespan">
+      <%= label_tag :workload_months, l(:workload_show_range) %>
+      <%= text_field_tag :workload_num_months, @num_months, :name => 'workload[num_months]', :size => 2 %>
+      <%= label_tag :workload_first_day, l(:workload_show_rangefrom) %>
+      <%= text_field_tag :workload_first_day, @first_day, :name => 'workload[first_day]', :size => 10 %>
+      <%= calendar_for('workload_first_day') %>
+    </div>
+    <div class="calendar">
+      <%= label_tag :workload_start_date, l(:workload_show_today) %>
+      <%= text_field_tag :workload_start_date, @today, :name => 'workload[start_date]', :size => 10 %>
+      <%= calendar_for('workload_start_date') %>
+    </div>
 
-  <div class="users">
-    <%= label_tag :workload_users, l(:workload_show_filter_user) %>
-    <%= select_tag :workload_users, options_from_collection_for_select(@usersAllowedToDisplay, 'id', "name", @usersToDisplay.map(&:id)), :name => 'workload[users][]', :multiple => true %>
-  </div>
-  <div class="issues">
-    <%= hidden_field_tag :workload_show_issues_default, 0, :name => 'workload[show_issues]' %>
-    <%= check_box_tag :workload_show_issues, 1, @show_issues, :name => 'workload[show_issues]' %>
-    <%= label_tag :check_box_tagworkload_show_issues, l(:workload_show_issues) %>
-  </div>
-  <%= link_to_function l(:button_apply), 'jQuery("#filter_form").submit()', :class => 'icon icon-checked' %>
+    <div class="users">
+      <%= label_tag :workload_users, l(:workload_show_filter_user) %>
+      <%= select_tag :workload_users, options_from_collection_for_select(@usersAllowedToDisplay, 'id', "name", @usersToDisplay.map(&:id)), :name => 'workload[users][]', :multiple => true %>
+    </div>
+    <div class="issues">
+      <%= label_tag :check_box_tagworkload_show_issues, l(:workload_show_issues) %>
+      <%= hidden_field_tag :workload_show_issues_default, 0, :name => 'workload[show_issues]' %>
+      <%= check_box_tag :workload_show_issues, 1, @show_issues, :name => 'workload[show_issues]' %>
+    </div>
+    <%= link_to_function l(:button_apply), 'jQuery("#filter_form").submit()', :class => 'apply icon icon-checked' %>
+  </fieldset>
 <%
   end
 %>
