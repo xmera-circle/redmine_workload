@@ -6,12 +6,14 @@
     background-image: url('../images/logo.png');
     background-repeat: no-repeat;
     background-position: center;
+
+    min-width: 250px;
 }
 
 /* Column width if no data is displayed */
 .controller-work_load .day-of-month,
 .controller-work_load .day-of-week {
-    width: 28px;
+    min-width: 28px;
 }
 
 /* Month names */
@@ -58,12 +60,12 @@
     border-collapse: collapse;
 }
 
-.controller-work_load .data thead {
+.controller-work_load thead {
     font-size: .9em;
 }
 
-.controller-work_load .data .user-description,
-.controller-work_load .data .issue-description {
+.controller-work_load .user-description,
+.controller-work_load .issue-description {
     width:     250px;
     min-width: 250px;
     max-width: 250px;
@@ -75,17 +77,17 @@
     border-right: 1px solid black;
 }
 
-.controller-work_load .data .user-description {
+.controller-work_load .user-description {
     font-size: 1.2em;
     padding-left: 1em;
 }
 
-.controller-work_load .data .issue-description {
+.controller-work_load .issue-description {
     padding-left: 2em;
 }
 
-.controller-work_load .data td,
-.controller-work_load .data th {
+.controller-work_load td,
+.controller-work_load th {
     height: 30px;
     border-bottom: 1px solid black;
 }
@@ -115,7 +117,7 @@
     background-color: #D7D7D7!important;
 }
 
-.controller-work_load .data td {
+.controller-work_load td {
     padding: 0;
 
     font-size: .8em;
@@ -134,7 +136,7 @@
     padding-top: 5px;
 }
 
-.controller-work_load .data .today {
+.controller-work_load .today {
     border-left: 2px solid red;
     padding-left: 2px;
     margin-left: 2px;
