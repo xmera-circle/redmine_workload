@@ -1,52 +1,42 @@
 /*******************************************************************************
  * Styles for the header of the gantt diagram.
  ******************************************************************************/
-.controller-work_load .month-header {
-    display:        inline-block;
 
-    text-align:     center;
-
-    border-top:     1px solid #c0c0c0;
-    border-bottom:  1px solid #c0c0c0;
+/* Column width if no data is displayed */
+.controller-work_load .day-of-month,
+.controller-work_load .day-of-week {
+    width: 28px;
 }
 
-.controller-work_load .month-header .month {
-    border-right:   1px solid #c0c0c0;
-    border-bottom:  1px solid #c0c0c0;
+/* Month names */
+.controller-work_load .month-name {
+    border-left: 1px solid black;
+    border-top: 1px solid black;
 }
 
-.controller-work_load .days {
-    border-left:    1px solid #c0c0c0;
+.controller-work_load .month-name:last-child {
+    border-right: 1px solid black;
 }
 
-.controller-work_load .days:first-child {
-    border-left:    none;
+/* Day of month */
+.controller-work_load .day-of-month.firstDayOfMonth {
+    border-left: 1px solid black;
 }
 
-.controller-work_load .day {
-    display:        inline-block;
-    width:          16px;
+.controller-work_load .day-of-month:last-child {
+    border-right: 1px solid black;
 }
 
-.controller-work_load .day .dayOfMonth,
-.controller-work_load .day .dayOfWeek {
-    display:        block;
-    height:         18px;
-
-    font-size:      .7em;
-
-    vertical-align: middle;
+/* Day of week */
+.controller-work_load .day-of-week.firstDayOfWeek,
+.controller-work_load .day-of-week:first-child {
+    border-left: 1px solid black;
 }
 
-.controller-work_load .day .dayOfMonth {
-    font-weight:    bold;
-
-    border-bottom:  1px solid #c0c0c0;
+.controller-work_load .day-of-week:last-child {
+    border-right: 1px solid black;
 }
 
-.controller-work_load .day .dayOfWeek {
-    border-right:   1px solid #c0c0c0;
-}
 
 /*******************************************************************************
  * Styles for the workload table.
@@ -59,24 +49,39 @@
 .controller-work_load .data {
     table-layout: fixed;
     border-spacing: 0 3px;
+    border-collapse: collapse;
 }
 
 .controller-work_load .data thead {
     font-size: .9em;
 }
 
-.controller-work_load .data tbody .user-description,
-.controller-work_load .data tbody .issue-description {
+.controller-work_load .data .user-description,
+.controller-work_load .data .issue-description {
     width:     250px;
     min-width: 250px;
     max-width: 250px;
 
     text-align: left;
     font-size: .9em;
+
+    border-left: 1px solid black;
+    border-right: 1px solid black;
 }
 
-.controller-work_load .data td {
+.controller-work_load .data .user-description {
+    font-size: 1.2em;
+    padding-left: 1em;
+}
+
+.controller-work_load .data .issue-description {
+    padding-left: 2em;
+}
+
+.controller-work_load .data td,
+.controller-work_load .data th {
     height: 30px;
+    border-bottom: 1px solid black;
 }
 
 .controller-work_load .user-total-workload {
@@ -104,10 +109,6 @@
     background-color: #D7D7D7!important;
 }
 
-.controller-work_load .data .issue-description {
-    padding-left: 10px;
-}
-
 .controller-work_load .data td {
     padding: 0;
 
@@ -127,7 +128,15 @@
     padding-top: 5px;
 }
 
-.controller-work_load .hours {
+.controller-work_load .data .today {
+    border-left: 2px solid red;
+    padding-left: 2px;
+    margin-left: 2px;
+}
+
+/* Styling of the spans in the table */
+
+.controller-work_load .hours span {
     display: block;
 
     padding-top: .6em;
@@ -137,26 +146,35 @@
     color: white;
 }
 
-.controller-work_load .today {
-    border-left: 2px solid red;
-}
-
-.controller-work_load .hours.none {
+.controller-work_load .hours.none span {
     color: black;
 }
 
-.controller-work_load .none {
+.controller-work_load .none span {
     background: transparent;
 }
 
-.controller-work_load .low {
+.controller-work_load .active span {
+    background-color: rgba(200, 200, 200, 0.5);
+}
+
+.controller-work_load .low span {
     background: green;
 }
 
-.controller-work_load .normal {
+.controller-work_load .normal span {
     background: yellow;
+    color: black;
 }
 
-.controller-work_load .high {
+.controller-work_load .high span {
     background: red;
+}
+
+.controller-work_load .holiday {
+    background-image: url('../images/background-holiday.png');
+}
+
+.controller-work_load .active.holiday span {
+    background-color: transparent;
 }

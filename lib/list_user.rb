@@ -84,6 +84,7 @@ class ListUser
       end
 
       firstWorkingDayAfterToday = DateTools::getWorkingDaysInTimespan(today..timeSpan.end).first
+      result[firstWorkingDayAfterToday] = Hash::new if result[firstWorkingDayAfterToday].nil?
       result[firstWorkingDayAfterToday][:hours] = hoursRemaining
 
     # If the hours needed for an issue can not be estimated, set all days

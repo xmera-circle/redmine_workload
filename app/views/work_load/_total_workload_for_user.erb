@@ -12,8 +12,8 @@
      klass += ' today'   if @today === day
      klass += ' ' + ListUser::getLoadClassForHours(totalWorkload[day][:hours])
   %>
-  <td>
-      <span class="<%= klass %>">
+  <td class="<%= klass %>">
+      <span>
         <%= sprintf("%.1f", totalWorkload[day][:hours]) %>
       </span>
   </td>

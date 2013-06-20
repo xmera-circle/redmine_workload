@@ -31,10 +31,12 @@
       klass += ' estimated'     if !dataForDay[:noEstimate]
       klass += ' today'         if  @today === day
       klass += ' ' + ListUser::getLoadClassForHours(dataForDay[:hours])
+
+      hoursString = (dataForDay[:hours].abs < 0.01) ? '' : sprintf("%.1f", dataForDay[:hours])
   %>
-    <td>
-      <span class="<%= klass %>">
-        <%= sprintf("%.1f", dataForDay[:hours]) %>
+    <td class="<%= klass %>">
+      <span>
+        <%= hoursString %>
       </span>
     </td>
   <% end %>
