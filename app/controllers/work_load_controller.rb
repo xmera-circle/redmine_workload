@@ -12,6 +12,8 @@ class WorkLoadController < ApplicationController
   def show
     workloadParameters = params[:workload]
 
+    workloadParameters = {} if workloadParameters.nil?
+
     # If no date is given for the start date, use today.
     @today = workloadParameters[:start_date].respond_to?(:to_date) ?
                     workloadParameters[:start_date].to_date :
