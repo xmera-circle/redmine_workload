@@ -1,9 +1,9 @@
 <%= form_tag({}, {:method => :get, :id => 'filter_form'}) do %>
   <div class="timespan">
     <%= label_tag :workload_months, l(:workload_show_range) %>
-    <%= text_field_tag :workload_num_months, 2, :name => 'workload[num_months]', :size => 2 %>
+    <%= text_field_tag :workload_num_months, @num_months, :name => 'workload[num_months]', :size => 2 %>
     <%= label_tag :workload_first_day, l(:workload_show_rangefrom) %>
-    <%= text_field_tag :workload_first_day, Date::today, :name => 'workload[first_day]', :size => 10 %>
+    <%= text_field_tag :workload_first_day, @first_day, :name => 'workload[first_day]', :size => 10 %>
     <%= calendar_for('workload_first_day') %>
   </div>
   <div class="calendar">
@@ -17,8 +17,8 @@
   </div>
   <div class="issues">
     <%= hidden_field_tag :workload_show_issues_default, 0, :name => 'workload[show_issues]' %>
-    <%= check_box_tag :workload_show_issues, 1, :name => 'workload[show_issues]' %>
-    <%= label_tag :workload_show_issues, l(:workload_show_issues) %>
+    <%= check_box_tag :workload_show_issues, 1, @show_issues, :name => 'workload[show_issues]' %>
+    <%= label_tag :check_box_tagworkload_show_issues, l(:workload_show_issues) %>
   </div>
   <%= link_to_function l(:button_apply), 'jQuery("#filter_form").submit()', :class => 'icon icon-checked' %>
 <%

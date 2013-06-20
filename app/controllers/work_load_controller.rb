@@ -20,7 +20,7 @@ class WorkLoadController < ApplicationController
                     Date::today
 
     # Should issues be shown, or only total workload per user?
-    @show_issues = workloadParameters[:show_issues] ? '1' : ''
+    @show_issues = workloadParameters[:show_issues].nil? ? false : (workloadParameters[:show_issues] === '1')
 
 
     # Get list of users that are allowed to display by this user
@@ -41,13 +41,13 @@ class WorkLoadController < ApplicationController
                     Date::today.at_beginning_of_month
 
     # Use given number of months to display, or 2 if number cannot be parsed.
-    num_months = Integer(workloadParameters[:num_months]) rescue 2
+    @num_months = Integer(workloadParameters[:num_months]) rescue 2
 
     # Limit number of months to 12 to hold down runtimes.
-    num_months = [num_months, 12].min
+    @num_months = [@num_months, 12].min
 
     # Last day is num_months after first day
-    @last_day = (@first_day >> num_months) - 1
+    @last_day = (@first_day >> @num_months) - 1
     @timeSpanToDisplay = @first_day..@last_day
 
     @monthsToRender = ListUser::getMonthsInTimespan(@timeSpanToDisplay)
