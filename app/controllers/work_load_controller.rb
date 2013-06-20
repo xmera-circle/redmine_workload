@@ -42,6 +42,7 @@ class WorkLoadController < ApplicationController
                     Date::today.at_beginning_of_month
 
     # Use given number of months to display, or 2 if number cannot be parsed.
+    workloadParameters[:num_months] = '2' if workloadParameters[:num_months].nil?
     @num_months = Integer(workloadParameters[:num_months]) rescue 2
 
     # Limit number of months to 12 to hold down runtimes.
