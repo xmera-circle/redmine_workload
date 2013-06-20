@@ -9,7 +9,7 @@
 
 <%
   klass  = (index % 2 == 0) ? 'even' : 'odd'
-  klass += ' overdue' if issue.overdue?
+  klass += ' overdue' if !issue.due_date.nil? && (issue.due_date < @today)
 %>
 
 <tr class="issue-workload <%= klass %>">
