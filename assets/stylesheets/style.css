@@ -2,6 +2,12 @@
  * Styles for the header of the gantt diagram.
  ******************************************************************************/
 
+.controller-work_load .logo {
+    background-image: url('../images/logo.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 /* Column width if no data is displayed */
 .controller-work_load .day-of-month,
 .controller-work_load .day-of-week {
