@@ -17,9 +17,7 @@ Redmine::Plugin.register :redmine_workload do
 
   settings :default => {'empty' => true}, :partial => 'settings/workload_settings'
 
-  permission :view_own_workload, :work_load => :show
   permission :view_project_workload, :work_load => :show
-  permission :view_all_workload, :work_load => :show
 
 end
 

@@ -25,7 +25,7 @@ class WorkLoadController < ApplicationController
 
 
     # Get list of users that are allowed to display by this user
-    @usersAllowedToDisplay = User.active
+    @usersAllowedToDisplay = ListUser::getUsersAllowedToDisplay()
 
     # Get list of users that should be displayed.
     @usersToDisplay = workloadParameters[:users].nil? ?

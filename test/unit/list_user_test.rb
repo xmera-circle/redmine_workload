@@ -2,17 +2,8 @@ require File.expand_path('../../test_helper', __FILE__)
 
 class ListUserTest < ActiveSupport::TestCase
 
-  # Load everything, I'm sick of the errors.
-  fixtures :projects, :users, :members, :member_roles, :roles,
-           :groups_users,
-           :trackers, :projects_trackers,
-           :enabled_modules,
-           :versions,
-           :issue_statuses, :issue_categories, :issue_relations, :workflows,
-           :enumerations,
-           :issues, :journals, :journal_details,
-           :custom_fields, :custom_fields_projects, :custom_fields_trackers, :custom_values,
-           :time_entries
+  fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
+           :users, :issue_statuses, :enumerations, :roles
 
 
   test "getOpenIssuesForUsers returns empty list if no users given" do
@@ -652,5 +643,45 @@ class ListUserTest < ActiveSupport::TestCase
     Setting.plugin_redmine_workload['threshold_highload_min'] = 7.0
 
     assert_equal "high", ListUser::getLoadClassForHours(10.5)
+  end
+
+  test "getUsersAllowedToDisplay returns an empty array if the current user is anonymus." do
+    User.current = User.anonymous
+
+    assert_equal [], ListUser::getUsersAllowedToDisplay
+  end
+
+  test "getUsersAllowedToDisplay returns only the user himself if user has no role assigned." do
+    User.current = User.generate!
+
+    assert_equal [User.current].map(&:id).sort, ListUser::getUsersAllowedToDisplay.map(&:id).sort
+  end
+
+  test "getUsersAllowedToDisplay returns all users if the current user is a admin." do
+    User.current = User.generate!
+    # Make this user an admin seperately
+    User.current.admin = true
+
+    assert_equal User.active.map(&:id).sort, ListUser::getUsersAllowedToDisplay.map(&:id).sort
+  end
+
+  test "getUsersAllowedToDisplay returns exactly project members if user has right to see workload of project members." do
+    User.current = User.generate!
+    project = Project.generate!
+
+    projectManagerRole = Role.generate!(:name => 'Project manager',
+                                        :permissions => [:view_project_workload])
+
+    User.add_to_project(User.current, project, [projectManagerRole]);
+
+    projectMember1 = User.generate!
+    User.add_to_project(projectMember1, project)
+    projectMember2 = User.generate!
+    User.add_to_project(projectMember2, project)
+
+    # Create some non-member
+    User.generate!
+
+    assert_equal [User.current, projectMember1, projectMember2].map(&:id).sort, ListUser::getUsersAllowedToDisplay.map(&:id).sort
   end
 end

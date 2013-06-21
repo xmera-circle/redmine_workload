@@ -267,4 +267,23 @@ class ListUser
     end
   end
 
+  # Returns the list of all users the current user may display.
+  def self.getUsersAllowedToDisplay()
+
+    return [] if User.current.anonymous?
+    return User.active if User.current.admin?
+
+    result = [User.current]
+
+    # Create SQL where clause to get all projects where the current user has the
+    # :view_project_workload permission
+    whereClause = Project.allowed_to_condition(User.current, :view_project_workload, :options => {:member => User.current})
+    projects = Project.where(whereClause).all
+
+    projects.each do |project|
+      result += project.members.map(&:user)
+    end
+
+    return result.uniq
+  end
 end
