@@ -46,8 +46,8 @@ en:
   workload_settings_general_workdays_saturday:  "Saturday:"
   workload_settings_general_workdays_sunday:    "Sunday:"
 
-  workload_settings_hours:                      "Wrokload thresholds"
-  workload_settings_leastdailyworkload:         "Smallest workload that is considered"
-  workload_settings_hours_low_min:              "Low:"
-  workload_settings_hours_normal_min:           "Normal:"
-  workload_settings_hours_high_min:             "Overloaded:"
+  workload_settings_hours:                      "Workload thresholds"
+  workload_settings_leastdailyworkload:         "Smallest workload that is considered to be ..."
+  workload_settings_hours_low_min:              "... low:"
+  workload_settings_hours_normal_min:           "... normal:"
+  workload_settings_hours_high_min:             "... overloaded:"
