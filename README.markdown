@@ -23,8 +23,8 @@ database migration, as this plugin does not change anything in the database.
 
 There are two places where this plugin might be configured:
 
-# In the plugin settings, available in the administration area under "plugins".
-# In the Roles-section of the administration area, the plugin adds a new
+1. In the plugin settings, available in the administration area under "plugins".
+2. In the Roles-section of the administration area, the plugin adds a new
   permission "view workload data in own projects". When this permission is given
   to a user in a project, he might see the workload of all the members of that
   project.
