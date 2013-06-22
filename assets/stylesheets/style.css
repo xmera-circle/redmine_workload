@@ -109,8 +109,13 @@
     padding-left: 1em;
 }
 
-.controller-work_load .issue-description {
+.controller-work_load .issue-description,
+.controller-work_load .invisible-workload-description {
     padding-left: 2em;
+}
+
+.controller-work_load .invisible-workload-description {
+    font-size: 1em;
 }
 
 .controller-work_load td,
