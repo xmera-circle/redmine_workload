@@ -1,0 +1,22 @@
+<%
+# Renders the workload data for one single issue.
+# Parameters:
+#  * user: The user to render the data for.
+#  * summarizedWorkload Hash that contains the summarized workload for invisible issues.
+%>
+
+<% summarizedWorkload.keys.sort.each do |day| %>
+  <%
+     klass  = 'hours'
+     klass += ' holiday' if summarizedWorkload[day][:holiday]
+     klass += ' today'   if @today === day
+     klass += ' ' + ListUser::getLoadClassForHours(summarizedWorkload[day][:hours])
+
+     hoursString = (summarizedWorkload[day][:hours].abs < 0.01) ? '' : sprintf("%.1f", summarizedWorkload[day][:hours])
+  %>
+  <td class="<%= klass %>">
+      <span>
+        <%= hoursString %>
+      </span>
+  </td>
+<% end %>

@@ -1,5 +1,6 @@
 class ListUser
-  unloadable
+
+  require 'dateTools'
 
   def self.getEstimatedTimeForIssue(issue)
     raise ArgumentError unless issue.kind_of?(Issue)

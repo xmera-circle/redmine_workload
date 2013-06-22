@@ -55,7 +55,10 @@ class WorkLoadController < ApplicationController
     @monthsToRender = ListUser::getMonthsInTimespan(@timeSpanToDisplay)
     @workloadData   = ListUser::getHoursPerUserIssueAndDay(@usersToDisplay, @timeSpanToDisplay, @today)
 
+    # Calculate workload per user and remove invisible issues.
     @totalWorkloadPerUser = ListUser::calculateTotalUserWorkloads(@workloadData, @timeSpanToDisplay)
+    @summaryOfInvisibleIssues = ListUser::removeDataForInvisibleIssuesAndReturnSummary(@workloadData, @timeSpanToDisplay)
 
+    puts "Summary: " + @summaryOfInvisibleIssues.inspect + "\n"
   end
 end

@@ -91,7 +91,8 @@
 }
 
 .controller-work_load .user-description,
-.controller-work_load .issue-description {
+.controller-work_load .issue-description,
+.controller-work_load .invisible-workload-description {
     width:     250px;
     min-width: 250px;
     max-width: 250px;
@@ -158,8 +159,7 @@
 
 .controller-work_load .user-total-workload th,
 .controller-work_load .user-total-workload td {
-    border-top: 1px solid #C0C0C0;
-    padding-top: 5px;
+    border-top: 4px solid #707070;
 }
 
 .controller-work_load .today {

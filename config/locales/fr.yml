@@ -10,6 +10,7 @@ fr:
   workload_show_today: "Aujourd'hui"
   workload_show_filter_user: "Utilisateurs"
   workload_show_issues: "Voir les tickets"
+  workload_show_invisible_issues: "Issues invisible to you:"
   workload_show_issue_estimated_hours: "Estimé"
   workload_show_issue_spent_time: "Temps consumé"
   workload_show_issue_status: "État"

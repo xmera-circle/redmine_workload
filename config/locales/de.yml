@@ -11,6 +11,7 @@ de:
   workload_show_today: "Als \"Heute\" annehmen:"
   workload_show_filter_user: "Nutzer:"
   workload_show_issues: "Zeige Tickets:"
+  workload_show_invisible_issues: "Für Sie unsichtbare Tickets:"
   workload_show_issue_estimated_hours: "Geschätzer Aufwand"
   workload_show_issue_spent_time: "Aufgewendete Zeit"
   workload_show_issue_status: "Status"

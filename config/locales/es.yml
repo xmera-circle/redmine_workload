@@ -10,6 +10,7 @@ es:
   workload_show_today: "Fecha de c&aacute;lculo"
   workload_show_filter_user: "Usuarios"
   workload_show_issues: "Mostrar Tareas"
+  workload_show_invisible_issues: "Issues invisible to you:"
   workload_show_issue_estimated_hours: "Estimated"
   workload_show_issue_spent_time: "Spent time"
   workload_show_issue_status: "Status"

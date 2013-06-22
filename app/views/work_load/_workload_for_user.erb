@@ -4,6 +4,7 @@
 #  * user: The user to render the data for.
 #  * data: The data to render. A hash with issues as keys.
 #  * totalWorkload: The total workload for this user.
+#  * summarizedWorkload: The summarized workload from invisible issues for this user.
 %>
 
 <tr class="user-total-workload">
@@ -18,4 +19,8 @@
 
      <%= render :partial => 'workload_for_issue', :locals => {:user => user, :issue => issue, :data => data[issue], :index => index} %>
   <% end %>
+  <tr class="invisible-issues-summary">
+    <th class="invisible-workload-description" scope="row"><%= l(:workload_show_invisible_issues) %> </th>
+    <%= render :partial => 'summarized_workload_for_invisible_issues', :locals => {:user => user, :summarizedWorkload => summarizedWorkload} %>
+  </tr>
 <% end %>

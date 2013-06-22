@@ -30,7 +30,8 @@
          <%= render :partial => 'workload_for_user',
                     :locals => { :user => user,
                                  :data => @workloadData[user],
-                                 :totalWorkload => @totalWorkloadPerUser[user]
+                                 :totalWorkload => @totalWorkloadPerUser[user],
+                                 :summarizedWorkload => @summaryOfInvisibleIssues[user]
                                }
          %>
       <% end %>
