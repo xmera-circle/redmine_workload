@@ -214,11 +214,16 @@ class ListUser
     return day.end_of_month.day
   end
 
-  # Adds the total workload for each day for a user. The first parameter must be
-  # a data structure returned by getHoursPerUserIssueAndDay.
-  # In this data structure, each used gets an additional key, :total_workload.
-  # The result for this key is a hash that has the same structure as returned
-  # by the function getHoursForIssuesPerDay.
+  # Calculates the total workload for each day for all users. The first
+  # parameter must be a data structure returned by getHoursPerUserIssueAndDay,
+  # the second parameter the time span for which the total workload should be
+  # calculated. The time span must be a subset of the time span given to
+  # getHoursPerUserIssueAndDay in the first place.
+  # The result is a hash that takes a user as key and returns a hash, that
+  # takes a day as key and returns the total workload for that day as value.
+  # The total workload per day is a hash that has two keys:
+  #  * :hours - the number of hours to work on that day
+  #  * :holiday - boolean, is this a holiday.
   def self.calculateTotalUserWorkloads(hourDataStructure, timeSpan)
 
     workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
