@@ -659,7 +659,7 @@ class ListUserTest < ActiveSupport::TestCase
 
   test "getUsersAllowedToDisplay returns all users if the current user is a admin." do
     User.current = User.generate!
-    # Make this user an admin seperately
+    # Make this user an admin (can't do it in the attributes?!?)
     User.current.admin = true
 
     assert_equal User.active.map(&:id).sort, ListUser::getUsersAllowedToDisplay.map(&:id).sort
@@ -683,5 +683,109 @@ class ListUserTest < ActiveSupport::TestCase
     User.generate!
 
     assert_equal [User.current, projectMember1, projectMember2].map(&:id).sort, ListUser::getUsersAllowedToDisplay.map(&:id).sort
+  end
+
+  test "removeDataForInvisibleIssuesAndReturnSummary removes nothing if all issues are visible" do
+
+    defineSaturdaySundayAndWendnesdayAsHoliday
+
+    user = User.generate!
+    role = Role.generate!(:permissions => [:view_issues])
+    project = Project.generate!
+
+    User.add_to_project(user, project, [role])
+
+    issue1 = Issue.generate!(:project => project)
+    issue2 = Issue.generate!(:project => project)
+
+    startDate = Date::new(2013, 6, 19)
+    dueDate = Date::new(2013, 6, 21)
+
+    workloadDataBefore = ListUser::getHoursPerUserIssueAndDay([user], startDate..dueDate, startDate)
+    workloadDataToModify = ListUser::getHoursPerUserIssueAndDay([user], startDate..dueDate, startDate)
+
+    summary = ListUser::removeDataForInvisibleIssuesAndReturnSummary(workloadDataToModify, startDate..dueDate)
+
+    expectedSummary = {
+      user => {
+        Date::new(2013, 6, 19) => {
+          :hours => 0.0,
+          :holiday => true
+        },
+        Date::new(2013, 6, 20) => {
+          :hours => 0.0,
+          :holiday => false
+        },
+        Date::new(2013, 6, 21) => {
+          :hours => 0.0,
+          :holiday => false
+        }
+      }
+    }
+
+    assert_equal workloadDataBefore, workloadDataToModify
+    assert_equal expectedSummary, summary
+  end
+
+  test "removeDataForInvisibleIssuesAndReturnSummary removes invisible issue" do
+
+    defineSaturdaySundayAndWendnesdayAsHoliday
+
+    User.current = User.generate! # The user viewing the workload
+    issueOwner = User.generate!   # The user owning the issues.
+
+    role1 = Role.generate!(:permissions => [:view_issues])
+    role2 = Role.generate!(:permissions => [])
+
+    project1 = Project.generate!
+    project2 = Project.generate!
+
+    # Add issue owner to projects - needs no roles.
+    User.add_to_project(issueOwner, project1, [role2]) # Issues visible
+    User.add_to_project(issueOwner, project2, [role2]) # Issues invisible
+
+    User.add_to_project(User.current, project1, [role1]) # Issues visible
+    User.add_to_project(User.current, project2, [role2]) # Issues invisible
+
+    startDate = Date::new(2013, 6, 20)
+    dueDate = Date::new(2013, 6, 21)
+
+    issue1 = Issue.generate!(:project => project1,
+                             :start_date => startDate,
+                             :due_date => dueDate,
+                             :estimated_hours => 2.0,
+                             :assigned_to => issueOwner)
+    issue2 = Issue.generate!(:project => project1,
+                             :start_date => startDate,
+                             :due_date => dueDate,
+                             :estimated_hours => 10.0,
+                             :assigned_to => issueOwner)
+
+    # Calculate expected workload data
+    expectedWorkloadData = ListUser::getHoursPerUserIssueAndDay([issueOwner], startDate..dueDate, startDate)
+    puts expectedWorkloadData.inspect
+
+    expectedWorkloadData[issueOwner].delete(issue2) # Remove invisible issue
+
+    # Calculate expected summary hash
+    expectedSummary = {
+      issueOwner => {
+        Date::new(2013, 6, 20) => {
+          :hours => 5.0,
+          :holiday => false
+        },
+        Date::new(2013, 6, 21) => {
+          :hours => 5.0,
+          :holiday => false
+        }
+      }
+    }
+
+    # Execute test
+    workloadDataToModify = ListUser::getHoursPerUserIssueAndDay([issueOwner], startDate..dueDate, startDate)
+    summary = ListUser::removeDataForInvisibleIssuesAndReturnSummary(workloadDataToModify, startDate..dueDate)
+
+    assert_equal expectedWorkloadData, workloadDataToModify
+    assert_equal expectedSummary, summary
   end
 end

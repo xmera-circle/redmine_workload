@@ -290,4 +290,17 @@ class ListUser
 
     return result.uniq
   end
+
+  # This function removes the data of all issues that are invisible to the
+  # current user from the given hourDataStructure.
+  # To be able to still display this data, a summary is returned for each user.
+  # This summary is a hash that takes a user as key and returns a hash that
+  # takes a day as key and returns a summary of the work that user has to do
+  # on the given day.
+  # The summary is a hash that has two keys:
+  #  * :hours - the total number of hours from invisible issues from that day
+  #  * :holiday - boolean, is this a holiday.
+  def self.removeDataForInvisibleIssuesAndReturnSummary(hourDataStructure,  timeSpan)
+    return Hash::new
+  end
 end
