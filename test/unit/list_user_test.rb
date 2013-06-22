@@ -695,11 +695,17 @@ class ListUserTest < ActiveSupport::TestCase
 
     User.add_to_project(user, project, [role])
 
-    issue1 = Issue.generate!(:project => project)
-    issue2 = Issue.generate!(:project => project)
-
     startDate = Date::new(2013, 6, 19)
     dueDate = Date::new(2013, 6, 21)
+
+    issue1 = Issue.generate!(:project => project,
+                             :start_date => startDate,
+                             :due_date => dueDate,
+                             :assigned_to => user)
+    issue2 = Issue.generate!(:project => project,
+                             :start_date => startDate,
+                             :due_date => dueDate,
+                             :assigned_to => user)
 
     workloadDataBefore = ListUser::getHoursPerUserIssueAndDay([user], startDate..dueDate, startDate)
     workloadDataToModify = ListUser::getHoursPerUserIssueAndDay([user], startDate..dueDate, startDate)
@@ -755,7 +761,7 @@ class ListUserTest < ActiveSupport::TestCase
                              :due_date => dueDate,
                              :estimated_hours => 2.0,
                              :assigned_to => issueOwner)
-    issue2 = Issue.generate!(:project => project1,
+    issue2 = Issue.generate!(:project => project2,
                              :start_date => startDate,
                              :due_date => dueDate,
                              :estimated_hours => 10.0,
@@ -763,7 +769,6 @@ class ListUserTest < ActiveSupport::TestCase
 
     # Calculate expected workload data
     expectedWorkloadData = ListUser::getHoursPerUserIssueAndDay([issueOwner], startDate..dueDate, startDate)
-    puts expectedWorkloadData.inspect
 
     expectedWorkloadData[issueOwner].delete(issue2) # Remove invisible issue
 

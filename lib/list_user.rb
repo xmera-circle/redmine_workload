@@ -301,6 +301,37 @@ class ListUser
   #  * :hours - the total number of hours from invisible issues from that day
   #  * :holiday - boolean, is this a holiday.
   def self.removeDataForInvisibleIssuesAndReturnSummary(hourDataStructure,  timeSpan)
-    return Hash::new
+
+    summary = Hash::new
+
+    workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
+
+    hourDataStructure.keys.each do |user|
+      summary[user] = Hash::new
+
+      # Initialize summary data
+      timeSpan.each do |day|
+        summary[user][day] = {
+          :hours => 0.0,
+          :holiday => !workingDays.include?(day)
+        }
+      end
+
+      # Go over all issues and add the workload of the invisible issues to
+      # the summary
+      hourDataStructure[user].keys.each do |issue|
+        if !issue.visible? then
+
+          timeSpan.each do |day|
+            summary[user][day][:hours] += hourDataStructure[user][issue][day][:hours]
+          end
+
+          # Remove the invisible issue
+          hourDataStructure[user].delete(issue)
+        end
+      end
+    end
+
+    return summary
   end
 end
