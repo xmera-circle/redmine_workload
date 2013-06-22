@@ -275,10 +275,9 @@ class ListUser
 
     result = [User.current]
 
-    # Create SQL where clause to get all projects where the current user has the
-    # :view_project_workload permission
-    whereClause = Project.allowed_to_condition(User.current, :view_project_workload, :options => {:member => User.current})
-    projects = Project.where(whereClause).all
+    # Get all projects where the current user has the :view_project_workload
+    # permission
+    projects = Project.allowed_to(:view_project_workload)
 
     projects.each do |project|
       result += project.members.map(&:user)
