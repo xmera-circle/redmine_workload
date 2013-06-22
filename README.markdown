@@ -8,9 +8,6 @@ To be able to do this, the issue start date, due date and estimated time must be
 filled. Issues that have not filled out one of these fields will be shown in the
 overview, but the workload resulting from these issues will be ignored.
 
-The thresholds at which a user is considered to have too much or not enough work
-may be configured in the plugin settings.
-
 #### Installation
 
 The plugin is tested with redmine 2.3.1.
@@ -21,13 +18,33 @@ To install it, simply clone it into the plugins-directory. Execute
 
 in your plugins directory. Then restart your redmine. There is no need for
 database migration, as this plugin does not change anything in the database.
-You may configure the workload plugin in the plugin-settings dialog in redmines
-administration area.
+
+#### Configuration
+
+There are two places where this plugin might be configured:
+
+# In the plugin settings, available in the administration area under "plugins".
+# In the Roles-section of the administration area, the plugin adds a new
+  permission "view workload data in own projects". When this permission is given
+  to a user in a project, he might see the workload of all the members of that
+  project.
+
+#### Permissions
+
+The plugin shows the workload as follows:
+
+* An anonymous user can't see any workload.
+* An admin user can see the workload of everyone.
+* Any normal user can see the following workload:
+
+  - He may always see his own workload.
+  - He may see the workload of every user that is member of a project for which
+    he has the permission "view workload data in own projects" (see above).
+  - When showing the issues that contribute to the workload, only issues visible
+    to the current user are shown. Invisible issues are only summarized.
 
 #### ToDo
 
-* Implement access restrictions. Not all users may see the workload of all
-users.
 * Make it possible to display the workload starting with another day than the
 start of a month.
 * Improve performance - requests still take up to 5 seconds.
