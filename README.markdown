@@ -1,12 +1,13 @@
 ### Workload-Plugin for Redmine
 
 A complete rewrite of the original workload-plugin from Rafael Calleja. The
-plugin calculates, how much work a user would have to do in order to hit the
-deadline for all his issues.
+plugin calculates how much work each user would have to do per day in order
+to hit the deadlines for all his issues.
 
-To be able to do this, the issue start date, due date and estimated time must be
-filled. Issues that have not filled out one of these fields will be shown in the
-overview, but the workload resulting from these issues will be ignored.
+To be able to do this calculation, the issues start date, due date and
+estimated time must be filled in. Issues that have not filled in one of
+these fields will be shown in the overview, but the workload resulting from
+these issues will be ignored.
 
 #### Installation
 
