@@ -186,15 +186,28 @@ class ListUser
 			
       if !result.has_key?(issue.assigned_to) then
 			result[assignee] = {
+					:overdue_hours => 0.0,
+					:overdue_number => 0,
 					:total => Hash::new,
 					:invisible => Hash::new
 				}
+					
+				timeSpan.each do |day|
+					result[assignee][:total][day] = {
+						:hours => 0.0
+					}
+				end
 			end
 			
 			hoursForIssue = getHoursForIssuesPerDay(issue, timeSpan, today)
 
-			# Add the issue to the total workload in any case.
-			result[assignee][:total] = addIssueInfoToSummary(result[assignee][:total], hoursForIssue, timeSpan)
+			# Add the issue to the total workload, unless its overdue.
+			if issue.overdue? then
+				result[assignee][:overdue_hours]  += hoursForIssue[today][:hours];
+				result[assignee][:overdue_number] += 1
+			else
+				result[assignee][:total] = addIssueInfoToSummary(result[assignee][:total], hoursForIssue, timeSpan)
+			end
 		
 			# If the issue is invisible, add it to the invisible issues summary.
 			# Otherwise, add it to the project (and its summary) to which it belongs
@@ -204,11 +217,30 @@ class ListUser
 			else
 				project = issue.project
 				
-				result[assignee][project] = Hash::new unless result[assignee].has_key?(project)
+				if !result[assignee].has_key?(project) then
+					result[assignee][project] = {
+						:total => Hash::new,
+						:overdue_hours => 0.0,
+						:overdue_number => 0
+					}
+					
+					timeSpan.each do |day|
+						result[assignee][project][:total][day] = {
+							:hours => 0.0
+						}
+					end
+				end
 
+				# Add the issue to the project workload summary, unless its overdue.
+				if issue.overdue? then
+					result[assignee][project][:overdue_hours]  += hoursForIssue[today][:hours];
+					result[assignee][project][:overdue_number] += 1
+				else
+					result[assignee][project][:total] = addIssueInfoToSummary(result[assignee][project][:total], hoursForIssue, timeSpan)
+				end
+
+				# Add it to the issues for that project in any case.
 				result[assignee][project][issue] = hoursForIssue
-				result[assignee][project][:total] = addIssueInfoToSummary(result[assignee][project][:total], hoursForIssue, timeSpan)
-			
 			end
     end
 
