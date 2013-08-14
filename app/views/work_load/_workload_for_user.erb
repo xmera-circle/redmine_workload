@@ -10,6 +10,14 @@
 	<th class="user-description" scope="row">
 	  <%= render :partial => 'trigger', :locals => {:trigger_for => "user-#{user.name}"} %>
 	  <%= "#{user.firstname} #{user.lastname}" %>
+	  <% if data[:overdue_number] > 0 %>
+		<dl class="additional-user-info user-<%= user.name %>-open user-<%= user.name %>-close">
+		  <dt><%= l(:workload_overdue_issues_num) %></dt>
+		  <dd><%= data[:overdue_number] %></dd>
+		  <dt><%= l(:workload_overdue_issues_hours) %></dt>
+		  <dd><%= data[:overdue_hours] %></dd>
+		</dl>
+	  <% end %>
 	</th>
 	<% # Print the total workload for this user for each day %>
 	<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total]} %>

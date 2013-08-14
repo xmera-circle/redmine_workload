@@ -9,14 +9,22 @@
 <tbody class="project-total-workload user-<%= user.name %>-open user-<%= user.name %>-close">
   <tr>
 	<th class="project-description" scope="row">
-	  <%= render :partial => 'trigger', :locals => {:trigger_for => "project-#{project.identifier}"} %>
+	  <%= render :partial => 'trigger', :locals => {:trigger_for => "project-#{user.name}-#{project.identifier}"} %>
 	  <%= project.to_s %>
+	  <% if data[:overdue_number] > 0 %>
+		<dl class="additional-project-info user-<%= user.name %>-close project-<%= user.name %>-<%= project.identifier %>-open project-<%= user.name %>-<%= project.identifier %>-close">
+		  <dt><%= l(:workload_overdue_issues_num) %></dt>
+		  <dd><%= data[:overdue_number] %></dd>
+		  <dt><%= l(:workload_overdue_issues_hours) %></dt>
+		  <dd><%= data[:overdue_hours] %></dd>
+		</dl>
+	  <% end %>
 	</th>
 	<% # Print the total workload for this project for each day %>
 	<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total]} %>
   </tr>
 </tbody>
-<tbody class="issue-workloads user-<%= user.name %>-close project-<%= project.identifier %>-open project-<%= project.identifier %>-close">
+<tbody class="issue-workloads user-<%= user.name %>-close project-<%= user.name %>-<%= project.identifier %>-open project-<%= user.name %>-<%= project.identifier %>-close">
   <% # Iterate over all issues for the project %>
   <% issuesForUser = data.keys.select{|x| x.kind_of?(Issue)} %>
      <% issuesForUser.each_with_index do |issue, index| %>

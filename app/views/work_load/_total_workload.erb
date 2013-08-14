@@ -8,6 +8,7 @@
   <%
      klass  = 'hours'
      klass += ' holiday' if totalWorkload[day][:holiday]
+     klass += ' workingday' if !totalWorkload[day][:holiday]
      klass += ' today'   if @today === day
      klass += ' ' + ListUser::getLoadClassForHours(totalWorkload[day][:hours])
   %>

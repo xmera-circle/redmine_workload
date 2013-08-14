@@ -90,8 +90,13 @@
     font-size: .9em;
 }
 
+/*------------------------------------------------------------------------------
+ * Styles for the stuff that may be shown or hidden.
+ -----------------------------------------------------------------------------*/
 .controller-work_load .project-total-workload,
-.controller-work_load .issue-workloads {
+.controller-work_load .issue-workloads,
+.controller-work_load .additional-user-info,
+.controller-work_load .additional-project-info {
 	display: none;
 }
 
@@ -104,6 +109,9 @@
 	text-align: center;
 }
 
+/*------------------------------------------------------------------------------
+ * Table heads on the left side.
+ -----------------------------------------------------------------------------*/
 .controller-work_load .user-description,
 .controller-work_load .project-description,
 .controller-work_load .issue-description,
@@ -123,6 +131,9 @@
     width:     260px;
     min-width: 260px;
     max-width: 260px;
+	
+	padding-top: 7px;
+	padding-bottom: 7px;
 }
 
 .controller-work_load .project-description {
@@ -132,6 +143,9 @@
     width:     255px;
     min-width: 255px;
     max-width: 255px;
+	
+	padding-top: 7px;
+	padding-bottom: 7px;
 }
 
 .controller-work_load .issue-description,
@@ -147,9 +161,32 @@
     font-size: 1em;
 }
 
+.controller-work_load .additional-user-info,
+.controller-work_load .additional-project-info {
+	font-size: .7em;
+	font-weight: normal;
+	margin-left: 30px;
+}
+
+.controller-work_load .additional-user-info dt,
+.controller-work_load .additional-project-info dt {
+	float: left;
+	clear: left;
+	
+	width: 170px;
+}
+
+.controller-work_load .additional-user-info dd,
+.controller-work_load .additional-project-info dd {	
+	margin-left: 180px;
+}
+
+/*------------------------------------------------------------------------------
+ * Real table data
+ -----------------------------------------------------------------------------*/
 .controller-work_load td,
 .controller-work_load th {
-    height: 30px;
+    min-height: 30px;
     border-bottom: 1px solid black;
 }
 
@@ -204,7 +241,6 @@
 }
 
 /* Styling of the spans in the table */
-
 .controller-work_load .hours span {
     display: block;
 

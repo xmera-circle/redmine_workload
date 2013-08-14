@@ -34,6 +34,8 @@ en:
   workload_show_legend_time_spent: "Time spent"
   workload_show_legend_past: "Past"
   workload_show_legend_out: "Out of budget"
+  workload_overdue_issues_num: "Number of overdue issues:"
+  workload_overdue_issues_hours: "Hours from overdue issues:"
 
   workload_settings_general_workdays: "Weekly working days"
   workload_settings_general_workdays_explanation: "The following days will be considered as working days when computing the workload:"

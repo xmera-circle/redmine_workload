@@ -34,6 +34,8 @@ de:
   workload_show_legend_time_spent: "Aufgewendete Zeit"
   workload_show_legend_past: "In der Vergangenheit"
   workload_show_legend_out: "Budget verbraucht"
+  workload_overdue_issues_num: "Anzahl überfälliger Tickets:"
+  workload_overdue_issues_hours: "Stunden aus überfälligen Tickets:"
 
   workload_settings_general_workdays: "Wöchentliche Arbeitstage"
   workload_settings_general_workdays_explanation: "Diese Tage werden bei der Berechnung der Arbeitsbelastung als Arbeitstage angenommen:"

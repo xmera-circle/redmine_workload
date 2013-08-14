@@ -177,6 +177,8 @@ class ListUser
     raise ArgumentError unless issues.kind_of?(Array)
     raise ArgumentError unless timeSpan.kind_of?(Range)
     raise ArgumentError unless today.kind_of?(Date)
+		
+    workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
 
     result = {}
 
@@ -194,7 +196,8 @@ class ListUser
 					
 				timeSpan.each do |day|
 					result[assignee][:total][day] = {
-						:hours => 0.0
+						:hours => 0.0,
+						:holiday => !workingDays.include?(day)
 					}
 				end
 			end
@@ -226,7 +229,8 @@ class ListUser
 					
 					timeSpan.each do |day|
 						result[assignee][project][:total][day] = {
-							:hours => 0.0
+							:hours => 0.0,
+							:holiday => !workingDays.include?(day)
 						}
 					end
 				end
@@ -316,9 +320,6 @@ class ListUser
     workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
 		
 		summary = Hash::new if summary.nil?
-		
-		puts summary.inspect
-		puts issueInfo.inspect
 		
 		timeSpan.each do |day|
 			if !summary.has_key?(day) then
