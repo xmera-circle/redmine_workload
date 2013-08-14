@@ -216,7 +216,7 @@ class ListUser
 			# Otherwise, add it to the project (and its summary) to which it belongs
 			# to.
 			if !issue.visible? then
-				result[assignee][:invisible] = addIssueInfoToSummary(result[assignee][:invisible], hoursForIssue, timeSpan)
+				result[assignee][:invisible] = addIssueInfoToSummary(result[assignee][:invisible], hoursForIssue, timeSpan) unless issue.overdue?
 			else
 				project = issue.project
 				
