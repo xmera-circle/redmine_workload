@@ -122,6 +122,9 @@
 
     border-left: 1px solid black;
     border-right: 1px solid black;
+	
+	padding-top: 7px;
+	padding-bottom: 7px;
 }
 
 .controller-work_load .user-description {
@@ -131,9 +134,6 @@
     width:     260px;
     min-width: 260px;
     max-width: 260px;
-	
-	padding-top: 7px;
-	padding-bottom: 7px;
 }
 
 .controller-work_load .project-description {
@@ -143,9 +143,6 @@
     width:     255px;
     min-width: 255px;
     max-width: 255px;
-	
-	padding-top: 7px;
-	padding-bottom: 7px;
 }
 
 .controller-work_load .issue-description,
