@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module FiltersHelper
   def get_option_tags_for_userselection(usersToShow, selectedUsers)
 

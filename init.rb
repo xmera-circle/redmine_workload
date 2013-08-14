@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'redmine'
 require_dependency 'dateTools'
 require_dependency 'list_user'

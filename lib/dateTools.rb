@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class DateTools
 
   # Returns a list of all regular working weekdays.
