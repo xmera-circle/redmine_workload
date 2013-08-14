@@ -17,11 +17,6 @@
       <%= label_tag :workload_users, l(:workload_show_filter_user) %>
       <%= select_tag :workload_users, get_option_tags_for_userselection(@usersAllowedToDisplay, @usersToDisplay), :name => 'workload[users][]', :multiple => true %>
     </div>
-    <div class="issues">
-      <%= label_tag :check_box_tagworkload_show_issues, l(:workload_show_issues) %>
-      <%= hidden_field_tag :workload_show_issues_default, 0, :name => 'workload[show_issues]' %>
-      <%= check_box_tag :workload_show_issues, 1, @show_issues, :name => 'workload[show_issues]' %>
-    </div>
     <%= link_to_function l(:button_apply), 'jQuery("#filter_form").submit()', :class => 'apply icon icon-checked' %>
   </fieldset>
 <%

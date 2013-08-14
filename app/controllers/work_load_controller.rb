@@ -21,10 +21,6 @@ class WorkLoadController < ApplicationController
                     workloadParameters[:start_date].to_date :
                     Date::today
 
-    # Should issues be shown, or only total workload per user?
-    @show_issues = workloadParameters[:show_issues].nil? ? false : (workloadParameters[:show_issues] === '1')
-
-
     # Get list of users that are allowed to display by this user
     @usersAllowedToDisplay = ListUser::getUsersAllowedToDisplay()
 
