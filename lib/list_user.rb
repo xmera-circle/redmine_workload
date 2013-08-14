@@ -13,10 +13,8 @@ class ListUser
   end
 
   # Returns all issues that fulfill the following conditions:
-  #  * They are open,
-  #  * The project they belong to is active,
-  #  * Due date and start date are set,
-  #  * They have at least on day in the given timespan.
+  #  * They are open
+  #  * The project they belong to is active
   def self.getOpenIssuesForUsers(users)
 
     raise ArgumentError unless users.kind_of?(Array)
@@ -168,20 +166,50 @@ class ListUser
   # lastDay) for each open issue of each of the given users.
   # The result is returned as nested hash:
   # The topmost hash takes a user as key and returns a hash that takes an issue
-  # as key. This second hash returns a hash that was returned by
-  # getHoursForIssuesPerDay.
-  def self.getHoursPerUserIssueAndDay(users, timeSpan, today)
-    raise ArgumentError unless users.kind_of?(Array)
+  # as key. This second hash takes a project as key and returns another hash.
+	# This third level hash returns a hash that was returned by
+	# getHoursForIssuesPerDay. Additionally, it has two special keys:
+	# * :invisible. Returns a summary of all issues that are not visible for the
+	#								currently logged in user.
+	#´* :total.     Returns a summary of all issues for the user that this hash is
+	#								for.
+  def self.getHoursPerUserIssueAndDay(issues, timeSpan, today)
+    raise ArgumentError unless issues.kind_of?(Array)
     raise ArgumentError unless timeSpan.kind_of?(Range)
     raise ArgumentError unless today.kind_of?(Date)
-
-    issues = getOpenIssuesForUsers(users)
 
     result = {}
 
     issues.each do |issue|
-      result[issue.assigned_to] = Hash::new unless result.has_key?(issue.assigned_to)
-      result[issue.assigned_to][issue] = getHoursForIssuesPerDay(issue, timeSpan, today)
+			
+			assignee = issue.assigned_to
+			
+      if !result.has_key?(issue.assigned_to) then
+			result[assignee] = {
+					:total => Hash::new,
+					:invisible => Hash::new
+				}
+			end
+			
+			hoursForIssue = getHoursForIssuesPerDay(issue, timeSpan, today)
+
+			# Add the issue to the total workload in any case.
+			result[assignee][:total] = addIssueInfoToSummary(result[assignee][:total], hoursForIssue, timeSpan)
+		
+			# If the issue is invisible, add it to the invisible issues summary.
+			# Otherwise, add it to the project (and its summary) to which it belongs
+			# to.
+			if !issue.visible? then
+				result[assignee][:invisible] = addIssueInfoToSummary(result[assignee][:invisible], hoursForIssue, timeSpan)
+			else
+				project = issue.project
+				
+				result[assignee][project] = Hash::new unless result[assignee].has_key?(project)
+
+				result[assignee][project][issue] = hoursForIssue
+				result[assignee][project][:total] = addIssueInfoToSummary(result[assignee][project][:total], hoursForIssue, timeSpan)
+			
+			end
     end
 
     return result
@@ -214,47 +242,6 @@ class ListUser
     day = day.to_date if day.respond_to?(:to_date)
 
     return day.end_of_month.day
-  end
-
-  # Calculates the total workload for each day for all users. The first
-  # parameter must be a data structure returned by getHoursPerUserIssueAndDay,
-  # the second parameter the time span for which the total workload should be
-  # calculated. The time span must be a subset of the time span given to
-  # getHoursPerUserIssueAndDay in the first place.
-  # The result is a hash that takes a user as key and returns a hash, that
-  # takes a day as key and returns the total workload for that day as value.
-  # The total workload per day is a hash that has two keys:
-  #  * :hours - the number of hours to work on that day
-  #  * :holiday - boolean, is this a holiday.
-  def self.calculateTotalUserWorkloads(hourDataStructure, timeSpan)
-
-    workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
-
-    totalWorkload = Hash::new
-
-    hourDataStructure.keys.each do |user|
-      # Get a list of all issues of the user. Filter, because other keys than
-      # issues might be present.
-      issuesOfUser = hourDataStructure[user].keys.select{|key| key.kind_of?(Issue)}
-
-      totalWorkload[user] = Hash::new
-
-      timeSpan.each do |day|
-
-        # Initialize workload for day
-        totalWorkload[user][day] = {
-          :hours => 0.0,
-          :holiday => !workingDays.include?(day)
-        }
-
-        # Go over all issues and sum workload
-        issuesOfUser.each do |issue|
-          totalWorkload[user][day][:hours] += hourDataStructure[user][issue][day][:hours]
-        end
-      end
-    end
-
-    return totalWorkload
   end
 
   # Returns the "load class" for a given amount of working hours on a single
@@ -292,48 +279,23 @@ class ListUser
 
     return result.uniq
   end
-
-  # This function removes the data of all issues that are invisible to the
-  # current user from the given hourDataStructure.
-  # To be able to still display this data, a summary is returned for each user.
-  # This summary is a hash that takes a user as key and returns a hash that
-  # takes a day as key and returns a summary of the work that user has to do
-  # on the given day.
-  # The summary is a hash that has two keys:
-  #  * :hours - the total number of hours from invisible issues from that day
-  #  * :holiday - boolean, is this a holiday.
-  def self.removeDataForInvisibleIssuesAndReturnSummary(hourDataStructure,  timeSpan)
-
-    summary = Hash::new
-
+	
+	def self.addIssueInfoToSummary(summary, issueInfo, timeSpan)
     workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
+		
+		summary = Hash::new if summary.nil?
+		
+		puts summary.inspect
+		puts issueInfo.inspect
+		
+		timeSpan.each do |day|
+			if !summary.has_key?(day) then
+				summary[day] = {:hours => 0.0, :holiday => !workingDays.include?(day)}
+			end
+			
+			summary[day][:hours] += issueInfo[day][:hours]
+		end
 
-    hourDataStructure.keys.each do |user|
-      summary[user] = Hash::new
-
-      # Initialize summary data
-      timeSpan.each do |day|
-        summary[user][day] = {
-          :hours => 0.0,
-          :holiday => !workingDays.include?(day)
-        }
-      end
-
-      # Go over all issues and add the workload of the invisible issues to
-      # the summary
-      hourDataStructure[user].keys.each do |issue|
-        if !issue.visible? then
-
-          timeSpan.each do |day|
-            summary[user][day][:hours] += hourDataStructure[user][issue][day][:hours]
-          end
-
-          # Remove the invisible issue
-          hourDataStructure[user].delete(issue)
-        end
-      end
-    end
-
-    return summary
-  end
+		return summary
+	end
 end

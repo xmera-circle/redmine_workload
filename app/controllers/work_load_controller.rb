@@ -36,7 +36,6 @@ class WorkLoadController < ApplicationController
     # Intersect the list with the list of users that are allowed to be displayed.
     @usersToDisplay = @usersToDisplay & @usersAllowedToDisplay
 
-
     # Set the first day to display (must be begin of a month)
     @first_day = workloadParameters[:first_day].respond_to?(:to_date) ?
                     workloadParameters[:first_day].to_date.at_beginning_of_month :
@@ -53,11 +52,9 @@ class WorkLoadController < ApplicationController
     @last_day = (@first_day >> @num_months) - 1
     @timeSpanToDisplay = @first_day..@last_day
 
+		
+		@issuesForWorkload = ListUser::getOpenIssuesForUsers(@usersToDisplay)
     @monthsToRender = ListUser::getMonthsInTimespan(@timeSpanToDisplay)
-    @workloadData   = ListUser::getHoursPerUserIssueAndDay(@usersToDisplay, @timeSpanToDisplay, @today)
-
-    # Calculate workload per user and remove invisible issues.
-    @totalWorkloadPerUser = ListUser::calculateTotalUserWorkloads(@workloadData, @timeSpanToDisplay)
-    @summaryOfInvisibleIssues = ListUser::removeDataForInvisibleIssuesAndReturnSummary(@workloadData, @timeSpanToDisplay)
+    @workloadData   = ListUser::getHoursPerUserIssueAndDay(@issuesForWorkload, @timeSpanToDisplay, @today)
   end
 end

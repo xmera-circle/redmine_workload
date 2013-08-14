@@ -29,9 +29,7 @@
          @workloadData.keys.each do |user| %>
          <%= render :partial => 'workload_for_user',
                     :locals => { :user => user,
-                                 :data => @workloadData[user],
-                                 :totalWorkload => @totalWorkloadPerUser[user],
-                                 :summarizedWorkload => @summaryOfInvisibleIssues[user]
+                                 :data => @workloadData[user]
                                }
          %>
       <% end %>
