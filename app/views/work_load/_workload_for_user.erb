@@ -5,16 +5,24 @@
 #  * data: The data to render. A hash with issues as keys.
 %>
 
-<tr class="user-total-workload">
-  <th class="user-description" scope="row"><%= "#{user.firstname} #{user.lastname}" %> </th>
-  <% # Print the total workload for this user for each day %>
-  <%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total]} %>
-</tr>
-<% if @show_issues then %>
-  <tr class="invisible-issues-summary">
-    <th class="invisible-workload-description" scope="row"><%= l(:workload_show_invisible_issues) %> </th>
-    <%= render :partial => 'summarized_workload_for_invisible_issues', :locals => {:user => user, :summarizedWorkload => data[:invisible]} %>
+<tbody class="user-total-workload" id="user-total-workload-<%= user.name %>">
+  <tr>
+	<th class="user-description" scope="row">
+	  <%= render :partial => 'trigger', :locals => {:trigger_for => "user-#{user.name}"} %>
+	  <%= "#{user.firstname} #{user.lastname}" %>
+	</th>
+	<% # Print the total workload for this user for each day %>
+	<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total]} %>
   </tr>
+</tbody>
+
+<% if !data[:invisible].empty? %>
+  <tbody class="invisible-issues-summary user-<%= user.name %>-open user-<%= user.name %>-close">
+	<tr>
+	  <th class="invisible-workload-description" scope="row"><%= l(:workload_show_invisible_issues) %> </th>
+	  <%= render :partial => 'summarized_workload_for_invisible_issues', :locals => {:user => user, :summarizedWorkload => data[:invisible]} %>
+	</tr>
+  </tbody>
 <% end %>
 <% # Iterate over all projects for the user %>
 <% projects = data.keys.select{|x| x.kind_of?(Project)} %>

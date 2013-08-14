@@ -6,16 +6,21 @@
 #  * data: The data to render. A hash with issues as keys.
 %>
 
-<tr class="project-total-workload">
-  <th class="project-description" scope="row"><%= project.to_s %> </th>
-  <% # Print the total workload for this project for each day %>
-  <%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total]} %>
-</tr>
-<% if @show_issues then %>
+<tbody class="project-total-workload user-<%= user.name %>-open user-<%= user.name %>-close">
+  <tr>
+	<th class="project-description" scope="row">
+	  <%= render :partial => 'trigger', :locals => {:trigger_for => "project-#{project.identifier}"} %>
+	  <%= project.to_s %>
+	</th>
+	<% # Print the total workload for this project for each day %>
+	<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total]} %>
+  </tr>
+</tbody>
+<tbody class="issue-workloads user-<%= user.name %>-close project-<%= project.identifier %>-open project-<%= project.identifier %>-close">
   <% # Iterate over all issues for the project %>
   <% issuesForUser = data.keys.select{|x| x.kind_of?(Issue)} %>
      <% issuesForUser.each_with_index do |issue, index| %>
 
      <%= render :partial => 'workload_for_issue', :locals => {:user => user, :issue => issue, :data => data[issue], :index => index} %>
   <% end %>
-<% end %>
+</tbody>

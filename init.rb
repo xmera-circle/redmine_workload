@@ -24,6 +24,7 @@ end
 
 class RedmineToolbarHookListener < Redmine::Hook::ViewListener
    def view_layouts_base_html_head(context)
+		 javascript_include_tag('slides', :plugin => :redmine_workload ) +
      stylesheet_link_tag('style', :plugin => :redmine_workload )
    end
 end

@@ -24,16 +24,14 @@
         <% end %>
       </tr>
     </thead>
-    <tbody>
-      <% # Iterate over all users:
-         @workloadData.keys.each do |user| %>
-         <%= render :partial => 'workload_for_user',
-                    :locals => { :user => user,
-                                 :data => @workloadData[user]
-                               }
-         %>
-      <% end %>
-    </tbody>
+	<% # Iterate over all users:
+	   @workloadData.keys.each do |user| %>
+	   <%= render :partial => 'workload_for_user',
+				  :locals => { :user => user,
+							   :data => @workloadData[user]
+							 }
+	   %>
+	<% end %>
   </table>
 </div>
 

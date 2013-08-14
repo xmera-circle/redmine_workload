@@ -90,12 +90,19 @@
     font-size: .9em;
 }
 
+.controller-work_load .project-total-workload,
+.controller-work_load .issue-workloads {
+	display: none;
+}
+
+.controller-work_load .trigger {
+	cursor: default;
+}
+
 .controller-work_load .user-description,
+.controller-work_load .project-description,
 .controller-work_load .issue-description,
 .controller-work_load .invisible-workload-description {
-    width:     250px;
-    min-width: 250px;
-    max-width: 250px;
 
     text-align: left;
     font-size: .9em;
@@ -105,13 +112,30 @@
 }
 
 .controller-work_load .user-description {
-    font-size: 1.2em;
-    padding-left: 1em;
+    font-size: 1.3em;
+    padding-left: 10px;
+	
+    width:     260px;
+    min-width: 260px;
+    max-width: 260px;
+}
+
+.controller-work_load .project-description {
+	font-size: 1.2em;
+	padding-left: 15px;
+	
+    width:     255px;
+    min-width: 255px;
+    max-width: 255px;
 }
 
 .controller-work_load .issue-description,
 .controller-work_load .invisible-workload-description {
-    padding-left: 2em;
+    padding-left: 20px;
+	
+    width:     250px;
+    min-width: 250px;
+    max-width: 250px;
 }
 
 .controller-work_load .invisible-workload-description {
@@ -145,7 +169,8 @@
 }
 
 .controller-work_load .issue-workload:hover,
-.controller-work_load .user-total-workload:hover {
+.controller-work_load .user-total-workload:hover,
+.controller-work_load .project-total-workload:hover{
     background-color: #D7D7D7!important;
 }
 
