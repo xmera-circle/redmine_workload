@@ -20,6 +20,7 @@ jQuery(document).ready(function() {
 			$affectedObjects.hide();
 
 			$this.html('&#x25b6;');
+			$affectedObjects.find('.trigger').html('&#x25b6;');
 		}
 	});
 });

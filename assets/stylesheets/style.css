@@ -96,7 +96,12 @@
 }
 
 .controller-work_load .trigger {
+	display: inline-block;
+
+	width: 20px;
+	
 	cursor: default;
+	text-align: center;
 }
 
 .controller-work_load .user-description,
