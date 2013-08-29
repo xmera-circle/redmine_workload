@@ -34,6 +34,7 @@ en:
   workload_show_legend_time_spent: "Time spent"
   workload_show_legend_past: "Past"
   workload_show_legend_out: "Out of budget"
+  workload_trigger_tooltip: "Click the triangle for more details"
   workload_overdue_issues_num: "Number of overdue issues:"
   workload_overdue_issues_hours: "Hours from overdue issues:"
 

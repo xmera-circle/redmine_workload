@@ -7,7 +7,7 @@
 
 <tbody class="user-total-workload" id="user-total-workload-<%= user.name %>">
   <tr>
-	<th class="user-description" scope="row">
+	<th class="user-description" scope="row" title="<%= l(:workload_trigger_tooltip) %>">
 	  <%= render :partial => 'trigger', :locals => {:trigger_for => "user-#{user.name}"} %>
 	  <%= "#{user.firstname} #{user.lastname}" %>
 	  <% if data[:overdue_number] > 0 %>

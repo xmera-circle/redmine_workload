@@ -8,7 +8,7 @@
 
 <tbody class="project-total-workload user-<%= user.name %>-open user-<%= user.name %>-close">
   <tr>
-	<th class="project-description" scope="row">
+	<th class="project-description" scope="row" title="<%= l(:workload_trigger_tooltip) %>">
 	  <%= render :partial => 'trigger', :locals => {:trigger_for => "project-#{user.name}-#{project.identifier}"} %>
 	  <%= project.to_s %>
 	  <% if data[:overdue_number] > 0 %>
