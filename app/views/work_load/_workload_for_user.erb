@@ -15,7 +15,7 @@
 		  <dt><%= l(:workload_overdue_issues_num) %></dt>
 		  <dd><%= data[:overdue_number] %></dd>
 		  <dt><%= l(:workload_overdue_issues_hours) %></dt>
-		  <dd><%= data[:overdue_hours] %></dd>
+		  <dd><%= "%0.2f" % data[:overdue_hours] %></dd>
 		</dl>
 	  <% end %>
 	</th>
