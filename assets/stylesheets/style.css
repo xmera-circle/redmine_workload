@@ -95,7 +95,7 @@
  -----------------------------------------------------------------------------*/
 .controller-work_load .data .project-total-workload,
 .controller-work_load .data .issue-workloads,
-.controller-work_load .data additional-user-info,
+.controller-work_load .data .additional-user-info,
 .controller-work_load .data .additional-project-info,
 .controller-work_load .data .invisible-issues-summary {
 	display: none;
