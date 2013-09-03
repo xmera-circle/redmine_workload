@@ -8,7 +8,7 @@ it:
   workload_show_filters: "Filtri"
   workload_show_range: "Range:"
   workload_show_rangefrom: "mesi da"
-  workload_show_today: "Usa come \"today\":"
+  workload_show_today: "Usa come \"OGGI\":"
   workload_show_filter_user: "Utenti:"
   workload_show_issues: "Mostra segnalazioni:"
   workload_show_invisible_issues: "Segnalazioni non visibili a te:"
@@ -49,7 +49,7 @@ it:
   workload_settings_general_workdays_sunday:    "Domenica:"
 
   workload_settings_hours:                      "Soglie di carico"
-  workload_settings_leastdailyworkload:         "La soglia inferiore che dev'essere considerata di carico ..."
+  workload_settings_leastdailyworkload:         "La soglia minima che dev'essere considerata di carico ..."
   workload_settings_hours_low_min:              "... basso:"
   workload_settings_hours_normal_min:           "... normale:"
   workload_settings_hours_high_min:             "... sovraccarico:"
