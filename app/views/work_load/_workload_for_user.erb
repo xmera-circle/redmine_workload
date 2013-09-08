@@ -5,13 +5,13 @@
 #  * data: The data to render. A hash with issues as keys.
 %>
 
-<tbody class="user-total-workload" id="user-total-workload-<%= user.name %>">
+<tbody class="user-total-workload" id="user-total-workload-<%= user.id %>">
   <tr>
 	<th class="user-description" scope="row" title="<%= l(:workload_trigger_tooltip) %>">
-	  <%= render :partial => 'trigger', :locals => {:trigger_for => "user-#{user.name}"} %>
+	  <%= render :partial => 'trigger', :locals => {:trigger_for => "user-#{user.id}"} %>
 	  <%= "#{user.firstname} #{user.lastname}" %>
 	  <% if data[:overdue_number] > 0 %>
-		<dl class="additional-user-info user-<%= user.name %>-open user-<%= user.name %>-close">
+		<dl class="additional-user-info user-<%= user.id %>-open user-<%= user.id %>-close">
 		  <dt><%= l(:workload_overdue_issues_num) %></dt>
 		  <dd><%= data[:overdue_number] %></dd>
 		  <dt><%= l(:workload_overdue_issues_hours) %></dt>
@@ -25,7 +25,7 @@
 </tbody>
 
 <% if !data[:invisible].empty? %>
-  <tbody class="invisible-issues-summary user-<%= user.name %>-open user-<%= user.name %>-close">
+  <tbody class="invisible-issues-summary user-<%= user.id %>-open user-<%= user.id %>-close">
 	<tr>
 	  <th class="invisible-workload-description" scope="row"><%= l(:workload_show_invisible_issues) %> </th>
 	  <%= render :partial => 'summarized_workload_for_invisible_issues', :locals => {:user => user, :summarizedWorkload => data[:invisible]} %>

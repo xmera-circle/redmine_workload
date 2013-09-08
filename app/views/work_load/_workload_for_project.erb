@@ -6,17 +6,17 @@
 #  * data: The data to render. A hash with issues as keys.
 %>
 
-<tbody class="project-total-workload user-<%= user.name %>-open user-<%= user.name %>-close">
+<tbody class="project-total-workload user-<%= user.id %>-open user-<%= user.id %>-close">
   <tr>
 	<th class="project-description" scope="row" title="<%= l(:workload_trigger_tooltip) %>">
-	  <%= render :partial => 'trigger', :locals => {:trigger_for => "project-#{user.name}-#{project.identifier}"} %>
+	  <%= render :partial => 'trigger', :locals => {:trigger_for => "project-#{user.id}-#{project.identifier}"} %>
 	  <%= project.to_s %>
 	  <% if data[:overdue_number] > 0 %>
-		<dl class="additional-project-info user-<%= user.name %>-close project-<%= user.name %>-<%= project.identifier %>-open project-<%= user.name %>-<%= project.identifier %>-close">
+		<dl class="additional-project-info user-<%= user.id %>-close project-<%= user.id %>-<%= project.identifier %>-open project-<%= user.id %>-<%= project.identifier %>-close">
 		  <dt><%= l(:workload_overdue_issues_num) %></dt>
 		  <dd><%= data[:overdue_number] %></dd>
 		  <dt><%= l(:workload_overdue_issues_hours) %></dt>
-		  <dd><%= "%0.2f" % data[:overdue_hours] %></dd>
+		  <dd><%= data[:overdue_hours] %></dd>
 		</dl>
 	  <% end %>
 	</th>
@@ -24,7 +24,7 @@
 	<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total]} %>
   </tr>
 </tbody>
-<tbody class="issue-workloads user-<%= user.name %>-close project-<%= user.name %>-<%= project.identifier %>-open project-<%= user.name %>-<%= project.identifier %>-close">
+<tbody class="issue-workloads user-<%= user.id %>-close project-<%= user.id %>-<%= project.identifier %>-open project-<%= user.id %>-<%= project.identifier %>-close">
   <% # Iterate over all issues for the project %>
   <% issuesForUser = data.keys.select{|x| x.kind_of?(Issue)} %>
      <% issuesForUser.each_with_index do |issue, index| %>
