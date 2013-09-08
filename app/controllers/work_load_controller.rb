@@ -12,9 +12,10 @@ class WorkLoadController < ApplicationController
   include QueriesHelper
 
   def show
-    workloadParameters = params[:workload]
-
-    workloadParameters = {} if workloadParameters.nil?
+    workloadParameters = params[:workload] || {}
+    defaults = {num_months: 2} 
+    # TODO: Add :first_day later to this defaults, if it's possible to set any date not just the beginnging
+    workloadParameters.reverse_merge! defaults
 
     # If no date is given for the start date, use today.
     @today = workloadParameters[:start_date].respond_to?(:to_date) ?
@@ -38,7 +39,6 @@ class WorkLoadController < ApplicationController
                     Date::today.at_beginning_of_month
 
     # Use given number of months to display, or 2 if number cannot be parsed.
-    workloadParameters[:num_months] = '2' if workloadParameters[:num_months].nil?
     @num_months = Integer(workloadParameters[:num_months]) rescue 2
 
     # Limit number of months to 12 to hold down runtimes.
@@ -48,8 +48,7 @@ class WorkLoadController < ApplicationController
     @last_day = (@first_day >> @num_months) - 1
     @timeSpanToDisplay = @first_day..@last_day
 
-		
-		@issuesForWorkload = ListUser::getOpenIssuesForUsers(@usersToDisplay)
+    @issuesForWorkload = ListUser::getOpenIssuesForUsers(@usersToDisplay)
     @monthsToRender = ListUser::getMonthsInTimespan(@timeSpanToDisplay)
     @workloadData   = ListUser::getHoursPerUserIssueAndDay(@issuesForWorkload, @timeSpanToDisplay, @today)
   end
