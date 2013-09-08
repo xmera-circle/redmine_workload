@@ -179,7 +179,10 @@ class ListUser
     raise ArgumentError unless today.kind_of?(Date)
 		
     workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
-
+		
+		firstWorkingDayFromTodayOn = workingDays.select {|x| x >= today}.min
+		firstWorkingDayFromTodayOn = today if firstWorkingDayFromTodayOn.nil?
+		
     result = {}
 
     issues.each do |issue|
@@ -206,7 +209,7 @@ class ListUser
 
 			# Add the issue to the total workload, unless its overdue.
 			if issue.overdue? then
-				result[assignee][:overdue_hours]  += hoursForIssue[today][:hours];
+				result[assignee][:overdue_hours]  += hoursForIssue[firstWorkingDayFromTodayOn][:hours];
 				result[assignee][:overdue_number] += 1
 			else
 				result[assignee][:total] = addIssueInfoToSummary(result[assignee][:total], hoursForIssue, timeSpan)
@@ -237,7 +240,7 @@ class ListUser
 
 				# Add the issue to the project workload summary, unless its overdue.
 				if issue.overdue? then
-					result[assignee][project][:overdue_hours]  += hoursForIssue[today][:hours];
+					result[assignee][project][:overdue_hours]  += hoursForIssue[firstWorkingDayFromTodayOn][:hours];
 					result[assignee][project][:overdue_number] += 1
 				else
 					result[assignee][project][:total] = addIssueInfoToSummary(result[assignee][project][:total], hoursForIssue, timeSpan)
