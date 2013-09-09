@@ -3,10 +3,14 @@
     <legend><%= l(:workload_show_filters) %></legend>
     <div class="timespan">
       <%= label_tag :workload_num_months, l(:workload_show_range) %>
-      <%= text_field_tag :workload_num_months, @num_months, :name => 'workload[num_months]', :size => 2 %>
+    
       <%= label_tag :workload_first_day, l(:workload_show_rangefrom) %>
       <%= text_field_tag :workload_first_day, @first_day, :name => 'workload[first_day]', :size => 10 %>
       <%= calendar_for('workload_first_day') %>
+    
+      <%= label_tag :workload_last_day, l(:workload_show_rangeto) %>
+      <%= text_field_tag :workload_last_day, @last_day, :name => 'workload[last_day]', :size => 10 %>
+      <%= calendar_for('workload_last_day') %>
     </div>
     <div class="calendar">
       <%= label_tag :workload_start_date, l(:workload_show_today) %>

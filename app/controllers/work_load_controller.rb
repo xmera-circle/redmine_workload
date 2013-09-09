@@ -13,43 +13,48 @@ class WorkLoadController < ApplicationController
 
   def show
     workloadParameters = params[:workload] || {}
-    defaults = {num_months: 2} 
-    # TODO: Add :first_day later to this defaults, if it's possible to set any date not just the beginnging
-    workloadParameters.reverse_merge! defaults
+    
+    @first_day = sanitizeDateParameter(workloadParameters[:first_day], Date::today - 10)
+    @last_day  = sanitizeDateParameter(workloadParameters[:last_day],  Date::today + 50)
+    @today     = sanitizeDateParameter(workloadParameters[:today],     Date::today)
 
-    # If no date is given for the start date, use today.
-    @today = workloadParameters[:start_date].respond_to?(:to_date) ?
-                    workloadParameters[:start_date].to_date :
-                    Date::today
-
-    # Get list of users that are allowed to display by this user
-    @usersAllowedToDisplay = ListUser::getUsersAllowedToDisplay()
-
-    # Get list of users that should be displayed.
-    @usersToDisplay = workloadParameters[:users].nil? ?
-                        [] :
-                        User.find_all_by_id(workloadParameters[:users].split(','))
-
-    # Intersect the list with the list of users that are allowed to be displayed.
-    @usersToDisplay = @usersToDisplay & @usersAllowedToDisplay
-
-    # Set the first day to display (must be begin of a month)
-    @first_day = workloadParameters[:first_day].respond_to?(:to_date) ?
-                    workloadParameters[:first_day].to_date.at_beginning_of_month :
-                    Date::today.at_beginning_of_month
-
-    # Use given number of months to display, or 2 if number cannot be parsed.
-    @num_months = Integer(workloadParameters[:num_months]) rescue 2
-
-    # Limit number of months to 12 to hold down runtimes.
-    @num_months = [@num_months, 12].min
-
-    # Last day is num_months after first day
-    @last_day = (@first_day >> @num_months) - 1
+    # Make sure that last_day is at most 12 months after first_day to prevent
+    # long running times
+    @last_day = [(@first_day >> 12) - 1, @last_day].min
     @timeSpanToDisplay = @first_day..@last_day
+    
+    initalizeUsers(workloadParameters)
 
     @issuesForWorkload = ListUser::getOpenIssuesForUsers(@usersToDisplay)
     @monthsToRender = ListUser::getMonthsInTimespan(@timeSpanToDisplay)
     @workloadData   = ListUser::getHoursPerUserIssueAndDay(@issuesForWorkload, @timeSpanToDisplay, @today)
+  end
+
+
+
+private
+  
+  def initalizeUsers(workloadParameters)
+
+    # Get list of users that are allowed to be displayed by this user
+    @usersAllowedToDisplay = ListUser::getUsersAllowedToDisplay()
+    
+    userIds = workloadParameters[:users].kind_of?(Array) ? workloadParameters[:users] : []
+    userIds.map! { |x| x.to_i }
+    
+    # Get list of users that should be displayed.
+    @usersToDisplay = User.find_all_by_id(userIds)
+
+    # Intersect the list with the list of users that are allowed to be displayed.
+    @usersToDisplay = @usersToDisplay & @usersAllowedToDisplay
+  end
+  
+  def sanitizeDateParameter(parameter, default)
+    
+    if (parameter.respond_to?(:to_date)) then
+      return parameter.to_date
+    else
+      return default
+    end
   end
 end
