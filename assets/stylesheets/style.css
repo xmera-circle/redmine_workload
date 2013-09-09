@@ -53,7 +53,8 @@
 }
 
 /* Day of month */
-.controller-work_load .data .day-of-month.firstDayOfMonth {
+.controller-work_load .data .day-of-month.firstDayOfMonth,
+.controller-work_load .data .day-of-month:first-child {
     border-left: 1px solid black;
 }
 
@@ -63,7 +64,7 @@
 
 /* Day of week */
 .controller-work_load .data .day-of-week.firstDayOfWeek,
-.controller-work_load .data day-of-week:first-child {
+.controller-work_load .data .day-of-week:first-child {
     border-left: 1px solid black;
 }
 

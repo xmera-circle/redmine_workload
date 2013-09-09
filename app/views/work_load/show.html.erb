@@ -9,29 +9,23 @@
     <thead>
       <tr class="month-names">
         <td class="logo" rowspan="3">&nbsp;<!--Contains logo or empty space --></td>
-        <% @monthsToRender.each do |someDayOfMonth| %>
-          <%= render :partial => 'month_names_header', :locals => {:dayOfMonth => someDayOfMonth} %>
-        <% end %>
+        <%= render :partial => 'month_names_header' %>
       </tr>
       <tr class="days-of-month">
-        <% @monthsToRender.each do |someDayOfMonth| %>
-          <%= render :partial => 'day_of_month_header', :locals => {:dayOfMonth => someDayOfMonth} %>
-        <% end %>
+        <%= render :partial => 'day_of_month_header' %>
       </tr>
       <tr class="days-of-week">
-        <% @monthsToRender.each do |someDayOfMonth| %>
-          <%= render :partial => 'day_of_week_header', :locals => {:dayOfMonth => someDayOfMonth} %>
-        <% end %>
+        <%= render :partial => 'day_of_week_header' %>
       </tr>
     </thead>
-	<% # Iterate over all users:
-	   @workloadData.keys.each do |user| %>
-	   <%= render :partial => 'workload_for_user',
-				  :locals => { :user => user,
-							   :data => @workloadData[user]
-							 }
-	   %>
-	<% end %>
+    <% # Iterate over all users:
+       @workloadData.keys.each do |user| %>
+       <%= render :partial => 'workload_for_user',
+                  :locals => { :user => user,
+                               :data => @workloadData[user]
+                             }
+       %>
+    <% end %>
   </table>
 </div>
 

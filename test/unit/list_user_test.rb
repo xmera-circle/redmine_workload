@@ -80,18 +80,6 @@ class ListUserTest < ActiveSupport::TestCase
     assert_equal (3..12).to_a.concat((1..5).to_a), ListUser::getMonthsInTimespan(firstDay..lastDay).map(&:month)
   end
 
-  test "getDaysInMonth returns 31 for december 2012" do
-    assert_equal 31, ListUser::getDaysInMonth(Date::new(2012, 12, 6))
-  end
-
-  test "getDaysInMonth returns 29 for february 2012" do
-    assert_equal 29, ListUser::getDaysInMonth(Date::new(2012, 2, 23))
-  end
-
-  test "getDaysInMonth returns 28 for february 2013" do
-    assert_equal 28, ListUser::getDaysInMonth(Date::new(2013, 2, 1))
-  end
-
   # Set Saturday, Sunday and Wednesday to be a holiday, all others to be a
   # working day.
   def defineSaturdaySundayAndWendnesdayAsHoliday

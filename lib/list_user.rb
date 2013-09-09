@@ -254,8 +254,9 @@ class ListUser
     return result
   end
 
-  # Returns one day of each month between the given dates, including the months
-  # of the dates. It is not specified which day of the month will be returned.
+  # Returns an array with one entry for each month in the given time span.
+  # Each entry is a hash with two keys: :first_day and :last_day, having the
+  # first resp. last day of that month from the time span as value.
   def self.getMonthsInTimespan(timeSpan)
 
     raise ArgumentError unless timeSpan.kind_of?(Range)
@@ -263,24 +264,21 @@ class ListUser
     # Abort if the given time span is empty.
     return [] unless timeSpan.any?
 
-    firstOfCurrentMonth = timeSpan.first.beginning_of_month
-    firstOfLastMonth    = timeSpan.last.beginning_of_month
+    firstOfCurrentMonth = timeSpan.first
+    lastOfCurrentMonth  = [firstOfCurrentMonth.end_of_month, timeSpan.last].min
 
     result = []
-    while firstOfCurrentMonth <= firstOfLastMonth do
-      result.push(firstOfCurrentMonth)
+    while firstOfCurrentMonth <= timeSpan.last do
+      result.push({
+          :first_day => firstOfCurrentMonth,
+          :last_day  => lastOfCurrentMonth
+      })
 
-      firstOfCurrentMonth = firstOfCurrentMonth.next_month
+      firstOfCurrentMonth = firstOfCurrentMonth.beginning_of_month.next_month
+      lastOfCurrentMonth  = [firstOfCurrentMonth.end_of_month, timeSpan.last].min
     end
 
     return result
-  end
-
-  # Returns the number of days of the month of the given day.
-  def self.getDaysInMonth(day)
-    day = day.to_date if day.respond_to?(:to_date)
-
-    return day.end_of_month.day
   end
 
   # Returns the "load class" for a given amount of working hours on a single

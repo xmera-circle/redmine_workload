@@ -1,7 +1,14 @@
 <%
-# Parameters:
-#  dayOfMonth: Any day of the month to render the header for.
+# Renders the headers of the month names
 %>
-<th class="month-name" colspan="<%= ListUser::getDaysInMonth(dayOfMonth) %>" scope="colgroup">
-  <%= "#{month_name(dayOfMonth.month)} #{dayOfMonth.year}"  %>
-</th>
+
+<%
+  monthsInTimespan = ListUser::getMonthsInTimespan(@timeSpanToDisplay)
+%>
+<% monthsInTimespan.each do |month| %>
+  <th class="month-name" colspan="<%= (month[:last_day].day - month[:first_day].day) + 1 %>" scope="colgroup">
+    <% if ((month[:last_day] - month[:first_day]) + 1) >= 5 then %>
+      <%= "#{month_name(month[:first_day].month)} #{month[:first_day].year}" %>
+    <% end %>
+  </th>
+<% end %>
