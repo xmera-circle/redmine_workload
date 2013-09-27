@@ -9,7 +9,7 @@ Redmine::Plugin.register :redmine_workload do
   description 'This is a plugin for Redmine, originally developed by Rafael Calleja. It ' +
               'displays the estimated number of hours users have to work to finish ' +
               'all their assigned issus on time.'
-  version '1.0.1'
+  version '1.0.2'
   url 'https://github.com/JostBaron/redmine_workload'
   author_url 'http://netzkönig.de/'
 
