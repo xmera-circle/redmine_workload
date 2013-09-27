@@ -83,13 +83,13 @@ class ListUserTest < ActiveSupport::TestCase
   # Set Saturday, Sunday and Wednesday to be a holiday, all others to be a
   # working day.
   def defineSaturdaySundayAndWendnesdayAsHoliday
-    Setting.plugin_redmine_workload['general_workday_monday'] = 'checked';
-    Setting.plugin_redmine_workload['general_workday_tuesday'] = 'checked';
-    Setting.plugin_redmine_workload['general_workday_wednesday'] = '';
-    Setting.plugin_redmine_workload['general_workday_thursday'] = 'checked';
-    Setting.plugin_redmine_workload['general_workday_friday'] = 'checked';
-    Setting.plugin_redmine_workload['general_workday_saturday'] = '';
-    Setting.plugin_redmine_workload['general_workday_sunday'] = '';
+    Setting['plugin_redmine_workload']['general_workday_monday'] = 'checked';
+    Setting['plugin_redmine_workload']['general_workday_tuesday'] = 'checked';
+    Setting['plugin_redmine_workload']['general_workday_wednesday'] = '';
+    Setting['plugin_redmine_workload']['general_workday_thursday'] = 'checked';
+    Setting['plugin_redmine_workload']['general_workday_friday'] = 'checked';
+    Setting['plugin_redmine_workload']['general_workday_saturday'] = '';
+    Setting['plugin_redmine_workload']['general_workday_sunday'] = '';
   end
 
   def assertIssueTimesHashEquals(expected, actual)
@@ -603,33 +603,33 @@ class ListUserTest < ActiveSupport::TestCase
   end
 
   test "getLoadClassForHours returns \"none\" for workloads below threshold for low workload" do
-    Setting.plugin_redmine_workload['threshold_lowload_min'] = 0.1
-    Setting.plugin_redmine_workload['threshold_normalload_min'] = 5.0
-    Setting.plugin_redmine_workload['threshold_highload_min'] = 7.0
+    Setting['plugin_redmine_workload']['threshold_lowload_min'] = 0.1
+    Setting['plugin_redmine_workload']['threshold_normalload_min'] = 5.0
+    Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
 
     assert_equal "none", ListUser::getLoadClassForHours(0.05)
   end
 
   test "getLoadClassForHours returns \"low\" for workloads between thresholds for low and normal workload" do
-    Setting.plugin_redmine_workload['threshold_lowload_min'] = 0.1
-    Setting.plugin_redmine_workload['threshold_normalload_min'] = 5.0
-    Setting.plugin_redmine_workload['threshold_highload_min'] = 7.0
+    Setting['plugin_redmine_workload']['threshold_lowload_min'] = 0.1
+    Setting['plugin_redmine_workload']['threshold_normalload_min'] = 5.0
+    Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
 
     assert_equal "low", ListUser::getLoadClassForHours(3.5)
   end
 
   test "getLoadClassForHours returns \"normal\" for workloads between thresholds for normal and high workload" do
-    Setting.plugin_redmine_workload['threshold_lowload_min'] = 0.1
-    Setting.plugin_redmine_workload['threshold_normalload_min'] = 2.0
-    Setting.plugin_redmine_workload['threshold_highload_min'] = 7.0
+    Setting['plugin_redmine_workload']['threshold_lowload_min'] = 0.1
+    Setting['plugin_redmine_workload']['threshold_normalload_min'] = 2.0
+    Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
 
     assert_equal "normal", ListUser::getLoadClassForHours(3.5)
   end
 
   test "getLoadClassForHours returns \"high\" for workloads above threshold for high workload" do
-    Setting.plugin_redmine_workload['threshold_lowload_min'] = 0.1
-    Setting.plugin_redmine_workload['threshold_normalload_min'] = 2.0
-    Setting.plugin_redmine_workload['threshold_highload_min'] = 7.0
+    Setting['plugin_redmine_workload']['threshold_lowload_min'] = 0.1
+    Setting['plugin_redmine_workload']['threshold_normalload_min'] = 2.0
+    Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
 
     assert_equal "high", ListUser::getLoadClassForHours(10.5)
   end
