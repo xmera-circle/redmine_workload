@@ -11,6 +11,7 @@ en:
   workload_show_rangeto: "until"
   workload_show_today: "Use as \"today\":"
   workload_show_filter_user: "Users:"
+  workload_show_filter_group: "Groups:"
   workload_show_issues: "Show issues:"
   workload_show_invisible_issues: "Issues invisible to you:"
   workload_show_issue_estimated_hours: "Estimated"
