@@ -14,10 +14,13 @@ class WorkLoadController < ApplicationController
   def show
     workloadParameters = params[:workload] || {}
 
-    @first_day = sanitizeDateParameter(workloadParameters[:first_day], Date::today - 10)
-    @last_day  = sanitizeDateParameter(workloadParameters[:last_day],  Date::today + 50)
-    @today     = sanitizeDateParameter(workloadParameters[:today],     Date::today)
+    @first_day = sanitizeDateParameter(workloadParameters[:first_day],  Date::today - 10)
+    @last_day  = sanitizeDateParameter(workloadParameters[:last_day],   Date::today + 50)
+    @today     = sanitizeDateParameter(workloadParameters[:start_date], Date::today)
 
+	# if @today ("select as today") is before @first_day take @today as @first_day
+	@first_day = [@today, @first_day].min
+	
     # Make sure that last_day is at most 12 months after first_day to prevent
     # long running times
     @last_day = [(@first_day >> 12) - 1, @last_day].min
