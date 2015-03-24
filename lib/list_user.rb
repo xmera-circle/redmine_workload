@@ -180,8 +180,7 @@ class ListUser
 		
     workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
 		
-		firstWorkingDayFromTodayOn = workingDays.select {|x| x >= today}.min
-		firstWorkingDayFromTodayOn = today if firstWorkingDayFromTodayOn.nil?
+		firstWorkingDayFromTodayOn = workingDays.select {|x| x >= today}.min || today
 		
     result = {}
 
