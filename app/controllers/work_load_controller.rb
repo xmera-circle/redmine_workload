@@ -50,8 +50,8 @@ private
     
     @usersToDisplay=ListUser::getUsersOfGroups(@selectedGroups)
 
-    # Get list of users that are allowed to be displayed by this user
-    @usersAllowedToDisplay = ListUser::getUsersAllowedToDisplay()
+    # Get list of users that are allowed to be displayed by this user sort by lastname
+    @usersAllowedToDisplay = ListUser::getUsersAllowedToDisplay().sort_by { |u| u[:lastname] }
 
     userIds = workloadParameters[:users].kind_of?(Array) ? workloadParameters[:users] : []
     userIds.map! { |x| x.to_i }
