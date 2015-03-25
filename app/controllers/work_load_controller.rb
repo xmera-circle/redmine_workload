@@ -38,13 +38,13 @@ class WorkLoadController < ApplicationController
 private
 
   def initalizeUsers(workloadParameters)
-    @groupsToDisplay=Group.all
+    @groupsToDisplay=Group.all.sort_by { |n| n[:lastname] }
     
     groupIds = workloadParameters[:groups].kind_of?(Array) ? workloadParameters[:groups] : []
     groupIds.map! { |x| x.to_i }
     
     # Find selected groups:
-    @selectedGroups =Group.find_all_by_id(groupIds)                
+    @selectedGroups =Group.where(:id => groupIds)
     
     @selectedGroups = @selectedGroups & @groupsToDisplay
     
@@ -56,11 +56,12 @@ private
     userIds = workloadParameters[:users].kind_of?(Array) ? workloadParameters[:users] : []
     userIds.map! { |x| x.to_i }
 
-    # Get list of users that should be displayed.
-    @usersToDisplay += User.find_all_by_id(userIds)
+    # Get list of users that should be displayed.    
+    @usersToDisplay += User.where(:id => userIds)
 
     # Intersect the list with the list of users that are allowed to be displayed.
     @usersToDisplay = @usersToDisplay & @usersAllowedToDisplay 
+    
   end
   
 
