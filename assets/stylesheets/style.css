@@ -282,3 +282,8 @@
 .controller-work_load .data .active.holiday span {
     background-color: transparent;
 }
+
+.controller-work_load .users select,
+.controller-work_load .groups select {
+	width: 300px;	
+}

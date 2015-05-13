@@ -4,5 +4,5 @@ if Rails::VERSION::MAJOR < 3
     map.connect 'work_load/:action/:id', :controller => :work_load
   end
 else
-  match 'work_load/(:action(/:id))', :controller => 'work_load'
+  match 'work_load/(:action(/:id))',via: [:get], :controller => 'work_load'
 end

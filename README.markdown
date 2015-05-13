@@ -11,7 +11,7 @@ these issues will be ignored.
 
 #### Installation
 
-The plugin is tested with redmine 2.3.1.
+The plugin is tested with redmine 3.0.1.
 
 To install it, simply clone it into the plugins-directory. Execute
 

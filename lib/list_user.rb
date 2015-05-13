@@ -180,8 +180,7 @@ class ListUser
 		
     workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
 		
-		firstWorkingDayFromTodayOn = workingDays.select {|x| x >= today}.min
-		firstWorkingDayFromTodayOn = today if firstWorkingDayFromTodayOn.nil?
+		firstWorkingDayFromTodayOn = workingDays.select {|x| x >= today}.min || today
 		
     result = {}
 
@@ -316,8 +315,20 @@ class ListUser
 
     return result.uniq
   end
-	
-	def self.addIssueInfoToSummary(summary, issueInfo, timeSpan)
+
+  def self.getUsersOfGroups(groups)
+    result = [User.current]
+    
+    groups.each do |grp|
+      #result += grp.members.map(&:user) if grp.members.map(&:user).nil?
+      result += grp.users(&:users)
+    end
+    
+    
+    return result.uniq
+  end
+
+  def self.addIssueInfoToSummary(summary, issueInfo, timeSpan)
     workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
 		
 		summary = Hash::new if summary.nil?
