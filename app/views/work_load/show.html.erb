@@ -1,7 +1,7 @@
 <% html_title(l(:workload_site_title)) %>
 
 <h2><%= l(:workload_show_label) %></h2>
-  <%= render :partial => 'filters' %>
+
 
 <%= error_messages_for 'query' %>
 <div class="wrapper">
@@ -30,5 +30,6 @@
 </div>
 
 <% content_for :sidebar do %>
-  <%  render :partial => 'issues/sidebar' %>
+	<%= render :partial => 'filters' %>
+  <% # render :partial => 'issues/sidebar' %>
 <% end %>
