@@ -1,27 +1,37 @@
 <%= form_tag({}, {:method => :get, :id => 'filter_form', :class => 'filters'}) do %>
+  
+  	<h3><%=l(:workload_title)%> <%=l(:workload_show_filters) %></h3>
+  	<fieldset>
+  		<legend><%= l(:workload_show_range) %></legend>
+    	<div class="timespan">      
+          <table>
+          	<tr>          		
+	     	  <td>
+			      <%= label_tag :workload_first_day, l(:workload_show_rangefrom) %>	     	  	
+	     	  </td>
+	     	  <td>
+	     	  	  <%= text_field_tag :workload_first_day, @first_day, :name => 'workload[first_day]', :size => 10 %>
+			      <%= calendar_for('workload_first_day') %>
+	     	  </td>
+	       </tr>
+	      	<tr>
+	      		<td><%= label_tag :workload_last_day, l(:workload_show_rangeto) %></td>
+	      		<td><%= text_field_tag :workload_last_day, @last_day, :name => 'workload[last_day]', :size => 10 %><%= calendar_for('workload_last_day') %></td>
+	      	</tr>
+	      	<tr>
+	      		<td><%= label_tag :workload_start_date, l(:workload_show_today) %></td>
+	      		<td><%= text_field_tag :workload_start_date, @today, :name => 'workload[start_date]', :size => 10 %><%= calendar_for('workload_start_date') %></td>
+	      	</tr>
+	      </table>
+	      
+    	</div>    
+  </fieldset>
+  <br>
   <fieldset>
-    <legend><%= l(:workload_show_filters) %></legend>
-    <div class="timespan">
-      <%= label_tag :workload_num_months, l(:workload_show_range) %>
-    
-      <%= label_tag :workload_first_day, l(:workload_show_rangefrom) %>
-      <%= text_field_tag :workload_first_day, @first_day, :name => 'workload[first_day]', :size => 10 %>
-      <%= calendar_for('workload_first_day') %>
-    
-      <%= label_tag :workload_last_day, l(:workload_show_rangeto) %>
-      <%= text_field_tag :workload_last_day, @last_day, :name => 'workload[last_day]', :size => 10 %>
-      <%= calendar_for('workload_last_day') %>
-    </div>
-	<br>
-    <div class="calendar">
-      <%= label_tag :workload_start_date, l(:workload_show_today) %>
-      <%= text_field_tag :workload_start_date, @today, :name => 'workload[start_date]', :size => 10 %>
-      <%= calendar_for('workload_start_date') %>
-    </div>
-	<br>
+  	<legend><%= l(:workload_show_filter_user_legend) %></legend>
     <div class="users">
-      <%= label_tag :workload_users, l(:workload_show_filter_user) %>
-      <%= select_tag :workload_users, get_option_tags_for_userselection(@usersAllowedToDisplay, @usersToDisplay), :name => 'workload[users][]', :multiple => true, :onchange => "this.form.workload_groups.selectedIndex=-1;" %>
+    	<%= label_tag :workload_users, l(:workload_show_filter_user) %>
+    	<%= select_tag :workload_users, get_option_tags_for_userselection(@usersAllowedToDisplay, @usersToDisplay), :name => 'workload[users][]', :multiple => true, :onchange => "this.form.workload_groups.selectedIndex=-1;" %>
     </div>
 	<br>
 	<div class="groups">
