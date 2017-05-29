@@ -11,8 +11,6 @@ these issues will be ignored.
 
 #### Installation
 
-The plugin is tested with redmine 3.0.1.
-
 To install it, simply clone it into the plugins-directory. Execute
 
     git clone https://github.com/JostBaron/redmine_workload.git redmine_workload
