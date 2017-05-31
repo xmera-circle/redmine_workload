@@ -1,0 +1,10 @@
+<h1><%= l(:workload_user_vacation_new)%></h1>
+<%= form_for :wl_user_vacations, url: {action: "create"}, html: {class: "nifty_form"} do |f| %>
+
+<%= render(partial: "form", locals: {form: f}) %>
+<p>
+    <%= f.submit l(:button_add)%>
+    <%= link_to l(:button_cancel), :controller => 'wl_user_vacations', :action => "index", :year => @this_year %>
+
+</p>
+<% end %>

@@ -1,119 +1,127 @@
 <%
 # This file provides configuration options for the workload plugin.
 %>
+<fieldset class="box tabular">
+	<legend><%=  l(:workload_settings_general_workdays) %></legend>
+	
+	<p><%= l(:workload_settings_general_workdays_explanation) %></p>
+	
+	<p>
+	  <label><%= l(:workload_settings_general_workdays_monday) %></label>
+	  <input type="hidden"
+	         name="settings[general_workday_monday]"
+	         value=""
+	  >
+	  <input type="checkbox"
+	         name="settings[general_workday_monday]"
+	         value="checked"
+	         <%= "checked" if settings['general_workday_monday'] != '' %>
+	  >
+	</p>
+	<p>
+	  <label><%= l(:workload_settings_general_workdays_tuesday) %></label>
+	  <input type="hidden"
+	         name="settings[general_workday_tuesday]"
+	         value=""
+	  >
+	  <input type="checkbox"
+	         name="settings[general_workday_tuesday]"
+	         value="checked"
+	         <%= "checked" if settings['general_workday_tuesday'] != '' %>
+	  >
+	</p>
+	<p>
+	  <label><%= l(:workload_settings_general_workdays_wednesday) %></label>
+	  <input type="hidden"
+	         name="settings[general_workday_wednesday]"
+	         value=""
+	  >
+	  <input type="checkbox"
+	         name="settings[general_workday_wednesday]"
+	         value="checked"
+	         <%= "checked" if settings['general_workday_wednesday'] != '' %>
+	  >
+	</p>
+	<p>
+	  <label><%= l(:workload_settings_general_workdays_thursday) %></label>
+	  <input type="hidden"
+	         name="settings[general_workday_thursday]"
+	         value=""
+	  >
+	  <input type="checkbox"
+	         name="settings[general_workday_thursday]"
+	         value="checked"
+	         <%= "checked" if settings['general_workday_thursday'] != '' %>
+	  >
+	</p>
+	<p>
+	  <label><%= l(:workload_settings_general_workdays_friday) %></label>
+	  <input type="hidden"
+	         name="settings[general_workday_friday]"
+	         value=""
+	  >
+	  <input type="checkbox"
+	         name="settings[general_workday_friday]"
+	         value="checked"
+	         <%= "checked" if settings['general_workday_friday'] != '' %>
+	  >
+	</p>
+	<p>
+	  <label><%= l(:workload_settings_general_workdays_saturday) %></label>
+	  <input type="hidden"
+	         name="settings[general_workday_saturday]"
+	         value=""
+	  >
+	  <input type="checkbox"
+	         name="settings[general_workday_saturday]"
+	         value="checked"
+	         <%= "checked" if settings['general_workday_saturday'] != '' %>
+	  >
+	</p>
+	<p>
+	  <label><%= l(:workload_settings_general_workdays_sunday) %></label>
+	  <input type="hidden"
+	         name="settings[general_workday_sunday]"
+	         value=""
+	  >
+	  <input type="checkbox"
+	         name="settings[general_workday_sunday]"
+	         value="checked"
+	         <%= "checked" if settings['general_workday_sunday'] != '' %>
+	  >
+	</p>
+</fieldset>
+<fieldset class="box tabular">	
+	<legend><%=  l(:workload_settings_hours) %></legend>
+	
+	<p>
+	  <%= l(:workload_settings_leastdailyworkload) %>
+	</p>
+	<p>
+	  <label><%= l(:workload_settings_hours_low_min) %></label>
+	  <input type="text"
+	         name="settings[threshold_lowload_min]"
+	         value="<%= settings['threshold_lowload_min'] %>"
+	  >
+	</p>
+	<p>
+	  <label><%= l(:workload_settings_hours_normal_min) %></label>
+	  <input type="text"
+	         name="settings[threshold_normalload_min]"
+	         value="<%= settings['threshold_normalload_min'] %>"
+	  >
+	</p>
+	<p>
+	  <label><%= l(:workload_settings_hours_high_min) %></label>
+	  <input type="text"
+	         name="settings[threshold_highload_min]"
+	         value="<%= settings['threshold_highload_min'] %>"
+	  >
+	</p>
+</fieldset>
 
-<h2><%=  l(:workload_settings_general_workdays) %></h2>
-
-<p><%= l(:workload_settings_general_workdays_explanation) %></p>
-
-<p>
-  <label><%= l(:workload_settings_general_workdays_monday) %></label>
-  <input type="hidden"
-         name="settings[general_workday_monday]"
-         value=""
-  >
-  <input type="checkbox"
-         name="settings[general_workday_monday]"
-         value="checked"
-         <%= "checked" if settings['general_workday_monday'] != '' %>
-  >
-</p>
-<p>
-  <label><%= l(:workload_settings_general_workdays_tuesday) %></label>
-  <input type="hidden"
-         name="settings[general_workday_tuesday]"
-         value=""
-  >
-  <input type="checkbox"
-         name="settings[general_workday_tuesday]"
-         value="checked"
-         <%= "checked" if settings['general_workday_tuesday'] != '' %>
-  >
-</p>
-<p>
-  <label><%= l(:workload_settings_general_workdays_wednesday) %></label>
-  <input type="hidden"
-         name="settings[general_workday_wednesday]"
-         value=""
-  >
-  <input type="checkbox"
-         name="settings[general_workday_wednesday]"
-         value="checked"
-         <%= "checked" if settings['general_workday_wednesday'] != '' %>
-  >
-</p>
-<p>
-  <label><%= l(:workload_settings_general_workdays_thursday) %></label>
-  <input type="hidden"
-         name="settings[general_workday_thursday]"
-         value=""
-  >
-  <input type="checkbox"
-         name="settings[general_workday_thursday]"
-         value="checked"
-         <%= "checked" if settings['general_workday_thursday'] != '' %>
-  >
-</p>
-<p>
-  <label><%= l(:workload_settings_general_workdays_friday) %></label>
-  <input type="hidden"
-         name="settings[general_workday_friday]"
-         value=""
-  >
-  <input type="checkbox"
-         name="settings[general_workday_friday]"
-         value="checked"
-         <%= "checked" if settings['general_workday_friday'] != '' %>
-  >
-</p>
-<p>
-  <label><%= l(:workload_settings_general_workdays_saturday) %></label>
-  <input type="hidden"
-         name="settings[general_workday_saturday]"
-         value=""
-  >
-  <input type="checkbox"
-         name="settings[general_workday_saturday]"
-         value="checked"
-         <%= "checked" if settings['general_workday_saturday'] != '' %>
-  >
-</p>
-<p>
-  <label><%= l(:workload_settings_general_workdays_sunday) %></label>
-  <input type="hidden"
-         name="settings[general_workday_sunday]"
-         value=""
-  >
-  <input type="checkbox"
-         name="settings[general_workday_sunday]"
-         value="checked"
-         <%= "checked" if settings['general_workday_sunday'] != '' %>
-  >
-</p>
-
-<h2><%=  l(:workload_settings_hours) %></h2>
-
-<p>
-  <%= l(:workload_settings_leastdailyworkload) %>
-</p>
-<p>
-  <label><%= l(:workload_settings_hours_low_min) %></label>
-  <input type="text"
-         name="settings[threshold_lowload_min]"
-         value="<%= settings['threshold_lowload_min'] %>"
-  >
-</p>
-<p>
-  <label><%= l(:workload_settings_hours_normal_min) %></label>
-  <input type="text"
-         name="settings[threshold_normalload_min]"
-         value="<%= settings['threshold_normalload_min'] %>"
-  >
-</p>
-<p>
-  <label><%= l(:workload_settings_hours_high_min) %></label>
-  <input type="text"
-         name="settings[threshold_highload_min]"
-         value="<%= settings['threshold_highload_min'] %>"
-  >
-</p>
+<fieldset class="box">	
+		<legend><%=l(:workload_holiday_title) %></legend>
+	
+		<%= link_to l(:workload_settings_holiday_setup), :controller => 'wl_national_holiday', :action => "index" %>	
+</fieldset>	

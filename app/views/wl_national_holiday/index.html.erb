@@ -1,0 +1,19 @@
+<div class="contextual">
+    <%= render_action_links %>
+    <%= call_hook(:view_wl_menu_extension) %>
+</div>
+
+<h1><%= l(:workload_holiday_title)%></h1>
+
+<%= link_to l(:label_new), {controller: "wl_national_holiday", action: "new"}, class: "icon icon-add" if @is_allowed%>
+
+<p>
+		<%= link_to "<<", :controller => 'wl_national_holiday', :action => "index", :year => @this_year-1 %>
+		<%= @this_year %>
+		<%= link_to ">>", :controller => 'wl_national_holiday', :action => "index", :year => @this_year+1 %>
+</p>
+	<% unless @wl_national_holiday.empty?%>
+	
+		<%= render(partial: "show_list", locals: {wl_national_holiday: @wl_national_holiday, is_allowed: @is_allowed}) %>
+	<%end%>
+	

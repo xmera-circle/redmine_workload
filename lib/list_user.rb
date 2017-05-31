@@ -61,7 +61,8 @@ class ListUser
     raise ArgumentError unless today.kind_of?(Date)
 
     hoursRemaining = ListUser::getEstimatedTimeForIssue(issue)
-    workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
+    issue.assigned_to.nil? ? assignee = 'all' : assignee = issue.assigned_to.id
+    workingDays = DateTools::getWorkingDaysInTimespan(timeSpan, assignee )    
 
     result = Hash::new
 
@@ -83,7 +84,7 @@ class ListUser
         }
       end
 
-      firstWorkingDayAfterToday = DateTools::getWorkingDaysInTimespan(today..timeSpan.end).min
+      firstWorkingDayAfterToday = DateTools::getWorkingDaysInTimespan(today..timeSpan.end, assignee).min
       result[firstWorkingDayAfterToday] = Hash::new if result[firstWorkingDayAfterToday].nil?
       result[firstWorkingDayAfterToday][:hours] = hoursRemaining
 
@@ -123,7 +124,8 @@ class ListUser
     # The issue has start and end date
     else
       # Number of remaining working days for the issue:
-      numberOfWorkdaysForIssue = DateTools::getRealDistanceInDays([today, issue.start_date].max..issue.due_date)
+      numberOfWorkdaysForIssue = DateTools::getRealDistanceInDays([today, issue.start_date].max..issue.due_date, assignee)
+      
       hoursPerWorkday = hoursRemaining/numberOfWorkdaysForIssue.to_f
 
       timeSpan.each do |day|
@@ -178,15 +180,17 @@ class ListUser
     raise ArgumentError unless timeSpan.kind_of?(Range)
     raise ArgumentError unless today.kind_of?(Date)
 		
-    workingDays = DateTools::getWorkingDaysInTimespan(timeSpan)
-		
-		firstWorkingDayFromTodayOn = workingDays.select {|x| x >= today}.min || today
+
 		
     result = {}
 
     issues.each do |issue|
 			
 			assignee = issue.assigned_to
+			
+			workingDays = DateTools::getWorkingDaysInTimespan(timeSpan, assignee.id)
+      firstWorkingDayFromTodayOn = workingDays.select {|x| x >= today}.min || today
+
 			
       if !result.has_key?(issue.assigned_to) then
 			result[assignee] = {
@@ -282,19 +286,35 @@ class ListUser
 
   # Returns the "load class" for a given amount of working hours on a single
   # day.
-  def self.getLoadClassForHours(hours)
+  def self.getLoadClassForHours(hours, user = nil)
     raise ArgumentError unless hours.respond_to?(:to_f)
     hours = hours.to_f
-
-    if hours < Setting['plugin_redmine_workload']['threshold_lowload_min'].to_f then
-      return "none"
-    elsif hours < Setting['plugin_redmine_workload']['threshold_normalload_min'].to_f then
-      return "low"
-    elsif hours < Setting['plugin_redmine_workload']['threshold_highload_min'].to_f then
-      return "normal"
-    else
-      return "high"
+    
+    #load defaults:
+    lowLoad = Setting['plugin_redmine_workload']['threshold_lowload_min'].to_f
+    normalLoad = Setting['plugin_redmine_workload']['threshold_normalload_min'].to_f
+    highLoad = Setting['plugin_redmine_workload']['threshold_highload_min'].to_f
+    
+    if !user.nil?
+      user_workload_data = WlUserData.find_by user_id: user.id
+      if !user_workload_data.nil?
+        lowLoad     = user_workload_data.threshold_lowload_min
+        normalLoad  = user_workload_data.threshold_normalload_min
+        highLoad    = user_workload_data.threshold_highload_min
+      end
     end
+
+    if hours < lowLoad then
+        return "none"
+    elsif hours < normalLoad then
+        return "low"
+    elsif hours < highLoad then
+        return "normal"
+    else
+        return "high"
+    end      
+    
+
   end
 
   # Returns the list of all users the current user may display.

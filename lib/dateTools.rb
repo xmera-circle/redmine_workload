@@ -16,32 +16,53 @@ class DateTools
 
     return result
   end
-
-  @@getWorkingDaysInTimespanCache = Hash::new
-
-  def self.getWorkingDaysInTimespan(timeSpan, noCache = false)
+  
+  def self.getWorkingDaysInTimespan(timeSpan, user = 'all', noCache = false)
     raise ArgumentError unless timeSpan.kind_of?(Range)
-
-    return @@getWorkingDaysInTimespanCache[timeSpan] unless @@getWorkingDaysInTimespanCache[timeSpan].nil? || noCache
-
-    workingDays = self::getWorkingDays()
-
-    result = Set::new
-
-    timeSpan.each do |day|
-      if workingDays.include?(day.cwday) then
-        result.add(day)
+    
+    Rails.cache.clear if noCache
+    
+    return Rails.cache.fetch("#{user}/#{timeSpan}", expires_in: 12.hours) do
+    
+      workingDays = self::getWorkingDays()    
+  
+      result = Set::new
+  
+      timeSpan.each do |day|#
+        next if self::IsVacation(day, user) ##skip Vacation
+        next if self::IsHoliday(day) ##skip Holidays
+  
+        if workingDays.include?(day.cwday) then
+          result.add(day)
+        end
       end
+
+      result      
+    end 
+
+  end
+
+  def self.getRealDistanceInDays(timeSpan, assignee='all')
+    raise ArgumentError unless timeSpan.kind_of?(Range)    
+    return self::getWorkingDaysInTimespan(timeSpan, assignee).size
+  end
+    
+  def self.IsHoliday(day)
+    if WlNationalHoliday.where("start <= ? AND end >= ?", day, day).empty? then
+      return false
+    else
+      return true
     end
-
-    @@getWorkingDaysInTimespanCache[timeSpan] = result
-
-    return result
   end
-
-  def self.getRealDistanceInDays(timeSpan)
-    raise ArgumentError unless timeSpan.kind_of?(Range)
-
-    return self::getWorkingDaysInTimespan(timeSpan).size
+  
+  def self.IsVacation(day, user)
+    return false if user=='all'
+    
+    if WlUserVacation.where("user_id = ? AND date_from <= ? AND date_to >= ?", user, day, day).empty? then
+      return false
+    else
+      return true
+    end
   end
+  
 end

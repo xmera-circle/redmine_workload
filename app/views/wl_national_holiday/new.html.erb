@@ -1,0 +1,10 @@
+
+<%= form_for :wl_national_holiday, url: {action: "create"}, html: {class: "nifty_form"} do |f| %>
+
+<%= render(partial: "form", locals: {form: f}) %>
+<p>
+    <%= f.submit l(:button_add)%>
+    <%= link_to l(:button_cancel), :controller => 'wl_national_holiday', :action => "index", :year => @this_year %>
+
+</p>
+<% end %>

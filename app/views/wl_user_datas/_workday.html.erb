@@ -1,0 +1,18 @@
+<p>
+	<%
+	label_symbol = "workload_settings_general_workdays_" + workday
+	
+	# this is for testing only, needs to be initialized from model
+	@user_working_days[ workday ] = ''
+	%>
+  <label><%= l(label_symbol.to_sym) %></label>
+  <input type="hidden"
+         name="settings[<%= workday %>]"
+         value=""
+  >
+  <input type="checkbox"
+         name="settings[<%= workday %>]"
+         value="checked"
+         <%= "checked" if @user_working_days[ workday ] != '' %>
+  >
+</p>

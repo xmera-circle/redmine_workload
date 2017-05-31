@@ -20,7 +20,7 @@
 	  <% end %>
 	</th>
 	<% # Print the total workload for this user for each day %>
-	<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total]} %>
+	<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total], :user => user} %>
   </tr>
 </tbody>
 

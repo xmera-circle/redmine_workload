@@ -1,5 +1,9 @@
 <% html_title(l(:workload_site_title)) %>
 
+<div class="contextual">
+    <%= render_action_links %>
+</div>
+
 <h2><%= l(:workload_show_label) %></h2>
 
 
@@ -31,5 +35,4 @@
 
 <% content_for :sidebar do %>
 	<%= render :partial => 'filters' %>
-  <% # render :partial => 'issues/sidebar' %>
 <% end %>

@@ -1,0 +1,16 @@
+  <p>
+    <%= form.label :description_date_from %><br>
+    <%= form.date_select :start, default: { year: @this_year} %>    
+  </p>
+  <p>
+    <%= form.label :description_date_to %><br>
+    <%= form.date_select :end, default: { year: @this_year} %>    
+  </p>
+ 
+  <p>
+    <%= form.label :reason %><br>
+    <%= form.text_field :reason %>
+  </p>
+  <input type="hidden"
+         name="year"
+         value="<%=@this_year%>">
