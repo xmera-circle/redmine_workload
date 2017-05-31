@@ -42,10 +42,17 @@ The plugin shows the workload as follows:
   - When showing the issues that contribute to the workload, only issues visible
     to the current user are shown. Invisible issues are only summarized.
 
+#### Holidays, Vacation and User Workload Data
+
+National holidays and user vacation is counted as day off (like weekend).
+
+Admins can setup National Holidays in plugin-settings.
+Users can get permissions to setup their vacations and Workload Data with 'Roles and permissions'.  
+You can specify user(s), who should be able to setup national holidays with 'Roles and permissions'.
+
+
 #### ToDo
 
-* Make it possible to display the workload starting with another day than the
-start of a month.
 * Improve performance - requests still take up to 5 seconds.
 * Add legend (again).
 * Use nicer colors for workload indications.

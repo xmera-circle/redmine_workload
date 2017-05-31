@@ -1,0 +1,12 @@
+<div class="contextual">
+    <%= render_action_links %>
+</div>
+
+
+<h1><%= l(:workload_user_vacation_menu)%></h1>
+
+<%= link_to l(:label_new), new_wl_user_vacation_path, :class => 'icon icon-add' if @is_allowed %>
+
+<% unless @wl_user_vacation.empty?%>	
+	<%= render(partial: "show_list", locals: {wl_user_vacation: @wl_user_vacation, is_allowed: @is_allowed}) %>
+<%end%>

@@ -1,0 +1,8 @@
+<%= form_for @wl_user_vacation do |f| %>
+
+<%= render(partial: "form", locals: {form: f}) %>
+<p>
+    <%= f.submit l(:button_update)%>
+    <%= link_to l(:button_cancel), :controller => 'wl_user_vacations', :action => "index", :year => @this_year %>
+</p>
+<% end %>

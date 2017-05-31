@@ -27,6 +27,7 @@ class WorkLoadController < ApplicationController
     @timeSpanToDisplay = @first_day..@last_day
 
     initalizeUsers(workloadParameters)       
+    
 
     @issuesForWorkload = ListUser::getOpenIssuesForUsers(@usersToDisplay)
     @monthsToRender = ListUser::getMonthsInTimespan(@timeSpanToDisplay)

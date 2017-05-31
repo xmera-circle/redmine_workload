@@ -1,0 +1,21 @@
+  <p>
+    <%= form.label :description_date_from %><br>
+    <%= form.date_select :date_from, default: { year: @this_year} %>    
+  </p>
+  <p>
+    <%= form.label :description_date_to %><br>
+    <%= form.date_select :date_to, default: { year: @this_year} %>    
+  </p>
+
+  <p>
+    <%= form.label :comments %><br>
+    <%= form.text_field :comments %>
+  </p>
+  <p>
+  	<%= form.label l(:workload_user_vacation_type) %>:<br>
+  	<%= form.text_field :vacation_type %>  	
+  </p>
+
+  <input type="hidden"
+         name="year"
+         value="<%=@this_year%>">

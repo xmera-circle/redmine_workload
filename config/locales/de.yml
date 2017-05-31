@@ -56,3 +56,18 @@ de:
   workload_settings_hours_low_min:              "... niedrig angesehen wird:"
   workload_settings_hours_normal_min:           "... normal angesehen wird:"
   workload_settings_hours_high_min:             "... überlastet angesehen wird:"
+
+  workload_settings_holiday_setup:	        "Feiertage bearbeiten"
+ 
+  workload_user_vacation:           "Urlaub"
+  workload_user_vacation_menu:      "Meine Urlaube"
+  workload_user_vacation_new:       "Neuen Urlaub erstellen"
+  workload_user_vacation_type:      "Typ"
+  
+  workload_user_data_site_title:   "Benutzer Workload Information"
+  workload_user_data_title:        "Meine Einstellungen"
+  workload_holiday_title:           "Feiertage"
+  workload_end_before_start:        "Das Enddatum muss hinter dem Anfangsdatum liegen"
+  permission_edit_national_holiday: "Workload: Feiertage bearbeiten"
+  permission_edit_user_vacations:   "Workload: Eigene Urlaube bearbeiten"
+  permission_edit_user_data:        "Workload: Eigene Belastungsgrenzen bearbeiten"

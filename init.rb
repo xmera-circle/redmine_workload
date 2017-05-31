@@ -9,12 +9,13 @@ Redmine::Plugin.register :redmine_workload do
   description 'This is a plugin for Redmine, originally developed by Rafael Calleja. It ' +
               'displays the estimated number of hours users have to work to finish ' +
               'all their assigned issus on time.'
-  version '1.0.4'
+  version '1.1.0'
   url 'https://github.com/JostBaron/redmine_workload'
   author_url 'http://netzkönig.de/'
-
+    
   menu :top_menu, :WorkLoad, { :controller => 'work_load', :action => 'show' }, :caption => :workload_title,
     :if =>  Proc.new { User.current.logged? }
+
 
   settings :partial => 'settings/workload_settings',
            :default => {
@@ -27,11 +28,14 @@ Redmine::Plugin.register :redmine_workload do
               'general_workday_sunday'    => '',
               'threshold_lowload_min'     => 0.1,
               'threshold_normalload_min'  => 7,
-              'threshold_highload_min'    => 8.5
+              'threshold_highload_min'    => 8.5,
            }
 
   permission :view_project_workload, :work_load => :show
-
+  permission :edit_national_holiday, :wl_national_holiday => [:create, :update, :destroy ]
+  permission :edit_user_vacations,   :wl_user_vacations   => [:create, :update, :destroy ]
+  permission :edit_user_data,        :wl_user_datas       => :create_update
+  
 end
 
 class RedmineToolbarHookListener < Redmine::Hook::ViewListener

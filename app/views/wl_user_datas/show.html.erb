@@ -1,0 +1,51 @@
+<% html_title(l(:workload_user_data_site_title)) %>
+
+<div class="contextual">
+    <%= render_action_links %>
+</div>
+
+<h2><%= l(:workload_user_data_site_title) %></h2>
+
+<%= form_for @user_workload_data,
+                     :url =>  { :action => "create_update" },
+                     :html => { :id => 'my_workload_user_data_form',
+                                :method => :post } do |f| %>
+
+<div class="splitcontentleft">
+
+	<fieldset class="box tabular">		
+		<legend><%=  l(:workload_settings_hours) %></legend>
+		
+		<p>
+		  <%= l(:workload_settings_leastdailyworkload) %>
+		</p>
+		<p>
+		  <label><%= l(:workload_settings_hours_low_min) %></label>
+		  <%= f.text_field :threshold_lowload_min, disabled: !@is_allowed %>
+		  <%= l(:field_default_value)%>: <%= Setting['plugin_redmine_workload']['threshold_lowload_min']%> 
+		</p>
+		<p>
+		  <label><%= l(:workload_settings_hours_normal_min) %></label>
+		  <%= f.text_field :threshold_normalload_min, disabled: !@is_allowed  %>
+		  <%= l(:field_default_value)%>: <%= Setting['plugin_redmine_workload']['threshold_normalload_min']%>
+		</p>
+		<p>
+		  <label><%= l(:workload_settings_hours_high_min) %></label>
+		  <%= f.text_field :threshold_highload_min, disabled: !@is_allowed  %>
+		  <%= l(:field_default_value)%>: <%= Setting['plugin_redmine_workload']['threshold_highload_min']%>
+		</p>
+		
+	
+	</fieldset>
+	<p class="mobile-hide">
+	<% if @is_allowed %>
+		<%= submit_tag l(:button_save) %>
+	<% end %>	
+	<%= link_to l(:button_cancel), :back %>
+	</p>
+</div>
+<% end %>
+
+<% content_for :sidebar do %>
+	<%= render :partial => 'sidebar' %>
+<% end %>
