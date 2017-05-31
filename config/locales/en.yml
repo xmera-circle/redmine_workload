@@ -70,4 +70,4 @@ en:
   workload_end_before_start:        "End must be greater or equal to start date"
   permission_edit_national_holiday: "Workload: Edit national Holidays"
   permission_edit_user_vacations:   "Workload: Edit own vacations"
-  permission_edit_user_data:        "Workload: Edit own load data"
+  permission_edit_user_data:        "Workload: Edit own workload thresholds"
