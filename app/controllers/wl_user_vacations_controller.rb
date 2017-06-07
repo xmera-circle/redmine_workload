@@ -5,7 +5,7 @@ class WlUserVacationsController < ApplicationController
   
   def index
     @is_allowed = User.current.allowed_to_globally?(:edit_user_vacations)
-    @wl_user_vacation = WlUserVacation.all
+    @wl_user_vacation = WlUserVacation.where user_id: User.current
   end
   
   def new
