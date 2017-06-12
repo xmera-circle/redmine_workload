@@ -11,13 +11,21 @@ these issues will be ignored.
 
 #### Installation
 
-To install it, simply clone it into the plugins-directory. Execute
+1. To install it, simply clone it into the plugins-directory. Execute
 
-    git clone https://github.com/JostBaron/redmine_workload.git redmine_workload
+    git clone https://github.com/JostBaron/redmine_workload.git redmine_workload
 
-in your plugins directory. Then restart your redmine. There is no need for
-database migration, as this plugin does not change anything in the database.
+ in your plugins directory. 
 
+2. database migration:
+
+	cd ..
+	rake redmine:plugins:migrate
+	
+3. reload web service
+
+	touch tmp/restart.txt
+    
 #### Configuration
 
 There are two places where this plugin might be configured:
