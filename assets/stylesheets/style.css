@@ -35,7 +35,7 @@ legend {
     background-repeat: no-repeat;
     background-position: center;
 
-    min-width: 250px;
+    min-width: 300px;
 }
 
 /* Column width if no data is displayed */
@@ -135,27 +135,27 @@ legend {
     font-size: 1.3em;
     padding-left: 10px;
 	
-    width:     260px;
-    min-width: 260px;
-    max-width: 260px;
+    width:     300px;
+    min-width: 300px;
+    max-width: 300px;
 }
 
 .controller-work_load .data .project-description {
 	font-size: 1.2em;
 	padding-left: 15px;
 	
-    width:     255px;
-    min-width: 255px;
-    max-width: 255px;
+    width:     300px;
+    min-width: 300px;
+    max-width: 300px;
 }
 
 .controller-work_load .data .issue-description,
 .controller-work_load .data .invisible-workload-description {
     padding-left: 20px;
 	
-    width:     250px;
-    min-width: 250px;
-    max-width: 250px;
+    width:     300px;
+    min-width: 300px;
+    max-width: 300px;
 }
 
 .controller-work_load .data .invisible-workload-description {
@@ -174,12 +174,12 @@ legend {
 	float: left;
 	clear: left;
 	
-	width: 170px;
+	width: 200px;
 }
 
 .controller-work_load .data .additional-user-info dd,
 .controller-work_load .data .additional-project-info dd {	
-	margin-left: 180px;
+	margin-left: 210px;
 }
 
 /*------------------------------------------------------------------------------
@@ -227,7 +227,7 @@ legend {
 
     width: 30px;
     min-width: 30px;
-    max-width: 30px;
+    /* max-width: 30px; */
 }
 
 .controller-work_load .data .user-total-workload th,
