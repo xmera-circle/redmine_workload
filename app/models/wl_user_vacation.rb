@@ -3,11 +3,11 @@ class WlUserVacation < ActiveRecord::Base
   
   belongs_to :user
   
-  attr_accessible :user_id  
-  attr_accessible :date_from
-  attr_accessible :date_to
-  attr_accessible :comments
-  attr_accessible :vacation_type
+  attr_accessor :user_id  
+  attr_accessor :date_from
+  attr_accessor :date_to
+  attr_accessor :comments
+  attr_accessor :vacation_type
   validates :date_from, :date => true
   validates :date_to, :date => true
   
