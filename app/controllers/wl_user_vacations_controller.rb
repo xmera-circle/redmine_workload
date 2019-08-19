@@ -33,7 +33,7 @@ class WlUserVacationsController < ApplicationController
   end
   
   def create
-    @wl_user_vacation = WlUserVacation.new(params[:wl_user_vacations])
+    @wl_user_vacation = WlUserVacation.new(wl_user_vacations)
     @wl_user_vacation.user_id = User.current.id
     if @wl_user_vacation.save
       redirect_to action: 'index', notice: 'Vacation was successfully saved.', year: params[:year]
@@ -62,5 +62,9 @@ private
       flash[:error] = translate 'no_right'
       redirect_to :action => 'index'
     end
+  end
+
+  def wl_user_vacations
+    params.require(:wl_user_vacations).permit(:user_id,:date_from,:date_to,:comments,:vacation_type)
   end
 end
