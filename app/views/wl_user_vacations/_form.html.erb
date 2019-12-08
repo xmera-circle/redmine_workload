@@ -1,18 +1,18 @@
   <p>
-    <%= form.label :description_date_from %><br>
+    <label><%= l(:field_start_date) %>:</label><br>
     <%= form.date_select :date_from, default: { year: @this_year} %>    
   </p>
   <p>
-    <%= form.label :description_date_to %><br>
+    <label><%= l(:workload_user_vacation_date_end) %>:</label><br>
     <%= form.date_select :date_to, default: { year: @this_year} %>    
   </p>
 
   <p>
-    <%= form.label :comments %><br>
+    <label><%= l(:workload_user_vacation_comments) %>:</label><br>
     <%= form.text_field :comments %>
   </p>
   <p>
-  	<%= form.label l(:workload_user_vacation_type) %>:<br>
+  	<label><%= l(:workload_user_vacation_type) %>:</label><br>
   	<%= form.text_field :vacation_type %>  	
   </p>
 

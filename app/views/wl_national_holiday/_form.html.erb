@@ -1,14 +1,14 @@
   <p>
-    <%= form.label :description_date_from %><br>
+    <label><%= l(:field_start_date) %>:</label><br>
     <%= form.date_select :start, default: { year: @this_year} %>    
   </p>
   <p>
-    <%= form.label :description_date_to %><br>
+    <label><%= l(:workload_user_vacation_date_end) %>:</label><br>
     <%= form.date_select :end, default: { year: @this_year} %>    
   </p>
  
   <p>
-    <%= form.label :reason %><br>
+    <label><%= l(:workload_holiday_reason) %>:</label><br>
     <%= form.text_field :reason %>
   </p>
   <input type="hidden"

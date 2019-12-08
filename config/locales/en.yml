@@ -63,11 +63,13 @@ en:
   workload_user_vacation_menu:      "My Vacations"
   workload_user_vacation_new:       "Create new Vacation"
   workload_user_vacation_type:      "Type"
-  
+  workload_user_vacation_comments:  "Coment"
+  workload_user_vacation_date_end:  "End"
+
   workload_user_data_site_title:   "User Workload Information"
   workload_user_data_title:        "My Setup"
   workload_holiday_title:           "Holidays"
   workload_end_before_start:        "End must be greater or equal to start date"
-  permission_edit_national_holiday: "Workload: Edit national Holidays"
-  permission_edit_user_vacations:   "Workload: Edit own vacations"
-  permission_edit_user_data:        "Workload: Edit own workload thresholds"
+  permission_edit_national_holiday: "Edit national Holidays"
+  permission_edit_user_vacations:   "Edit own vacations"
+  permission_edit_user_data:        "Edit own workload thresholds"
