@@ -20,7 +20,7 @@ class WlUserVacationsController < ApplicationController
     @wl_user_vacation = WlUserVacation.find(params[:id]) rescue nil 
   
     respond_to do |format|
-      if @wl_user_vacation.update_attributes(params[:wl_user_vacation])
+      if @wl_user_vacation.update_attributes(wl_user_vacations_params)
         format.html { redirect_to(:action => 'index', :notice => 'Vacation was successfully updated.', :params => { :year =>params[:year]} ) }
         format.xml  { head :ok }
       else
@@ -33,7 +33,7 @@ class WlUserVacationsController < ApplicationController
   end
   
   def create
-    @wl_user_vacation = WlUserVacation.new(wl_user_vacations)
+    @wl_user_vacation = WlUserVacation.new(wl_user_vacations_params)
     @wl_user_vacation.user_id = User.current.id
     if @wl_user_vacation.save
       redirect_to action: 'index', notice: 'Vacation was successfully saved.', year: params[:year]
@@ -64,7 +64,7 @@ private
     end
   end
 
-  def wl_user_vacations
+  def wl_user_vacations_params
     params.require(:wl_user_vacations).permit(:user_id,:date_from,:date_to,:comments,:vacation_type)
   end
 end

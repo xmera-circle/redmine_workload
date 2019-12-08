@@ -26,7 +26,7 @@ class WlNationalHolidayController < ApplicationController
     @wl_national_holiday = WlNationalHoliday.find(params[:id]) rescue nil 
   
     respond_to do |format|
-      if @wl_national_holiday.update_attributes(params[:wl_national_holiday])
+      if @wl_national_holiday.update_attributes(wl_national_holiday_params)
         format.html { redirect_to(:action => 'index', :notice => 'Holiday was successfully updated.', :params => { :year =>params[:year]} ) }
         format.xml  { head :ok }
       else
@@ -39,7 +39,7 @@ class WlNationalHolidayController < ApplicationController
   end
   
   def create
-    @wl_national_holiday = WlNationalHoliday.new(params[:wl_national_holiday])
+    @wl_national_holiday = WlNationalHoliday.new(wl_national_holiday_params)
     if @wl_national_holiday.save
       redirect_to action: 'index', notice: 'Holiday was successfully saved.', year: params[:year]
     else
@@ -76,5 +76,9 @@ private
     else 
       @this_year=Date.today.strftime("%Y").to_i if @this_year.blank?
     end
- end 
+ end
+
+ def wl_national_holiday_params
+    params.require(:wl_national_holiday).permit(:start,:end,:reason)
+ end
 end

@@ -1,8 +1,6 @@
 class WlNationalHoliday < ActiveRecord::Base
   unloadable
-  attr_accessor :start
-  attr_accessor :end
-  attr_accessor :reason
+
   validates :start, :date => true
   validates :end,   :date => true
   validates_presence_of :start, :end, :reason
