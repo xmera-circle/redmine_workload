@@ -31,11 +31,12 @@ Redmine::Plugin.register :redmine_workload do
               'threshold_highload_min'    => 8.5,
            }
 
-  permission :view_project_workload, :work_load => :show
-  permission :edit_national_holiday, :wl_national_holiday => [:create, :update, :destroy ]
-  permission :edit_user_vacations,   :wl_user_vacations   => [:create, :update, :destroy ]
-  permission :edit_user_data,        :wl_user_datas       => :create_update
-  
+  project_module :Workload do
+    permission :view_project_workload, :work_load => :show
+    permission :edit_national_holiday, :wl_national_holiday => [:create, :update, :destroy ]
+    permission :edit_user_vacations,   :wl_user_vacations   => [:create, :update, :destroy ]
+    permission :edit_user_data,        :wl_user_datas       => :create_update
+  end
 end
 
 class RedmineToolbarHookListener < Redmine::Hook::ViewListener
