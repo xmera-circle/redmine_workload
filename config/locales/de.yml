@@ -63,9 +63,12 @@ de:
   workload_user_vacation:           "Urlaub"
   workload_user_vacation_menu:      "Meine Urlaube"
   workload_user_vacation_new:       "Neuen Urlaub anlegen"
+  workload_user_vacation_edit:      "Urlaub bearbeiten"
   workload_user_vacation_type:      "Typ"
   workload_user_vacation_comments:  "Kommentar"
   workload_user_vacation_date_end:  "Ende"
+  workload_user_vacation_saved:     "Urlaub wurde erfolgreich gespeichert"
+  workload_user_vacation_deleted:   "Urlaub wurde erfolgreich gelöscht"
   
   workload_user_data_site_title:   "Benutzer Workload Information"
   workload_user_data_title:        "Meine Einstellungen"

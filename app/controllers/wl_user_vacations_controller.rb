@@ -20,8 +20,10 @@ class WlUserVacationsController < ApplicationController
     @wl_user_vacation = WlUserVacation.find(params[:id]) rescue nil
     respond_to do |format|
       if @wl_user_vacation.update_attributes(wl_user_vacation_params)
-        format.html { redirect_to(:action => 'index', :notice => 'Vacation was successfully updated.', :params => { :year =>params[:year]} ) }
-        format.xml  { head :ok }
+        format.html {
+          flash[:notice]= l(:workload_user_vacation_saved)
+          redirect_to(:action => 'index', :params => { :year =>params[:year]} )
+          }
       else
         format.html {
           flash[:error] = "<ul>" + @wl_user_vacation.errors.full_messages.map{|o| "<li>" + o + "</li>" }.join("") + "</ul>" 
@@ -34,23 +36,32 @@ class WlUserVacationsController < ApplicationController
   def create
     @wl_user_vacation = WlUserVacation.new(wl_user_vacations_params)
     @wl_user_vacation.user_id = User.current.id
-    if @wl_user_vacation.save
-      redirect_to action: 'index', notice: 'Vacation was successfully saved.', year: params[:year]
-    else
-      respond_to do |format| 
+    
+    respond_to do |format|
+      if @wl_user_vacation.save
+        format.html {
+          flash[:notice]= l(:workload_user_vacation_saved)
+          redirect_to(:action => 'index', :params => { :year =>params[:year]} )
+          }
+      else
         format.html {
           flash[:error] = "<ul>" + @wl_user_vacation.errors.full_messages.map{|o| "<li>" + o + "</li>" }.join("") + "</ul>"
-          render :action => 'new' }
+          render :action => 'new'
+          }
         format.api  { render_validation_errors(@wl_user_vacation) }
-      end 
-    end  
+      end
+    end
   end
   
   def destroy
     @wl_user_vacation = WlUserVacation.find(params[:id]) rescue nil
     @wl_user_vacation.destroy
-    
-    redirect_to(:action => 'index', :notice => 'Vacation was successfully deleted.', :year => params[:year])
+    respond_to do |format|
+      format.html {
+        flash[:notice]= l(:workload_user_vacation_deleted)
+        redirect_to(:action => 'index', :params => { :year =>params[:year]} )
+      }
+    end
   end
 
 private

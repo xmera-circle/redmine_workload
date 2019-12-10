@@ -62,10 +62,13 @@ en:
   workload_user_vacation:           "Vacation"
   workload_user_vacation_menu:      "My Vacations"
   workload_user_vacation_new:       "Create new Vacation"
+  workload_user_vacation_edit:      "Edit Vacation"
   workload_user_vacation_type:      "Type"
   workload_user_vacation_comments:  "Coment"
   workload_user_vacation_date_end:  "End"
-
+  workload_user_vacation_saved:     "Vacation has been saved"
+  workload_user_vacation_deleted:   "Vacation has been deleted"
+  
   workload_user_data_site_title:   "User Workload Information"
   workload_user_data_title:        "My Setup"
   workload_holiday_title:           "Holidays"
