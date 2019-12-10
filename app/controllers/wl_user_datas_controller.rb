@@ -25,7 +25,7 @@ class WlUserDatasController < ApplicationController
     logger.info "Parameter sind: #{params.inspect}"
     
     respond_to do |format|
-      if @user_workload_data.update(params[:wl_user_data])
+      if @user_workload_data.update(wl_user_data_params)
           format.html {
             flash[:notice]= l(:notice_account_updated)
             redirect_to(:action => 'show' )
@@ -50,6 +50,10 @@ private
       flash[:error] = translate 'no_right'
       redirect_to :back
     end
+  end
+
+  def wl_user_data_params
+    params.require(:wl_user_data).permit(:user_id, :threshold_lowload_min, :threshold_normalload_min, :threshold_highload_min)
   end
   
 end
