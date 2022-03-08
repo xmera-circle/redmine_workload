@@ -6,6 +6,9 @@ class ListUserTest < ActiveSupport::TestCase
   fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
            :users, :issue_statuses, :enumerations, :roles
 
+  def teardown
+    User.current = nil
+  end
 
   test "getOpenIssuesForUsers returns empty list if no users given" do
     assert_equal [], ListUser::getOpenIssuesForUsers([])
@@ -685,13 +688,14 @@ class ListUserTest < ActiveSupport::TestCase
   end
 
   test "getUsersAllowedToDisplay returns exactly project members if user has right to see workload of project members." do
-    User.current = User.generate!
+    user =  User.generate!
     project = Project.generate!
+    project.enable_module! :Workload
 
     projectManagerRole = Role.generate!(:name => 'Project manager',
                                         :permissions => [:view_project_workload])
 
-    User.add_to_project(User.current, project, [projectManagerRole]);
+    User.add_to_project(user, project, projectManagerRole);
 
     projectMember1 = User.generate!
     User.add_to_project(projectMember1, project)
@@ -701,6 +705,6 @@ class ListUserTest < ActiveSupport::TestCase
     # Create some non-member
     User.generate!
 
-    assert_equal [User.current, projectMember1, projectMember2].map(&:id).sort, ListUser::getUsersAllowedToDisplay.map(&:id).sort
+    assert_equal [user, projectMember1, projectMember2].map(&:id).sort, ListUser::getUsersAllowedToDisplay(user).map(&:id).sort
   end
 end

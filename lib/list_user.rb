@@ -318,16 +318,15 @@ class ListUser
   end
 
   # Returns the list of all users the current user may display.
-  def self.getUsersAllowedToDisplay()
+  def self.getUsersAllowedToDisplay(user = User.current)
+    return [] if user.anonymous?
+    return User.active if user.admin?
 
-    return [] if User.current.anonymous?
-    return User.active if User.current.admin?
-
-    result = [User.current]
+    result = [user]
 
     # Get all projects where the current user has the :view_project_workload
     # permission
-    projects = Project.allowed_to(:view_project_workload)
+    projects = Project.allowed_to(user, :view_project_workload)
 
     projects.each do |project|
       result += project.members.map(&:user)
