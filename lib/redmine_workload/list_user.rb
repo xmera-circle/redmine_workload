@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ListUser
-  require 'date_tools'
-
   def self.getEstimatedTimeForIssue(issue)
     raise ArgumentError unless issue.is_a?(Issue)
 

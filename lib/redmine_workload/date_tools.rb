@@ -17,10 +17,10 @@ class DateTools
     result
   end
 
-  def self.getWorkingDaysInTimespan(timeSpan, user = 'all', noCache: false)
+  def self.getWorkingDaysInTimespan(timeSpan, user = 'all', no_cache: false)
     raise ArgumentError unless timeSpan.is_a?(Range)
 
-    Rails.cache.clear if noCache
+    Rails.cache.clear if no_cache
 
     Rails.cache.fetch("#{user}/#{timeSpan}", expires_in: 12.hours) do
       workingDays = getWorkingDays
