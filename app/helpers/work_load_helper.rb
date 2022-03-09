@@ -2,7 +2,8 @@
 
 module WorkLoadHelper
   def is_workload_admin
-    right = (Setting.plugin_redmine_workload['allowed_users'].present? && Setting.plugin_redmine_workload['allowed_users'].include?(User.current.id.to_s))
+    allowed_users = Setting.plugin_redmine_workload['allowed_users']
+    allowed_users.present? && allowed_users.include?(User.current.id.to_s)
   end
 
   def render_action_links

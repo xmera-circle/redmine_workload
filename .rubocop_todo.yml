@@ -13,11 +13,6 @@
 Layout/LineLength:
   Max: 154
 
-# Offense count: 1
-Lint/UselessAssignment:
-  Exclude:
-    - 'app/helpers/work_load_helper.rb'
-
 # Offense count: 13
 # Configuration parameters: IgnoredMethods, CountRepeatedAttributes.
 Metrics/AbcSize:
