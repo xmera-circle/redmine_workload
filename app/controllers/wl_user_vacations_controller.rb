@@ -1,83 +1,101 @@
+# frozen_string_literal: true
+
 class WlUserVacationsController < ApplicationController
   helper :work_load
-  
-  before_action :check_edit_rights, only: [:edit, :update, :create, :destroy, :new]
-  
+
+  before_action :check_edit_rights, only: %i[edit update create destroy new]
+
   def index
     @is_allowed = User.current.allowed_to_globally?(:edit_user_vacations)
     @wl_user_vacation = WlUserVacation.where user_id: User.current
   end
-  
-  def new
-    
-  end
-  
+
+  def new; end
+
   def edit
-    @wl_user_vacation = WlUserVacation.find(params[:id]) rescue nil 
-  end    
-  
+    @wl_user_vacation = begin
+      WlUserVacation.find(params[:id])
+    rescue StandardError
+      nil
+    end
+  end
+
   def update
-    @wl_user_vacation = WlUserVacation.find(params[:id]) rescue nil
+    @wl_user_vacation = begin
+      WlUserVacation.find(params[:id])
+    rescue StandardError
+      nil
+    end
     respond_to do |format|
-      if @wl_user_vacation.update_attributes(wl_user_vacation_params)
-        format.html {
-          flash[:notice]= l(:workload_user_vacation_saved)
-          redirect_to(:action => 'index', :params => { :year =>params[:year]} )
-          }
+      if @wl_user_vacation.update(wl_user_vacation_params)
+        format.html do
+          flash[:notice] = l(:workload_user_vacation_saved)
+          redirect_to(action: 'index', params: { year: params[:year] })
+        end
       else
-        format.html {
-          flash[:error] = "<ul>" + @wl_user_vacation.errors.full_messages.map{|o| "<li>" + o + "</li>" }.join("") + "</ul>" 
-          render :action => "edit" }
-        format.xml  { render :xml => @wl_user_vacation.errors, :status => :unprocessable_entity }
+        format.html do
+          flash[:error] = '<ul>' + @wl_user_vacation.errors.full_messages.map do |o|
+                                     "<li>#{o}</li>"
+                                   end.join + '</ul>'
+          render action: 'edit'
+        end
+        format.xml  { render xml: @wl_user_vacation.errors, status: :unprocessable_entity }
       end
     end
   end
-  
+
   def create
     @wl_user_vacation = WlUserVacation.new(wl_user_vacations_params)
     @wl_user_vacation.user_id = User.current.id
-    
+
     respond_to do |format|
       if @wl_user_vacation.save
-        format.html {
-          flash[:notice]= l(:workload_user_vacation_saved)
-          redirect_to(:action => 'index', :params => { :year =>params[:year]} )
-          }
+        format.html do
+          flash[:notice] = l(:workload_user_vacation_saved)
+          redirect_to(action: 'index', params: { year: params[:year] })
+        end
       else
-        format.html {
-          flash[:error] = "<ul>" + @wl_user_vacation.errors.full_messages.map{|o| "<li>" + o + "</li>" }.join("") + "</ul>"
-          render :action => 'new'
-          }
-        format.api  { render_validation_errors(@wl_user_vacation) }
+        format.html do
+          flash[:error] = '<ul>' + @wl_user_vacation.errors.full_messages.map do |o|
+                                     "<li>#{o}</li>"
+                                   end.join + '</ul>'
+          render action: 'new'
+        end
+        format.api { render_validation_errors(@wl_user_vacation) }
       end
     end
   end
-  
+
   def destroy
-    @wl_user_vacation = WlUserVacation.find(params[:id]) rescue nil
+    @wl_user_vacation = begin
+      WlUserVacation.find(params[:id])
+    rescue StandardError
+      nil
+    end
     @wl_user_vacation.destroy
     respond_to do |format|
-      format.html {
-        flash[:notice]= l(:workload_user_vacation_deleted)
-        redirect_to(:action => 'index', :params => { :year =>params[:year]} )
-      }
+      format.html do
+        flash[:notice] = l(:workload_user_vacation_deleted)
+        redirect_to(action: 'index', params: { year: params[:year] })
+      end
     end
   end
 
-private
+  private
 
   def check_edit_rights
     is_allowed = User.current.allowed_to_globally?(:edit_user_vacations)
-    if !is_allowed
+    unless is_allowed
       flash[:error] = translate 'no_right'
-      redirect_to :action => 'index'
+      redirect_to action: 'index'
     end
   end
 
   def wl_user_vacations_params
-    params.require(:wl_user_vacations).permit(:user_id,:date_from,:date_to,:comments,:vacation_type)
+    params.require(:wl_user_vacations).permit(:user_id, :date_from, :date_to, :comments, :vacation_type)
   end
+
   def wl_user_vacation_params
-    params.require(:wl_user_vacation).permit(:id,:user_id,:date_from,:date_to,:comments,:vacation_type)
+    params.require(:wl_user_vacation).permit(:id, :user_id, :date_from, :date_to, :comments, :vacation_type)
   end
 end

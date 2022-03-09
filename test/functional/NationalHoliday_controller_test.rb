@@ -1,4 +1,6 @@
-require File.expand_path('../../test_helper', __FILE__)
+# frozen_string_literal: true
+
+require File.expand_path('../test_helper', __dir__)
 
 class NationalHolidayControllerTest < ActionController::TestCase
   # Replace this with your real tests.
