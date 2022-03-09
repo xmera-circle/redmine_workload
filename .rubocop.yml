@@ -1,0 +1,54 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  NewCops: enable
+  DisplayCopNames: true
+  DisplayStyleGuide: true
+  TargetRubyVersion: 2.7
+
+  Exclude:
+    - '**/vendor/**/*'
+    - '**/tmp/**/*'
+    - '**/bin/**/*'
+    - '**/extra/**/*'
+    - '**/lib/generators/**/templates/*'
+    - '**/lib/tasks/**/*'
+    - '**/files/**/*'
+    - '**/test/**/*'
+    - '**/db/migrate/*'
+    - 'db/schema.rb'
+
+require:
+  - rubocop-performance
+  - rubocop-rails
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  EnforcedStyle: always
+  Exclude:
+    - 'db/**/*.rb'
+    - 'Gemfile'
+    - 'Rakefile'
+
+Metrics/AbcSize:
+  Exclude:
+    - 'test/**/*'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'test/**/*'
+
+Layout/LineLength:
+  Max: 120
+
+Style/Documentation:
+  Enabled: false
+
+Style/Encoding:
+  Enabled: false
+
+Layout/TrailingWhitespace:
+  AllowInHeredoc: true
+
+Rails/ApplicationRecord:
+  Enabled: false
