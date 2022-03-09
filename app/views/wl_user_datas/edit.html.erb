@@ -1,15 +1,14 @@
-<% html_title(l(:workload_user_data_site_title)) %>
-
 <div class="contextual">
     <%= render_action_links %>
 </div>
 
+<% html_title(l(:workload_user_data_site_title)) %>
+
 <h2><%= l(:workload_user_data_site_title) %></h2>
 
-<%= form_for @user_workload_data,
-                     :url =>  { :action => "create_update" },
-                     :html => { :id => 'my_workload_user_data_form',
-                                :method => :post } do |f| %>
+<%= form_for @user_workload_data, 
+						 url: wl_user_data_path, 
+						 html: { :id => 'my_workload_user_data_form' } do |f| %>
 
 <div class="splitcontentleft">
 
