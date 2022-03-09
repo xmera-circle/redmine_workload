@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 class WlUserVacationsController < ApplicationController
-  helper :work_load
+  include WlUserDataFinder
 
+  helper :workloads
+
+  before_action :find_user_workload_data
   before_action :check_edit_rights, only: %i[edit update create destroy new]
 
   def index

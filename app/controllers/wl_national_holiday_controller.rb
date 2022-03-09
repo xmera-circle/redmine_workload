@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
+require 'json'
+
 class WlNationalHolidayController < ApplicationController
   unloadable
-  require 'json'
+  include WlUserDataFinder
 
+  before_action :find_user_workload_data
   before_action :check_edit_rights, only: %i[edit update create destroy]
   before_action :select_year
 
-  helper :work_load
+  helper :workloads
 
   def index
     filter_year_start = Date.new(@this_year, 0o1, 0o1)

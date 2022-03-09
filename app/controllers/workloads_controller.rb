@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class WorkLoadController < ApplicationController
+class WorkloadsController < ApplicationController
   unloadable
 
   helper :gantt
@@ -10,8 +10,11 @@ class WorkLoadController < ApplicationController
   helper :workload_filters
 
   include QueriesHelper
+  include WlUserDataFinder
 
-  def show
+  before_action :find_user_workload_data
+
+  def index
     workloadParameters = params[:workload] || {}
 
     @first_day = sanitizeDateParameter(workloadParameters[:first_day],  Date.today - 10)
