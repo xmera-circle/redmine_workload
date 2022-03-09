@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'redmine'
-require_dependency 'dateTools'
+require_dependency 'date_tools'
 require_dependency 'list_user'
 
 Redmine::Plugin.register :redmine_workload do
