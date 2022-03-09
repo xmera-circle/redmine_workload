@@ -107,13 +107,6 @@ Style/GuardClause:
     - 'app/models/wl_national_holiday.rb'
     - 'app/models/wl_user_vacation.rb'
 
-# Offense count: 1
-# Configuration parameters: AllowedMethods.
-# AllowedMethods: respond_to_missing?
-Style/OptionalBooleanParameter:
-  Exclude:
-    - 'lib/date_tools.rb'
-
 # Offense count: 5
 # Cop supports --auto-correct-all.
 # Configuration parameters: Mode.
