@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * WorkLoadHelper#workload_admin? to be deprecated in Redmine Workload 2.0.0
 * using of dynamic action segments in routes due to deprecation warning
+* styling of worload table to look similar as gantt diagram
 
 ### Fixed
 

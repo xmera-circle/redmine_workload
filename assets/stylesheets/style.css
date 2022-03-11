@@ -1,4 +1,13 @@
 /*******************************************************************************
+ * Color scheme.
+ ******************************************************************************/
+:root {
+    --lightgray: #eee;
+    --mediumgray: #c0c0c0;
+    --anthracite: #333;
+}
+
+/*******************************************************************************
  * Styles for the filter form.
  ******************************************************************************/
 
@@ -13,8 +22,7 @@
 
 
 legend {
-    color: #333;
-    font-weight: bold;
+    color: var(--anthracite);
 }
 
 .controller-workloads .wrapper {
@@ -30,11 +38,9 @@ legend {
  * Styles for the header of the gantt diagram.
  ******************************************************************************/
 
-.controller-workloads .data .logo {
-    background-image: url('../images/logo.png');
-    background-repeat: no-repeat;
-    background-position: center;
-
+.controller-workloads .data .workload_hdr {
+    background-color: var(--lightgray);
+    border: 1px solid var(--mediumgray);
     min-width: 300px;
 }
 
@@ -42,36 +48,37 @@ legend {
 .controller-workloads .data .day-of-month,
 .controller-workloads .data .day-of-week {
     min-width: 28px;
+    font-size: 0.8em;
 }
 
 /* Month names */
 .controller-workloads .data .month-name {
-    border-left: 1px solid black;
-    border-top: 1px solid black;
+    border-left: 1px solid var(--mediumgray);
+    border-top: 1px solid var(--mediumgray);
 }
 
 .controller-workloads .data .month-name:last-child {
-    border-right: 1px solid black;
+    border-right: 1px solid var(--mediumgray);
 }
 
 /* Day of month */
 .controller-workloads .data .day-of-month.firstDayOfMonth,
 .controller-workloads .data .day-of-month:first-child {
-    border-left: 1px solid black;
+    border-left: 1px solid var(--mediumgray);
 }
 
 .controller-workloads .data .day-of-month:last-child {
-    border-right: 1px solid black;
+    border-right: 1px solid var(--mediumgray);
 }
 
 /* Day of week */
 .controller-workloads .data .day-of-week.firstDayOfWeek,
 .controller-workloads .data .day-of-week:first-child {
-    border-left: 1px solid black;
+    border-left: 1px solid var(--mediumgray);
 }
 
 .controller-workloads .data .day-of-week:last-child {
-    border-right: 1px solid black;
+    border-right: 1px solid var(--mediumgray);
 }
 
 
@@ -89,8 +96,8 @@ legend {
     border-collapse: collapse;
 }
 
-.controller-workloads .data thead {
-    font-size: .9em;
+.controller-workloads .data th {
+    font-weight: initial;
 }
 
 /*------------------------------------------------------------------------------
@@ -106,11 +113,10 @@ legend {
 
 .controller-workloads .data .trigger {
 	display: inline-block;
-
-	width: 20px;
-	
 	cursor: default;
 	text-align: center;
+    font-size: 0.9em;
+    margin-right: 4px;
 }
 
 /*------------------------------------------------------------------------------
@@ -120,30 +126,20 @@ legend {
 .controller-workloads .data .project-description,
 .controller-workloads .data .issue-description,
 .controller-workloads .data .invisible-workload-description {
-
     text-align: left;
-    font-size: .9em;
-
-    border-left: 1px solid black;
-    border-right: 1px solid black;
-	
-	#padding-top: 7px;
-	#padding-bottom: 7px;
+    border-left: 1px solid var(--mediumgray);
+    border-right: 1px solid var(--mediumgray);
 }
 
 .controller-workloads .data .user-description {
-    font-size: 1.3em;
     padding-left: 10px;
-	
     width:     300px;
     min-width: 300px;
     max-width: 300px;
 }
 
 .controller-workloads .data .project-description {
-	font-size: 1.2em;
 	padding-left: 15px;
-	
     width:     300px;
     min-width: 300px;
     max-width: 300px;
@@ -152,7 +148,6 @@ legend {
 .controller-workloads .data .issue-description,
 .controller-workloads .data .invisible-workload-description {
     padding-left: 20px;
-	
     width:     300px;
     min-width: 300px;
     max-width: 300px;
@@ -164,7 +159,7 @@ legend {
 
 .controller-workloads .data .additional-user-info,
 .controller-workloads .data .additional-project-info {
-	font-size: .7em;
+    font-size: 0.9em;
 	font-weight: normal;
 	margin-left: 30px;
 }
@@ -173,7 +168,6 @@ legend {
 .controller-workloads .data .additional-project-info dt {
 	float: left;
 	clear: left;
-	
 	width: 200px;
 }
 
@@ -185,10 +179,17 @@ legend {
 /*------------------------------------------------------------------------------
  * Real table data
  -----------------------------------------------------------------------------*/
-.controller-workloads .data td,
-.controller-workloads .data th {
-    #min-height: 30px;
-    border-bottom: 1px solid black;
+.controller-workloads td.hours {
+    font-weight: normal;
+}
+
+.controller-workloads .data tr td:last-child {
+    border-right: 1px solid var(--mediumgray);
+}
+
+.controller-workloads .data tr:last-child td,
+.controller-workloads .data tr:last-child th {
+    border-bottom: 1px solid var(--mediumgray);
 }
 
 .controller-workloads .data .user-total-workload {
@@ -219,20 +220,11 @@ legend {
 
 .controller-workloads .data td {
     padding: 0;
-
     font-size: .8em;
     line-height: 1;
-
     text-align: center;
-
     width: 30px;
     min-width: 30px;
-    /* max-width: 30px; */
-}
-
-.controller-workloads .data .user-total-workload th,
-.controller-workloads .data .user-total-workload td {
-    border-top: 4px solid #707070;
 }
 
 .controller-workloads .data .today {
@@ -244,16 +236,14 @@ legend {
 /* Styling of the spans in the table */
 .controller-workloads .data .hours span {
     display: block;
-
     padding-top: .6em;
     padding-bottom: .3em;
     height: 1em;
-
     color: white;
 }
 
 .controller-workloads .data .hours.none span {
-    color: black;
+    color: var(--anthracite);
 }
 
 .controller-workloads .data .none span {
@@ -270,7 +260,7 @@ legend {
 
 .controller-workloads .data .normal span {
     background: yellow;
-    color: black;
+    color: var(--anthracite);
 }
 
 .controller-workloads .data .high span {
@@ -278,7 +268,13 @@ legend {
 }
 
 .controller-workloads .data .holiday {
-    background-image: url('../images/background-holiday.png');
+   background-color: var(--lightgray);
+   border-left: 1px solid var(--mediumgray);
+   border-right: 1px solid var(--mediumgray);
+}
+
+.controller-workloads .data .holiday span {
+    display: none;
 }
 
 .controller-workloads .data .active.holiday span {

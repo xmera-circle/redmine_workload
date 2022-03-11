@@ -13,7 +13,7 @@
       klass = ''
     end
   %>
-  <th class="day-of-week <%= klass %>" scope="col">
-    <%= day_name(currentDay.cwday).first %>
+  <th class="workload_hdr day-of-week <%= klass %>" scope="col">
+    <%= tag.small day_name(currentDay.cwday).first %>
   </th>
 <% end %>
