@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## unreleased
 
+### Added
+
+* week numbers to workload table header
+
 ### Changed
 
 * WorkLoadHelper#workload_admin? to be deprecated in Redmine Workload 2.0.0
