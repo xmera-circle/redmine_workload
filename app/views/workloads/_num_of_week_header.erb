@@ -1,0 +1,19 @@
+<%
+# Parameters:
+#  num_of_week: Any week of the year to render the header for.
+%>
+
+<% @timeSpanToDisplay.each do |current_day|%>
+  <%
+    if (current_day.cwday == 1) then
+      klass = ' first-day-of-week'
+    elsif (current_day.cwday == 7) then
+      klass = ' last-day-of-week'
+    else
+      klass = ''
+    end
+  %>
+  <th class="num-of-week<%= klass %>" scope="col">
+    <%= tag.small current_day.cweek if current_day.cwday == 4 %>
+  </th>
+<% end %>

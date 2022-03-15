@@ -20,7 +20,6 @@
     display: inline-block;
 }
 
-
 legend {
     color: var(--anthracite);
 }
@@ -35,19 +34,18 @@ legend {
 	height: 150px;
 }
 /*******************************************************************************
- * Styles for the header of the gantt diagram.
+ * Styles for the header of workload table.
  ******************************************************************************/
 
 .controller-workloads .data .workload_hdr {
     background-color: var(--lightgray);
     border: 1px solid var(--mediumgray);
-    min-width: 300px;
 }
 
 /* Column width if no data is displayed */
 .controller-workloads .data .day-of-month,
 .controller-workloads .data .day-of-week {
-    min-width: 28px;
+    min-width: 25px;
     font-size: 0.8em;
 }
 
@@ -60,6 +58,16 @@ legend {
 .controller-workloads .data .month-name:last-child {
     border-right: 1px solid var(--mediumgray);
 }
+
+/* Num of week */
+.controller-workloads .data .num-of-week.first-day-of-week {
+    border-left: 1px solid var(--mediumgray);
+}
+
+.controller-workloads .data .num-of-week.last-day-of-week {
+    border-right: 1px solid var(--mediumgray);
+}
+
 
 /* Day of month */
 .controller-workloads .data .day-of-month.firstDayOfMonth,
@@ -223,8 +231,8 @@ legend {
     font-size: .8em;
     line-height: 1;
     text-align: center;
-    width: 30px;
-    min-width: 30px;
+    width: 25px;
+    min-width: 25px;
 }
 
 .controller-workloads .data .today {

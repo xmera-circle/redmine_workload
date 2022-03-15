@@ -12,8 +12,11 @@
   <table class="data">
     <thead>
       <tr class="workload_hdr">
-        <td class="workload_hdr" rowspan="3">&nbsp;<!-- empty space --></td>
+        <td class="workload_hdr" rowspan="4">&nbsp;<!-- empty space --></td>
         <%= render :partial => 'month_names_header' %>
+      </tr>
+      <tr class="workload_hdr" >
+        <%= render :partial => 'num_of_week_header' %>
       </tr>
       <tr class="workload_hdr">
         <%= render :partial => 'day_of_month_header' %>
