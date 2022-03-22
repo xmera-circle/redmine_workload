@@ -56,7 +56,8 @@ en:
   workload_settings_hours_low_min:              "... low:"
   workload_settings_hours_normal_min:           "... normal:"
   workload_settings_hours_high_min:             "... overloaded:"
-  
+  workload_settings_main_group: Main group 
+
   workload_settings_holiday_setup:	        "Configure holidays"
  
   workload_user_vacation:           "Vacation"
@@ -76,3 +77,6 @@ en:
   permission_edit_national_holiday: "Edit national Holidays"
   permission_edit_user_vacations:   "Edit own vacations"
   permission_edit_user_data:        "Edit own workload thresholds"
+
+  notice_settings_updated: Settings sucessfully updated.
+  

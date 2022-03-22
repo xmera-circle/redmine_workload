@@ -4,7 +4,7 @@
 
 <% html_title(l(:workload_user_data_site_title)) %>
 
-<h2><%= l(:workload_user_data_site_title) %></h2>
+<h2><%= l(:workload_user_data_site_title) %> » <%= User.current.name %></h2>
 
 <%= form_for @user_workload_data, 
 						 url: wl_user_data_path, 
@@ -33,7 +33,12 @@
 		  <%= f.text_field :threshold_highload_min, disabled: !@is_allowed  %>
 		  <%= l(:field_default_value)%>: <%= Setting['plugin_redmine_workload']['threshold_highload_min']%>
 		</p>
-		
+		<p>
+		  <label><%= l(:workload_settings_main_group) %></label>
+		  <%= f.select :main_group, 
+										user_groups_for_select(selected: @user_workload_data.main_group), 
+										{ include_blank: true, disabled: !@is_allowed }  %>
+		</p>
 	
 	</fieldset>
 	<p class="mobile-hide">
