@@ -58,7 +58,7 @@ class NationalHolidayTest < ActiveSupport::TestCase
 
     assert_equal [firstDay, lastDay - 1], result, 'Result should only bring 2 workdays!'
 
-    result = ListUser.getHoursForIssuesPerDay(issue, firstDay..lastDay, firstDay)
+    result = ListUser.send(:hours_for_issue_per_day, issue, firstDay..lastDay, firstDay)
 
     assert_equal 10.0, result[firstDay][:hours], 'Workday should have 10h load!'
     assert_equal 0.0, result[firstDay + 1][:hours], 'Workday should be day off for holiday!' # holiday2[:start]

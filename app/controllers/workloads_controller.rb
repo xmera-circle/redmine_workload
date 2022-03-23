@@ -31,9 +31,9 @@ class WorkloadsController < ApplicationController
 
     initalizeUsers(workloadParameters)
 
-    @issuesForWorkload = ListUser.getOpenIssuesForUsers(@usersToDisplay)
-    @monthsToRender = ListUser.getMonthsInTimespan(@timeSpanToDisplay)
-    @workloadData   = ListUser.getHoursPerUserIssueAndDay(@issuesForWorkload, @timeSpanToDisplay, @today)
+    @issuesForWorkload = ListUser.open_issues_for_users(@usersToDisplay)
+    @monthsToRender = ListUser.months_in_timespan(@timeSpanToDisplay)
+    @workloadData   = ListUser.hours_per_user_issue_and_day(@issuesForWorkload, @timeSpanToDisplay, @today)
   end
 
   private
@@ -49,10 +49,10 @@ class WorkloadsController < ApplicationController
 
     @selectedGroups &= @groupsToDisplay
 
-    @usersToDisplay = ListUser.getUsersOfGroups(@selectedGroups)
+    @usersToDisplay = ListUser.users_of_groups(@selectedGroups)
 
     # Get list of users that are allowed to be displayed by this user sort by lastname
-    @usersAllowedToDisplay = ListUser.getUsersAllowedToDisplay.sort_by { |u| u[:lastname] }
+    @usersAllowedToDisplay = ListUser.users_allowed_to_display.sort_by { |u| u[:lastname] }
 
     userIds = workloadParameters[:users].is_a?(Array) ? workloadParameters[:users] : []
     userIds.map!(&:to_i)

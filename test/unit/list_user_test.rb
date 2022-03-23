@@ -10,11 +10,11 @@ class ListUserTest < ActiveSupport::TestCase
     User.current = nil
   end
 
-  test 'getOpenIssuesForUsers returns empty list if no users given' do
-    assert_equal [], ListUser.getOpenIssuesForUsers([])
+  test 'open_issues_for_users returns empty list if no users given' do
+    assert_equal [], ListUser.open_issues_for_users([])
   end
 
-  test 'getOpenIssuesForUsers returns only issues of interesting users' do
+  test 'open_issues_for_users returns only issues of interesting users' do
     user1 = User.generate!
     user2 = User.generate!
 
@@ -31,10 +31,10 @@ class ListUserTest < ActiveSupport::TestCase
                              status: IssueStatus.find(1), # New, not closed
                              project: project1)
 
-    assert_equal [issue2], ListUser.getOpenIssuesForUsers([user2])
+    assert_equal [issue2], ListUser.open_issues_for_users([user2])
   end
 
-  test 'getOpenIssuesForUsers returns only open issues' do
+  test 'open_issues_for_users returns only open issues' do
     user = User.generate!
     project1 = Project.generate!
 
@@ -53,47 +53,47 @@ class ListUserTest < ActiveSupport::TestCase
                              status_id: 1,
                              project: project1)
 
-    assert_equal [issue2], ListUser.getOpenIssuesForUsers([user])
+    assert_equal [issue2], ListUser.open_issues_for_users([user])
   end
 
   test 'getMonthsBetween returns [] if last day after first day' do
     firstDay = Date.new(2012, 3, 29)
     lastDay = Date.new(2012, 3, 28)
 
-    # TODO: Since ListUser::getMonthsInTimespan got changed this assert need repair
-    # assert_equal [], ListUser::getMonthsInTimespan(firstDay..lastDay).map(&:month)
+    # TODO: Since ListUser.months_in_timespan got changed this assert need repair
+    # assert_equal [], ListUser.months_in_timespan(firstDay..lastDay).map(&:month)
   end
 
   test 'getMonthsBetween returns [3] if both days in march 2012 and equal' do
     firstDay = Date.new(2012, 3, 27)
     lastDay = Date.new(2012, 3, 27)
 
-    # TODO: Since ListUser::getMonthsInTimespan got changed this assert need repair
-    # assert_equal [3], ListUser::getMonthsInTimespan(firstDay..lastDay).map(&:month)
+    # TODO: Since ListUser.months_in_timespan got changed this assert need repair
+    # assert_equal [3], ListUser.months_in_timespan(firstDay..lastDay).map(&:month)
   end
 
   test 'getMonthsBetween returns [3] if both days in march 2012 and different' do
     firstDay = Date.new(2012, 3, 27)
     lastDay = Date.new(2012, 3, 28)
 
-    # TODO: Since ListUser::getMonthsInTimespan got changed this assert need repair
-    # assert_equal [3], ListUser::getMonthsInTimespan(firstDay..lastDay).map(&:month)
+    # TODO: Since ListUser.months_in_timespan got changed this assert need repair
+    # assert_equal [3], ListUser.months_in_timespan(firstDay..lastDay).map(&:month)
   end
 
   test 'getMonthsBetween returns [3, 4, 5] if first day in march and last day in may' do
     firstDay = Date.new(2012, 3, 31)
     lastDay = Date.new(2012, 5, 1)
 
-    # TODO: Since ListUser::getMonthsInTimespan got changed this assert need repair
-    # assert_equal [3, 4, 5], ListUser::getMonthsInTimespan(firstDay..lastDay).map(&:month)
+    # TODO: Since ListUser.months_in_timespan got changed this assert need repair
+    # assert_equal [3, 4, 5], ListUser.months_in_timespan(firstDay..lastDay).map(&:month)
   end
 
   test 'getMonthsBetween returns correct result timespan overlaps year boundary' do
     firstDay = Date.new(2011, 3, 3)
     lastDay = Date.new(2012, 5, 1)
 
-    # TODO: Since ListUser::getMonthsInTimespan got changed this assert need repair
-    # assert_equal (3..12).to_a.concat((1..5).to_a), ListUser::getMonthsInTimespan(firstDay..lastDay).map(&:month)
+    # TODO: Since ListUser.months_in_timespan got changed this assert need repair
+    # assert_equal (3..12).to_a.concat((1..5).to_a), ListUser.months_in_timespan(firstDay..lastDay).map(&:month)
   end
 
   # Set Saturday, Sunday and Wednesday to be a holiday, all others to be a
@@ -135,7 +135,7 @@ class ListUserTest < ActiveSupport::TestCase
     end
   end
 
-  test 'getHoursForIssuesPerDay returns {} if time span empty' do
+  test 'hours_for_issue_per_day returns {} if time span empty' do
     issue = Issue.generate!(
       start_date: Date.new(2013, 5, 31),
       due_date: Date.new(2013, 6, 2),
@@ -146,10 +146,10 @@ class ListUserTest < ActiveSupport::TestCase
     firstDay = Date.new(2013, 5, 31)
     lastDay = Date.new(2013, 5, 29)
 
-    assertIssueTimesHashEquals({}, ListUser.getHoursForIssuesPerDay(issue, firstDay..lastDay, firstDay))
+    assertIssueTimesHashEquals({}, ListUser.send(:hours_for_issue_per_day, issue, firstDay..lastDay, firstDay))
   end
 
-  test 'getHoursForIssuesPerDay works if issue is completely in given time span and nothing done' do
+  test 'hours_for_issue_per_day works if issue is completely in given time span and nothing done' do
     defineSaturdaySundayAndWendnesdayAsHoliday
 
     issue = Issue.generate!(
@@ -189,10 +189,10 @@ class ListUserTest < ActiveSupport::TestCase
       }
     }
 
-    assertIssueTimesHashEquals expectedResult, ListUser.getHoursForIssuesPerDay(issue, firstDay..lastDay, firstDay)
+    assertIssueTimesHashEquals expectedResult, ListUser.send(:hours_for_issue_per_day, issue, firstDay..lastDay, firstDay)
   end
 
-  test 'getHoursForIssuesPerDay works if issue lasts after time span and done_ratio > 0' do
+  test 'hours_for_issue_per_day works if issue lasts after time span and done_ratio > 0' do
     defineSaturdaySundayAndWendnesdayAsHoliday
 
     # 30 hours still need to be done, 3 working days until issue is finished.
@@ -237,10 +237,10 @@ class ListUserTest < ActiveSupport::TestCase
       }
     }
 
-    assertIssueTimesHashEquals expectedResult, ListUser.getHoursForIssuesPerDay(issue, firstDay..lastDay, firstDay)
+    assertIssueTimesHashEquals expectedResult, ListUser.send(:hours_for_issue_per_day, issue, firstDay..lastDay, firstDay)
   end
 
-  test 'getHoursForIssuesPerDay works if issue starts before time span' do
+  test 'hours_for_issue_per_day works if issue starts before time span' do
     defineSaturdaySundayAndWendnesdayAsHoliday
 
     # 36 hours still need to be done, 2 working days until issue is due.
@@ -286,10 +286,10 @@ class ListUserTest < ActiveSupport::TestCase
       }
     }
 
-    assertIssueTimesHashEquals expectedResult, ListUser.getHoursForIssuesPerDay(issue, firstDay..lastDay, firstDay)
+    assertIssueTimesHashEquals expectedResult, ListUser.send(:hours_for_issue_per_day, issue, firstDay..lastDay, firstDay)
   end
 
-  test 'getHoursForIssuesPerDay works if issue completely before time span' do
+  test 'hours_for_issue_per_day works if issue completely before time span' do
     defineSaturdaySundayAndWendnesdayAsHoliday
 
     # 10 hours still need to be done, but issue is overdue. Remaining hours need
@@ -328,10 +328,10 @@ class ListUserTest < ActiveSupport::TestCase
       }
     }
 
-    assertIssueTimesHashEquals expectedResult, ListUser.getHoursForIssuesPerDay(issue, firstDay..lastDay, firstDay)
+    assertIssueTimesHashEquals expectedResult, ListUser.send(:hours_for_issue_per_day, issue, firstDay..lastDay, firstDay)
   end
 
-  test 'getHoursForIssuesPerDay works if issue has no due date' do
+  test 'hours_for_issue_per_day works if issue has no due date' do
     defineSaturdaySundayAndWendnesdayAsHoliday
 
     # 10 hours still need to be done.
@@ -369,10 +369,10 @@ class ListUserTest < ActiveSupport::TestCase
       }
     }
 
-    assertIssueTimesHashEquals expectedResult, ListUser.getHoursForIssuesPerDay(issue, firstDay..lastDay, firstDay)
+    assertIssueTimesHashEquals expectedResult, ListUser.send(:hours_for_issue_per_day, issue, firstDay..lastDay, firstDay)
   end
 
-  test 'getHoursForIssuesPerDay works if issue has no start date' do
+  test 'hours_for_issue_per_day works if issue has no start date' do
     defineSaturdaySundayAndWendnesdayAsHoliday
 
     # 10 hours still need to be done.
@@ -410,10 +410,10 @@ class ListUserTest < ActiveSupport::TestCase
       }
     }
 
-    assertIssueTimesHashEquals expectedResult, ListUser.getHoursForIssuesPerDay(issue, firstDay..lastDay, firstDay)
+    assertIssueTimesHashEquals expectedResult, ListUser.send(:hours_for_issue_per_day, issue, firstDay..lastDay, firstDay)
   end
 
-  test 'getHoursForIssuesPerDay works if in time span and issue overdue' do
+  test 'hours_for_issue_per_day works if in time span and issue overdue' do
     defineSaturdaySundayAndWendnesdayAsHoliday
 
     # 10 hours still need to be done, but issue is overdue. Remaining hours need
@@ -474,10 +474,10 @@ class ListUserTest < ActiveSupport::TestCase
       }
     }
 
-    assertIssueTimesHashEquals expectedResult, ListUser.getHoursForIssuesPerDay(issue, firstDay..lastDay, today)
+    assertIssueTimesHashEquals expectedResult, ListUser.send(:hours_for_issue_per_day, issue, firstDay..lastDay, today)
   end
 
-  test 'getHoursForIssuesPerDay works if issue is completely in given time span, but has started' do
+  test 'hours_for_issue_per_day works if issue is completely in given time span, but has started' do
     defineSaturdaySundayAndWendnesdayAsHoliday
 
     issue = Issue.generate!(
@@ -536,10 +536,10 @@ class ListUserTest < ActiveSupport::TestCase
       }
     }
 
-    assertIssueTimesHashEquals expectedResult, ListUser.getHoursForIssuesPerDay(issue, firstDay..lastDay, today)
+    assertIssueTimesHashEquals expectedResult, ListUser.send(:hours_for_issue_per_day, issue, firstDay..lastDay, today)
   end
 
-  test 'getHoursPerUserIssueAndDay returns correct structure' do
+  test 'hours_per_user_issue_and_day returns correct structure' do
     user = User.generate!
 
     project1 = Project.generate!
@@ -572,7 +572,7 @@ class ListUserTest < ActiveSupport::TestCase
     lastDay = Date.new(2013, 6, 4)
     today = Date.new(2013, 5, 31)
 
-    workloadData = ListUser.getHoursPerUserIssueAndDay(Issue.assigned_to(user).to_a, firstDay..lastDay, today)
+    workloadData = ListUser.hours_per_user_issue_and_day(Issue.assigned_to(user).to_a, firstDay..lastDay, today)
 
     assert workloadData.key?(user)
 
@@ -587,12 +587,12 @@ class ListUserTest < ActiveSupport::TestCase
     assert workloadData[user].key?(project2)
   end
 
-  test 'getEstimatedTimeForIssue works for issue without children.' do
+  test 'estimated_time_for_issue works for issue without children.' do
     issue = Issue.generate!(estimated_hours: 13.2)
-    assert_in_delta 13.2, ListUser.getEstimatedTimeForIssue(issue), 1e-4
+    assert_in_delta 13.2, ListUser.send(:estimated_time_for_issue, issue), 1e-4
   end
 
-  test 'getEstimatedTimeForIssue works for issue with children.' do
+  test 'estimated_time_for_issue works for issue with children.' do
     parent = Issue.generate!(estimated_hours: 3.6)
     child1 = Issue.generate!(estimated_hours: 5.0, parent_issue_id: parent.id, done_ratio: 90)
     child2 = Issue.generate!(estimated_hours: 9.0, parent_issue_id: parent.id)
@@ -600,12 +600,12 @@ class ListUserTest < ActiveSupport::TestCase
     # Force parent to reload so the data from the children is incorporated.
     parent.reload
 
-    assert_in_delta 0.0, ListUser.getEstimatedTimeForIssue(parent), 1e-4
-    assert_in_delta 0.5, ListUser.getEstimatedTimeForIssue(child1), 1e-4
-    assert_in_delta 9.0, ListUser.getEstimatedTimeForIssue(child2), 1e-4
+    assert_in_delta 0.0, ListUser.send(:estimated_time_for_issue, parent), 1e-4
+    assert_in_delta 0.5, ListUser.send(:estimated_time_for_issue, child1), 1e-4
+    assert_in_delta 9.0, ListUser.send(:estimated_time_for_issue, child2), 1e-4
   end
 
-  test 'getEstimatedTimeForIssue works for issue with grandchildren.' do
+  test 'estimated_time_for_issue works for issue with grandchildren.' do
     parent = Issue.generate!(estimated_hours: 4.5)
     child = Issue.generate!(estimated_hours: 5.0, parent_issue_id: parent.id)
     grandchild = Issue.generate!(estimated_hours: 9.0, parent_issue_id: child.id, done_ratio: 40)
@@ -615,64 +615,64 @@ class ListUserTest < ActiveSupport::TestCase
     parent.reload
     child.reload
 
-    assert_in_delta 0.0, ListUser.getEstimatedTimeForIssue(parent), 1e-4
-    assert_in_delta 0.0, ListUser.getEstimatedTimeForIssue(child), 1e-4
-    assert_in_delta 5.4, ListUser.getEstimatedTimeForIssue(grandchild), 1e-4
+    assert_in_delta 0.0, ListUser.send(:estimated_time_for_issue, parent), 1e-4
+    assert_in_delta 0.0, ListUser.send(:estimated_time_for_issue, child), 1e-4
+    assert_in_delta 5.4, ListUser.send(:estimated_time_for_issue, grandchild), 1e-4
   end
 
-  test 'getLoadClassForHours returns "none" for workloads below threshold for low workload' do
+  test 'load_class_for_hours returns "none" for workloads below threshold for low workload' do
     Setting['plugin_redmine_workload']['threshold_lowload_min'] = 0.1
     Setting['plugin_redmine_workload']['threshold_normalload_min'] = 5.0
     Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
 
-    assert_equal 'none', ListUser.getLoadClassForHours(0.05)
+    assert_equal 'none', ListUser.load_class_for_hours(0.05)
   end
 
-  test 'getLoadClassForHours returns "low" for workloads between thresholds for low and normal workload' do
+  test 'load_class_for_hours returns "low" for workloads between thresholds for low and normal workload' do
     Setting['plugin_redmine_workload']['threshold_lowload_min'] = 0.1
     Setting['plugin_redmine_workload']['threshold_normalload_min'] = 5.0
     Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
 
-    assert_equal 'low', ListUser.getLoadClassForHours(3.5)
+    assert_equal 'low', ListUser.load_class_for_hours(3.5)
   end
 
-  test 'getLoadClassForHours returns "normal" for workloads between thresholds for normal and high workload' do
+  test 'load_class_for_hours returns "normal" for workloads between thresholds for normal and high workload' do
     Setting['plugin_redmine_workload']['threshold_lowload_min'] = 0.1
     Setting['plugin_redmine_workload']['threshold_normalload_min'] = 2.0
     Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
 
-    assert_equal 'normal', ListUser.getLoadClassForHours(3.5)
+    assert_equal 'normal', ListUser.load_class_for_hours(3.5)
   end
 
-  test 'getLoadClassForHours returns "high" for workloads above threshold for high workload' do
+  test 'load_class_for_hours returns "high" for workloads above threshold for high workload' do
     Setting['plugin_redmine_workload']['threshold_lowload_min'] = 0.1
     Setting['plugin_redmine_workload']['threshold_normalload_min'] = 2.0
     Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
 
-    assert_equal 'high', ListUser.getLoadClassForHours(10.5)
+    assert_equal 'high', ListUser.load_class_for_hours(10.5)
   end
 
-  test 'getUsersAllowedToDisplay returns an empty array if the current user is anonymus.' do
+  test 'users_allowed_to_display returns an empty array if the current user is anonymus.' do
     User.current = User.anonymous
 
-    assert_equal [], ListUser.getUsersAllowedToDisplay
+    assert_equal [], ListUser.users_allowed_to_display
   end
 
-  test 'getUsersAllowedToDisplay returns only the user himself if user has no role assigned.' do
+  test 'users_allowed_to_display returns only the user himself if user has no role assigned.' do
     User.current = User.generate!
 
-    assert_equal [User.current].map(&:id).sort, ListUser.getUsersAllowedToDisplay.map(&:id).sort
+    assert_equal [User.current].map(&:id).sort, ListUser.users_allowed_to_display.map(&:id).sort
   end
 
-  test 'getUsersAllowedToDisplay returns all users if the current user is a admin.' do
+  test 'users_allowed_to_display returns all users if the current user is a admin.' do
     User.current = User.generate!
     # Make this user an admin (can't do it in the attributes?!?)
     User.current.admin = true
 
-    assert_equal User.active.map(&:id).sort, ListUser.getUsersAllowedToDisplay.map(&:id).sort
+    assert_equal User.active.map(&:id).sort, ListUser.users_allowed_to_display.map(&:id).sort
   end
 
-  test 'getUsersAllowedToDisplay returns exactly project members if user has right to see workload of project members.' do
+  test 'users_allowed_to_display returns exactly project members if user has right to see workload of project members.' do
     user =  User.generate!
     project = Project.generate!
     project.enable_module! :Workload
@@ -691,6 +691,6 @@ class ListUserTest < ActiveSupport::TestCase
     User.generate!
 
     assert_equal [user, projectMember1, projectMember2].map(&:id).sort,
-                 ListUser.getUsersAllowedToDisplay(user).map(&:id).sort
+                 ListUser.users_allowed_to_display(user).map(&:id).sort
   end
 end

@@ -3,7 +3,7 @@
 %>
 
 <%
-  monthsInTimespan = ListUser::getMonthsInTimespan(@timeSpanToDisplay)
+  monthsInTimespan = ListUser.months_in_timespan(@timeSpanToDisplay)
 %>
 <% monthsInTimespan.each do |month| %>
   <th class="workload_hdr" colspan="<%= (month[:last_day].day - month[:first_day].day) + 1 %>" scope="colgroup">
