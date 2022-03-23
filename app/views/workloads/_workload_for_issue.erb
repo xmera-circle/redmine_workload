@@ -30,7 +30,7 @@
       klass += ' not-estimated' if  dataForDay[:noEstimate]
       klass += ' estimated'     if !dataForDay[:noEstimate]
       klass += ' today'         if  @today === day
-      klass += ' ' + ListUser.load_class_for_hours(dataForDay[:hours], user)
+      klass += ' ' + load_class_for_hours(dataForDay[:hours], user)
 
       hoursString = (dataForDay[:hours].abs < 0.01) ? '' : sprintf("%.1f", dataForDay[:hours])
   %>

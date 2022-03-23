@@ -3,6 +3,8 @@
 require File.expand_path('../test_helper', __dir__)
 
 class ListUserTest < ActiveSupport::TestCase
+  include WorkloadsHelper
+
   fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
            :users, :issue_statuses, :enumerations, :roles
 
@@ -128,7 +130,7 @@ class ListUserTest < ActiveSupport::TestCase
       assert actual[day].key?(:noEstimate),   "On day #{day}, actual has no key :noEstimate"
       assert actual[day].key?(:holiday),      "On day #{day}, actual has no key :holiday"
 
-      assert_in_delta expected[day][:hours],   actual[day][:hours], 1e-4, "On day #{day}, hours wrong"
+      assert_in_delta expected[day][:hours],   actual[day][:hours], 1e-4, "On day #{day}, hours wrong: #{actual[day][:hours]}"
       assert_equal expected[day][:active],     actual[day][:active],      "On day #{day}, active wrong"
       assert_equal expected[day][:noEstimate], actual[day][:noEstimate],  "On day #{day}, noEstimate wrong"
       assert_equal expected[day][:holiday],    actual[day][:holiday],     "On day #{day}, holiday wrong"
@@ -625,7 +627,7 @@ class ListUserTest < ActiveSupport::TestCase
     Setting['plugin_redmine_workload']['threshold_normalload_min'] = 5.0
     Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
 
-    assert_equal 'none', ListUser.load_class_for_hours(0.05)
+    assert_equal 'none', load_class_for_hours(0.05)
   end
 
   test 'load_class_for_hours returns "low" for workloads between thresholds for low and normal workload' do
@@ -633,7 +635,7 @@ class ListUserTest < ActiveSupport::TestCase
     Setting['plugin_redmine_workload']['threshold_normalload_min'] = 5.0
     Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
 
-    assert_equal 'low', ListUser.load_class_for_hours(3.5)
+    assert_equal 'low', load_class_for_hours(3.5)
   end
 
   test 'load_class_for_hours returns "normal" for workloads between thresholds for normal and high workload' do
@@ -641,7 +643,7 @@ class ListUserTest < ActiveSupport::TestCase
     Setting['plugin_redmine_workload']['threshold_normalload_min'] = 2.0
     Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
 
-    assert_equal 'normal', ListUser.load_class_for_hours(3.5)
+    assert_equal 'normal', load_class_for_hours(3.5)
   end
 
   test 'load_class_for_hours returns "high" for workloads above threshold for high workload' do
@@ -649,27 +651,27 @@ class ListUserTest < ActiveSupport::TestCase
     Setting['plugin_redmine_workload']['threshold_normalload_min'] = 2.0
     Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
 
-    assert_equal 'high', ListUser.load_class_for_hours(10.5)
+    assert_equal 'high', load_class_for_hours(10.5)
   end
 
   test 'users_allowed_to_display returns an empty array if the current user is anonymus.' do
-    User.current = User.anonymous
+    users = UserSelection.new(user: User.anonymous)
 
-    assert_equal [], ListUser.users_allowed_to_display
+    assert_equal [], users.allowed_to_display
   end
 
   test 'users_allowed_to_display returns only the user himself if user has no role assigned.' do
-    User.current = User.generate!
-
-    assert_equal [User.current].map(&:id).sort, ListUser.users_allowed_to_display.map(&:id).sort
+    user = User.generate!
+    users = UserSelection.new(user: user)
+    assert_equal [user].map(&:id).sort, users.allowed_to_display.map(&:id).sort
   end
 
   test 'users_allowed_to_display returns all users if the current user is a admin.' do
-    User.current = User.generate!
+    user = User.generate!(admin: true)
+    users = UserSelection.new(user: user)
     # Make this user an admin (can't do it in the attributes?!?)
-    User.current.admin = true
 
-    assert_equal User.active.map(&:id).sort, ListUser.users_allowed_to_display.map(&:id).sort
+    assert_equal User.active.map(&:id).sort, users.allowed_to_display.map(&:id).sort
   end
 
   test 'users_allowed_to_display returns exactly project members if user has right to see workload of project members.' do
@@ -689,8 +691,8 @@ class ListUserTest < ActiveSupport::TestCase
 
     # Create some non-member
     User.generate!
-
+    users = UserSelection.new(user: user)
     assert_equal [user, projectMember1, projectMember2].map(&:id).sort,
-                 ListUser.users_allowed_to_display(user).map(&:id).sort
+                 users.allowed_to_display.map(&:id).sort
   end
 end
