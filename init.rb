@@ -38,6 +38,11 @@ Redmine::Plugin.register :redmine_workload do
   end
 end
 
+plugin = Redmine::Plugin.find(:redmine_workload)
+Rails.application.configure do
+  config.autoload_paths << "#{plugin.directory}/app/presenters"
+end
+
 class RedmineToolbarHookListener < Redmine::Hook::ViewListener
   def view_layouts_base_html_head(_context)
     javascript_include_tag('slides', plugin: :redmine_workload) +
