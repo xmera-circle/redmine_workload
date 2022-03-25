@@ -27,14 +27,16 @@ class WorkloadsController < ApplicationController
     # Make sure that last_day is at most 12 months after first_day to prevent
     # long running times
     @last_day = [(@first_day >> 12) - 1, @last_day].min
-    @timeSpanToDisplay = @first_day..@last_day
+    @time_span_to_display = @first_day..@last_day
 
     @groups = GroupSelection.new(groups: workload_params[:groups])
     @users = UserSelection.new(users: workload_params[:users], selected_groups: @groups.selected)
 
-    @issuesForWorkload = ListUser.open_issues_for_users(@users.to_display)
-    @monthsToRender = DateTools.months_in_timespan(@timeSpanToDisplay)
-    @workloadData   = ListUser.hours_per_user_issue_and_day(@issuesForWorkload, @timeSpanToDisplay, @today)
+    assignee = @groups.selected.presence ? (@groups.selected | @users.to_display) : @users.to_display
+    @issues_for_workload = ListUser.open_issues_for_users(assignee)
+
+    @months_to_render = DateTools.months_in_time_span(@time_span_to_display)
+    @workloadData   = ListUser.hours_per_user_issue_and_day(@issues_for_workload, @time_span_to_display, @today)
   end
 
   private

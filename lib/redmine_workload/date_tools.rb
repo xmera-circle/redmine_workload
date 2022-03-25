@@ -5,27 +5,27 @@ class DateTools
   # Returns an array with one entry for each month in the given time span.
   # Each entry is a hash with two keys: :first_day and :last_day, having the
   # first resp. last day of that month from the time span as value.
-  # @param timespan [Range] Timespan
+  # @param time_span [Range] Time span
   # @return [Array(Hash)] Array with one entry for each month in the given time span
   #
-  def self.months_in_timespan(timeSpan)
-    raise ArgumentError unless timeSpan.is_a?(Range)
+  def self.months_in_time_span(time_span)
+    raise ArgumentError unless time_span.is_a?(Range)
 
     # Abort if the given time span is empty.
-    return [] unless timeSpan.any?
+    return [] unless time_span.any?
 
-    firstOfCurrentMonth = timeSpan.first
-    lastOfCurrentMonth  = [firstOfCurrentMonth.end_of_month, timeSpan.last].min
+    first_of_current_month = time_span.first
+    last_of_current_month  = [first_of_current_month.end_of_month, time_span.last].min
 
     result = []
-    while firstOfCurrentMonth <= timeSpan.last
+    while first_of_current_month <= time_span.last
       result.push({
-                    first_day: firstOfCurrentMonth,
-                    last_day: lastOfCurrentMonth
+                    first_day: first_of_current_month,
+                    last_day: last_of_current_month
                   })
 
-      firstOfCurrentMonth = firstOfCurrentMonth.beginning_of_month.next_month
-      lastOfCurrentMonth  = [firstOfCurrentMonth.end_of_month, timeSpan.last].min
+      first_of_current_month = first_of_current_month.beginning_of_month.next_month
+      last_of_current_month  = [first_of_current_month.end_of_month, time_span.last].min
     end
 
     result
@@ -33,7 +33,7 @@ class DateTools
 
   # Returns a list of all regular working weekdays.
   # 1 is monday, 7 is sunday (same as in Date::cwday)
-  def self.getWorkingDays
+  def self.working_days
     result = Set.new
 
     result.add(1) if Setting['plugin_redmine_workload']['general_workday_monday'] != ''
@@ -47,40 +47,46 @@ class DateTools
     result
   end
 
-  def self.getWorkingDaysInTimespan(timeSpan, user = 'all', no_cache: false)
-    raise ArgumentError unless timeSpan.is_a?(Range)
+  def self.working_days_in_time_span(time_span, assignee_id = 'group', no_cache: false)
+    raise ArgumentError unless time_span.is_a?(Range)
 
     Rails.cache.clear if no_cache
 
-    Rails.cache.fetch("#{user}/#{timeSpan}", expires_in: 12.hours) do
-      workingDays = getWorkingDays
-
+    Rails.cache.fetch("#{assignee_id}/#{time_span}", expires_in: 12.hours) do
       result = Set.new
 
-      timeSpan.each do |day| #
-        next if self::IsVacation(day, user) # #skip Vacation
-        next if self::IsHoliday(day) # #skip Holidays
+      time_span.each do |day|
+        next if vacation?(day, assignee_id)
+        next if holiday?(day)
 
-        result.add(day) if workingDays.include?(day.cwday)
+        result.add(day) if working_days.include?(day.cwday)
       end
 
       result
     end
   end
 
-  def self.getRealDistanceInDays(timeSpan, assignee = 'all')
-    raise ArgumentError unless timeSpan.is_a?(Range)
+  def self.real_distance_in_days(time_span, assignee_id = 'group')
+    raise ArgumentError unless time_span.is_a?(Range)
 
-    getWorkingDaysInTimespan(timeSpan, assignee).size
+    working_days_in_time_span(time_span, assignee_id).size
   end
 
-  def self.IsHoliday(day)
+  def self.holiday?(day)
     !WlNationalHoliday.where('start <= ? AND end >= ?', day, day).empty?
   end
 
-  def self.IsVacation(day, user)
-    return false if user == 'all'
+  def self.vacation?(day, assignee_id)
+    return false if group?(assignee_id)
 
-    !WlUserVacation.where('user_id = ? AND date_from <= ? AND date_to >= ?', user, day, day).empty?
+    !WlUserVacation.where('user_id = ? AND date_from <= ? AND date_to >= ?', assignee_id, day, day).empty?
   end
+
+  private
+
+  def self.group?(id)
+    id == 'group'
+  end
+
+  private_class_method :group?
 end

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 * week numbers to workload table header
+* group issues to workload table if a group is selected
 
 ### Changed
 

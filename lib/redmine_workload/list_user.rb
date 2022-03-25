@@ -6,6 +6,7 @@
 #
 module ListUser
   class << self
+    include Redmine::I18n
     ##
     # Returns all issues that fulfill the following conditions:
     #  * They are open
@@ -19,7 +20,7 @@ module ListUser
     def open_issues_for_users(users)
       raise ArgumentError unless users.is_a?(Array)
 
-      userIDs = users.map(&:id)
+      user_ids = users.map(&:id)
 
       issue = Issue.arel_table
       project = Project.arel_table
@@ -29,13 +30,15 @@ module ListUser
       issues = Issue.joins(:project)
                     .joins(:status)
                     .joins(:assigned_to)
-                    .where(issue[:assigned_to_id].in(userIDs))      # Are assigned to one of the interesting users
+                    .where(issue[:assigned_to_id].in(user_ids))     # Are assigned to one of the interesting users
                     .where(project[:status].eq(1))                  # Do not belong to an inactive project
                     .where(issue_status[:is_closed].eq(false))      # Is open
 
       # Filter out all issues that have children; They do not *directly* add to
       # the workload
       issues.select(&:leaf?)
+      # let the group issues come first
+      issues.sort_by { |open_issue| open_issue.assigned_to.class.name }
     end
 
     ##
@@ -75,20 +78,23 @@ module ListUser
     #								for.
     # @return [Hash] Hash with all relevant data for displaying the workload table
     #                on user base.
-    def hours_per_user_issue_and_day(issues, timeSpan, today)
+    def hours_per_user_issue_and_day(issues, time_span, today)
       raise ArgumentError unless issues.is_a?(Array)
-      raise ArgumentError unless timeSpan.is_a?(Range)
+      raise ArgumentError unless time_span.is_a?(Range)
       raise ArgumentError unless today.is_a?(Date)
 
       result = {}
 
-      issues.each do |issue|
-        assignee = issue.assigned_to
+      issues.group_by(&:assigned_to).each do |assignee, issue_set|
+        working_days = DateTools.working_days_in_time_span(time_span, assignee.id)
+        first_working_day_from_today_on = working_days.select { |day| day >= today }.min || today
 
-        workingDays = DateTools.getWorkingDaysInTimespan(timeSpan, assignee.id)
-        firstWorkingDayFromTodayOn = workingDays.select { |x| x >= today }.min || today
+        if assignee.is_a? Group
+          dummy = Struct.new('UserDummy', :firstname, :lastname, :id)
+          assignee = dummy.new(nil, l(:label_assigned_to_group, value: assignee.lastname), assignee.id)
+        end
 
-        unless result.key?(issue.assigned_to)
+        unless result.key?(assignee)
           result[assignee] = {
             overdue_hours: 0.0,
             overdue_number: 0,
@@ -96,60 +102,63 @@ module ListUser
             invisible: {}
           }
 
-          timeSpan.each do |day|
+          time_span.each do |day|
             result[assignee][:total][day] = {
               hours: 0.0,
-              holiday: workingDays.exclude?(day)
+              holiday: working_days.exclude?(day)
             }
           end
         end
 
-        hoursForIssue = hours_for_issue_per_day(issue, timeSpan, today)
+        ## Iterate over each issue in the array
+        issue_set.each do |issue|
+          hours_for_issue = hours_for_issue_per_day(issue, time_span, today)
 
-        # Add the issue to the total workload, unless its overdue.
-        if issue.overdue?
-          result[assignee][:overdue_hours] += hoursForIssue[firstWorkingDayFromTodayOn][:hours]
-          result[assignee][:overdue_number] += 1
-        else
-          result[assignee][:total] = add_issue_info_to_summary(result[assignee][:total], hoursForIssue, timeSpan)
-        end
-
-        # If the issue is invisible, add it to the invisible issues summary.
-        # Otherwise, add it to the project (and its summary) to which it belongs
-        # to.
-        if issue.visible?
-          project = issue.project
-
-          unless result[assignee].key?(project)
-            result[assignee][project] = {
-              total: {},
-              overdue_hours: 0.0,
-              overdue_number: 0
-            }
-
-            timeSpan.each do |day|
-              result[assignee][project][:total][day] = {
-                hours: 0.0,
-                holiday: workingDays.exclude?(day)
-              }
-            end
-          end
-
-          # Add the issue to the project workload summary, unless its overdue.
+          # Add the issue to the total workload, unless its overdue.
           if issue.overdue?
-            result[assignee][project][:overdue_hours] += hoursForIssue[firstWorkingDayFromTodayOn][:hours]
-            result[assignee][project][:overdue_number] += 1
+            result[assignee][:overdue_hours] += hours_for_issue[first_working_day_from_today_on][:hours]
+            result[assignee][:overdue_number] += 1
           else
-            result[assignee][project][:total] =
-              add_issue_info_to_summary(result[assignee][project][:total], hoursForIssue, timeSpan)
+            result[assignee][:total] = add_issue_info_to_summary(result[assignee][:total], hours_for_issue, time_span)
           end
 
-          # Add it to the issues for that project in any case.
-          result[assignee][project][issue] = hoursForIssue
-        else
-          unless issue.overdue?
-            result[assignee][:invisible] =
-              add_issue_info_to_summary(result[assignee][:invisible], hoursForIssue, timeSpan)
+          # If the issue is invisible, add it to the invisible issues summary.
+          # Otherwise, add it to the project (and its summary) to which it belongs
+          # to.
+          if issue.visible?
+            project = issue.project
+
+            unless result[assignee].key?(project)
+              result[assignee][project] = {
+                total: {},
+                overdue_hours: 0.0,
+                overdue_number: 0
+              }
+
+              time_span.each do |day|
+                result[assignee][project][:total][day] = {
+                  hours: 0.0,
+                  holiday: working_days.exclude?(day)
+                }
+              end
+            end
+
+            # Add the issue to the project workload summary, unless its overdue.
+            if issue.overdue?
+              result[assignee][project][:overdue_hours] += hours_for_issue[first_working_day_from_today_on][:hours]
+              result[assignee][project][:overdue_number] += 1
+            else
+              result[assignee][project][:total] =
+                add_issue_info_to_summary(result[assignee][project][:total], hours_for_issue, time_span)
+            end
+
+            # Add it to the issues for that project in any case.
+            result[assignee][project][issue] = hours_for_issue
+          else
+            unless issue.overdue?
+              result[assignee][:invisible] =
+                add_issue_info_to_summary(result[assignee][:invisible], hours_for_issue, time_span)
+            end
           end
         end
       end
@@ -176,19 +185,19 @@ module ListUser
     #   * :holiday - true if this is a holiday, false otherwise.
     #
     # @param issue [Issue] A single issue object.
-    # @param timespan [Range] Relevant time span.
+    # @param time_span [Range] Relevant time span.
     # @param today [Date] The date of today.
     #
     # @return [Hash] If the given time span is empty, an empty hash is returned.
     #
-    def hours_for_issue_per_day(issue, timeSpan, today)
+    def hours_for_issue_per_day(issue, time_span, today)
       raise ArgumentError unless issue.is_a?(Issue)
-      raise ArgumentError unless timeSpan.is_a?(Range)
+      raise ArgumentError unless time_span.is_a?(Range)
       raise ArgumentError unless today.is_a?(Date)
 
-      hoursRemaining = estimated_time_for_issue(issue)
+      hours_remaining = estimated_time_for_issue(issue)
       assignee = issue.assigned_to.nil? ? 'all' : issue.assigned_to.id
-      workingDays = DateTools.getWorkingDaysInTimespan(timeSpan, assignee)
+      working_days = DateTools.working_days_in_time_span(time_span, assignee)
 
       result = {}
 
@@ -197,28 +206,28 @@ module ListUser
       if !issue.due_date.nil? && (issue.due_date < today)
 
         # Initialize all days to inactive
-        timeSpan.each do |day|
+        time_span.each do |day|
           # A day is active if it is after the issue start and before the issue due date
-          isActive = (day <= issue.due_date && (issue.start_date.nil? || issue.start_date >= day))
+          is_active = (day <= issue.due_date && (issue.start_date.nil? || issue.start_date >= day))
 
           result[day] = {
             hours: 0.0,
-            active: isActive,
+            active: is_active,
             noEstimate: false,
-            holiday: workingDays.exclude?(day)
+            holiday: working_days.exclude?(day)
           }
         end
 
-        firstWorkingDayAfterToday = DateTools.getWorkingDaysInTimespan(today..timeSpan.end, assignee).min
-        result[firstWorkingDayAfterToday] = {} if result[firstWorkingDayAfterToday].nil?
-        result[firstWorkingDayAfterToday][:hours] = hoursRemaining
+        first_working_day_after_today = DateTools.working_days_in_time_span(today..time_span.end, assignee).min
+        result[first_working_day_after_today] = {} if result[first_working_day_after_today].nil?
+        result[first_working_day_after_today][:hours] = hours_remaining
 
       # If the hours needed for an issue can not be estimated, set all days
       # outside the issues time to inactive, and all days within the issues time
       # to active but not estimated.
       elsif issue.due_date.nil? || issue.start_date.nil?
-        timeSpan.each do |day|
-          isHoliday = workingDays.exclude?(day)
+        time_span.each do |day|
+          holiday = working_days.exclude?(day)
 
           # Check: Is the issue is active on day?
           result[day] = if (!issue.due_date.nil? && (day <= issue.due_date)) ||
@@ -229,9 +238,9 @@ module ListUser
                             hours: 0.0, # No estimate possible, use zero
                             # to make other calculations easy.
                             active: true,
-                            noEstimate: true && !isHoliday, # On holidays, the zero hours
+                            noEstimate: true && !holiday, # On holidays, the zero hours
                             # are *not* estimated
-                            holiday: isHoliday
+                            holiday: holiday
                           }
 
                         # Issue is not active
@@ -240,7 +249,7 @@ module ListUser
                             hours: 0.0, # Not active => 0 hours to do.
                             active: false,
                             noEstimate: false,
-                            holiday: isHoliday
+                            holiday: holiday
                           }
                         end
         end
@@ -248,29 +257,28 @@ module ListUser
       # The issue has start and end date
       else
         # Number of remaining working days for the issue:
-        numberOfWorkdaysForIssue = DateTools.getRealDistanceInDays([today, issue.start_date].max..issue.due_date,
-                                                                  assignee)
+        remaining_time_span = [today, issue.start_date].max..issue.due_date
+        number_of_workdays_for_issue = DateTools.real_distance_in_days(remaining_time_span, assignee)
+        hours_per_workday = hours_remaining / number_of_workdays_for_issue.to_f
 
-        hoursPerWorkday = hoursRemaining / numberOfWorkdaysForIssue.to_f
-
-        timeSpan.each do |day|
-          isHoliday = workingDays.exclude?(day)
+        time_span.each do |day|
+          holiday = working_days.exclude?(day)
 
           result[day] = if (day >= issue.start_date) && (day <= issue.due_date)
 
                           if day >= today
                             {
-                              hours: isHoliday ? 0.0 : hoursPerWorkday,
+                              hours: holiday ? 0.0 : hours_per_workday,
                               active: true,
-                              noEstimate: issue.estimated_hours.nil? && !isHoliday,
-                              holiday: isHoliday
+                              noEstimate: issue.estimated_hours.nil? && !holiday,
+                              holiday: holiday
                             }
                           else
                             {
                               hours: 0.0,
                               active: true,
                               noEstimate: false,
-                              holiday: isHoliday
+                              holiday: holiday
                             }
                           end
                         else
@@ -278,7 +286,7 @@ module ListUser
                             hours: 0.0,
                             active: false,
                             noEstimate: false,
-                            holiday: isHoliday
+                            holiday: holiday
                           }
                         end
         end
@@ -311,7 +319,7 @@ module ListUser
     # @param time_span
     #
     def add_issue_info_to_summary(summary, issue_info, time_span)
-      working_days = DateTools.getWorkingDaysInTimespan(time_span)
+      working_days = DateTools.working_days_in_time_span(time_span)
       summary ||= {}
 
       time_span.each do |day|

@@ -79,4 +79,4 @@ en:
   permission_edit_user_data:        "Edit own workload thresholds"
 
   notice_settings_updated: Settings sucessfully updated.
-  
+  label_assigned_to_group: Assigned to %{value}
