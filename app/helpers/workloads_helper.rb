@@ -21,34 +21,35 @@ module WorkloadsHelper
   # @param [User] A user object.
   # @return [String] The css class for highlighting the hours in the workload table.
   #
-  def load_class_for_hours(hours, user = nil)
+  def load_class_for_hours(hours, assignee = nil)
     raise ArgumentError unless hours.respond_to?(:to_f)
 
     hours = hours.to_f
+    lowload, normalload, highload = threshold_values_of(assignee)
 
-    # load defaults:
-    lowLoad = Setting['plugin_redmine_workload']['threshold_lowload_min'].to_f
-    normalLoad = Setting['plugin_redmine_workload']['threshold_normalload_min'].to_f
-    highLoad = Setting['plugin_redmine_workload']['threshold_highload_min'].to_f
-
-    unless user.nil?
-      user_workload_data = WlUserData.find_by user_id: user.id
-      unless user_workload_data.nil?
-        lowLoad     = user_workload_data.threshold_lowload_min
-        normalLoad  = user_workload_data.threshold_normalload_min
-        highLoad    = user_workload_data.threshold_highload_min
-      end
-    end
-
-    if hours < lowLoad
+    if hours < lowload
       'none'
-    elsif hours < normalLoad
+    elsif hours < normalload
       'low'
-    elsif hours < highLoad
+    elsif hours < highload
       'normal'
     else
       'high'
     end
+  end
+
+  def threshold_values_of(assignee)
+    default_lowload = Setting['plugin_redmine_workload']['threshold_lowload_min'].to_f
+    default_normalload = Setting['plugin_redmine_workload']['threshold_normalload_min'].to_f
+    default_highload = Setting['plugin_redmine_workload']['threshold_highload_min'].to_f
+
+    workload = assignee.is_a?(User) ? WlUserData.find_by(user_id: assignee.id) : assignee
+
+    lowload     = workload&.threshold_lowload_min || default_lowload
+    normalload  = workload&.threshold_normalload_min || default_normalload
+    highload    = workload&.threshold_highload_min || default_highload
+
+    [lowload, normalload, highload]
   end
 
   def render_action_links

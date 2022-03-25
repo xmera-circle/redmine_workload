@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * week numbers to workload table header
 * group issues to workload table if a group is selected
+* calculation of group workload based on user main group setting
 
 ### Changed
 

@@ -89,10 +89,7 @@ module ListUser
         working_days = DateTools.working_days_in_time_span(time_span, assignee.id)
         first_working_day_from_today_on = working_days.select { |day| day >= today }.min || today
 
-        if assignee.is_a? Group
-          dummy = Struct.new('UserDummy', :firstname, :lastname, :id)
-          assignee = dummy.new(nil, l(:label_assigned_to_group, value: assignee.lastname), assignee.id)
-        end
+        assignee = GroupUserDummy.new(group: assignee) if assignee.is_a? Group
 
         unless result.key?(assignee)
           result[assignee] = {
