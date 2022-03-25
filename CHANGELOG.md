@@ -10,12 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 * week numbers to workload table header
+* group issues to workload table if a group is selected
 
 ### Changed
 
 * WorkLoadHelper#workload_admin? to be deprecated in Redmine Workload 2.0.0
 * using of dynamic action segments in routes due to deprecation warning
 * styling of worload table to look similar as gantt diagram
+* user and group selection to be in a separate class to make it reusable
 
 ### Fixed
 

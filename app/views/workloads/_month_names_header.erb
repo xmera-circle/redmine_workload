@@ -2,10 +2,7 @@
 # Renders the headers of the month names
 %>
 
-<%
-  monthsInTimespan = ListUser::getMonthsInTimespan(@timeSpanToDisplay)
-%>
-<% monthsInTimespan.each do |month| %>
+<% @months_to_render.each do |month| %>
   <th class="workload_hdr" colspan="<%= (month[:last_day].day - month[:first_day].day) + 1 %>" scope="colgroup">
     <% if ((month[:last_day] - month[:first_day]) + 1) >= 5 then %>
       <%= tag.small "#{month_name(month[:first_day].month)} #{month[:first_day].year}" %>

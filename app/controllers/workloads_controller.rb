@@ -15,11 +15,11 @@ class WorkloadsController < ApplicationController
   before_action :find_user_workload_data
 
   def index
-    workloadParameters = params[:workload] || {}
+    workload_params = params[:workload] || {}
 
-    @first_day = sanitizeDateParameter(workloadParameters[:first_day],  Date.today - 10)
-    @last_day  = sanitizeDateParameter(workloadParameters[:last_day],   Date.today + 50)
-    @today     = sanitizeDateParameter(workloadParameters[:start_date], Date.today)
+    @first_day = sanitizeDateParameter(workload_params[:first_day],  Date.today - 10)
+    @last_day  = sanitizeDateParameter(workload_params[:last_day],   Date.today + 50)
+    @today     = sanitizeDateParameter(workload_params[:start_date], Date.today)
 
     # if @today ("select as today") is before @first_day take @today as @first_day
     @first_day = [@today, @first_day].min
@@ -27,42 +27,19 @@ class WorkloadsController < ApplicationController
     # Make sure that last_day is at most 12 months after first_day to prevent
     # long running times
     @last_day = [(@first_day >> 12) - 1, @last_day].min
-    @timeSpanToDisplay = @first_day..@last_day
+    @time_span_to_display = @first_day..@last_day
 
-    initalizeUsers(workloadParameters)
+    @groups = GroupSelection.new(groups: workload_params[:groups])
+    @users = UserSelection.new(users: workload_params[:users], selected_groups: @groups.selected)
 
-    @issuesForWorkload = ListUser.getOpenIssuesForUsers(@usersToDisplay)
-    @monthsToRender = ListUser.getMonthsInTimespan(@timeSpanToDisplay)
-    @workloadData   = ListUser.getHoursPerUserIssueAndDay(@issuesForWorkload, @timeSpanToDisplay, @today)
+    assignee = @groups.selected.presence ? (@groups.selected | @users.to_display) : @users.to_display
+    @issues_for_workload = ListUser.open_issues_for_users(assignee)
+
+    @months_to_render = DateTools.months_in_time_span(@time_span_to_display)
+    @workloadData   = ListUser.hours_per_user_issue_and_day(@issues_for_workload, @time_span_to_display, @today)
   end
 
   private
-
-  def initalizeUsers(workloadParameters)
-    @groupsToDisplay = Group.all.sort_by { |n| n[:lastname] }
-
-    groupIds = workloadParameters[:groups].is_a?(Array) ? workloadParameters[:groups] : []
-    groupIds.map!(&:to_i)
-
-    # Find selected groups:
-    @selectedGroups = Group.where(id: groupIds)
-
-    @selectedGroups &= @groupsToDisplay
-
-    @usersToDisplay = ListUser.getUsersOfGroups(@selectedGroups)
-
-    # Get list of users that are allowed to be displayed by this user sort by lastname
-    @usersAllowedToDisplay = ListUser.getUsersAllowedToDisplay.sort_by { |u| u[:lastname] }
-
-    userIds = workloadParameters[:users].is_a?(Array) ? workloadParameters[:users] : []
-    userIds.map!(&:to_i)
-
-    # Get list of users that should be displayed.
-    @usersToDisplay += User.where(id: userIds)
-
-    # Intersect the list with the list of users that are allowed to be displayed.
-    @usersToDisplay &= @usersAllowedToDisplay
-  end
 
   def sanitizeDateParameter(parameter, default)
     if parameter.respond_to?(:to_date)

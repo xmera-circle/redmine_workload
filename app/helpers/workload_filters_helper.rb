@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module WorkloadFiltersHelper
-  def get_option_tags_for_userselection(usersToShow, selectedUsers)
+  def user_options_for_select(usersToShow, selectedUsers)
     result = ''
 
     usersToShow.each do |user|
@@ -13,7 +13,7 @@ module WorkloadFiltersHelper
     result.html_safe
   end
 
-  def get_option_tags_for_groupselection(groupsToShow, selectedGroups)
+  def group_options_for_select(groupsToShow, selectedGroups)
     result = ''
 
     groupsToShow.each do |group|

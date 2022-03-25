@@ -78,3 +78,6 @@ de:
   permission_edit_national_holiday: "Feiertage bearbeiten"
   permission_edit_user_vacations:   "Eigene Urlaube bearbeiten"
   permission_edit_user_data:        "Eigene Belastungsgrenzen bearbeiten"
+
+  notice_settings_updated: Einstellungen erfolgreich aktualisiert.
+  label_assigned_to_group: Zugewiesen an %{value}

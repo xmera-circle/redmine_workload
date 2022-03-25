@@ -22,7 +22,7 @@ class NationalHolidayTest < ActiveSupport::TestCase
                                     reason: 'Test Holiday')
 
     assert holiday.save, 'Holiday could not be created or saved!'
-    assert DateTools::IsHoliday(holiday[:start]), '2017-05-30 should be a holiday!'
+    assert DateTools::holiday?(holiday[:start]), '2017-05-30 should be a holiday!'
     assert holiday.destroy, 'Holiday could not be deleted!'
   end
 
@@ -32,8 +32,8 @@ class NationalHolidayTest < ActiveSupport::TestCase
     holiday.save
 
     assert holiday.save, 'Holiday could not be created or saved!'
-    assert DateTools::IsHoliday(holiday[:start]), '2017-05-30 should be a holiday!'
-    assert DateTools::IsHoliday(holiday[:end]), '2017-05-31 should be a holiday!'
+    assert DateTools::holiday?(holiday[:start]), '2017-05-30 should be a holiday!'
+    assert DateTools::holiday?(holiday[:end]), '2017-05-31 should be a holiday!'
   end
 
   test 'holiday is not workday' do
@@ -54,11 +54,11 @@ class NationalHolidayTest < ActiveSupport::TestCase
     firstDay = Date.new(2017, 5, 15)
     lastDay = Date.new(2017, 5, 19)
 
-    result = DateTools.getWorkingDaysInTimespan(firstDay..lastDay, 'all').to_a
+    result = DateTools.working_days_in_time_span(firstDay..lastDay, 'all').to_a
 
     assert_equal [firstDay, lastDay - 1], result, 'Result should only bring 2 workdays!'
 
-    result = ListUser.getHoursForIssuesPerDay(issue, firstDay..lastDay, firstDay)
+    result = ListUser.send(:hours_for_issue_per_day, issue, firstDay..lastDay, firstDay)
 
     assert_equal 10.0, result[firstDay][:hours], 'Workday should have 10h load!'
     assert_equal 0.0, result[firstDay + 1][:hours], 'Workday should be day off for holiday!' # holiday2[:start]
