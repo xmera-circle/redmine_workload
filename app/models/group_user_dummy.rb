@@ -21,6 +21,10 @@ class GroupUserDummy
     self.group = group
   end
 
+  def groups
+    [group]
+  end
+
   def lastname
     l(:label_assigned_to_group, value: group.lastname)
   end

@@ -37,8 +37,6 @@ module ListUser
       # Filter out all issues that have children; They do not *directly* add to
       # the workload
       issues.select(&:leaf?)
-      # let the group issues come first
-      issues.sort_by { |open_issue| open_issue.assigned_to.class.name }
     end
 
     ##
