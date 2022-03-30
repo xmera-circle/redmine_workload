@@ -195,6 +195,10 @@ legend {
 /*------------------------------------------------------------------------------
  * Real table data
  -----------------------------------------------------------------------------*/
+.controller-workloads .tooltip span.tip {
+    top: 20px;
+}
+
 .controller-workloads td.hours {
     font-weight: normal;
 }
