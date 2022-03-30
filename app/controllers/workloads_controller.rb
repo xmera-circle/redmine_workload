@@ -32,11 +32,14 @@ class WorkloadsController < ApplicationController
     @groups = GroupSelection.new(groups: workload_params[:groups])
     @users = UserSelection.new(users: workload_params[:users], selected_groups: @groups.selected)
 
-    assignee = @groups.selected.presence ? (@groups.selected | @users.to_display) : @users.to_display
-    @issues_for_workload = ListUser.open_issues_for_users(assignee)
+    assignees = @groups.selected.presence ? (@groups.selected | @users.to_display) : @users.to_display
+    @issues_for_workload = ListUser.open_issues_for_users(assignees)
 
     @months_to_render = DateTools.months_in_time_span(@time_span_to_display)
     @workloadData   = ListUser.hours_per_user_issue_and_day(@issues_for_workload, @time_span_to_display, @today)
+    @group_workload = GroupWorkload.new(user_workload: @workloadData,
+                                        selected_groups: @groups.selected,
+                                        time_span: @time_span_to_display)
   end
 
   private
