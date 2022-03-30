@@ -1,0 +1,39 @@
+<%
+# Renders the workload data for a single group.
+# Parameters:
+#  * group: The group to render the data for.
+#  * data: The data to render. A hash with issues as keys.
+%>
+
+<tbody class="group-total-workload" id="group-total-workload-<%= group.id %>">
+  <tr>
+	<th class="group-description" scope="row" title="<%= l(:workload_trigger_tooltip) %>">
+	  <%= render :partial => 'trigger', :locals => {:trigger_for => "group-#{group.id}"} %>
+	  <%= "#{group.firstname} #{group.lastname}" %>
+	  <% if data[:overdue_number] > 0 %>
+		<dl class="additional-group-info group-<%= group.id %>-open group-<%= group.id %>-close">
+		  <dt><%= l(:workload_overdue_issues_num) %></dt>
+		  <dd><%= data[:overdue_number] %></dd>
+		  <dt><%= l(:workload_overdue_issues_hours) %></dt>
+		  <dd><%= "%0.2f" % data[:overdue_hours] %></dd>
+		</dl>
+	  <% end %>
+	</th>
+	<% # Print the total workload for this group for each day %>
+	<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total], :user => GroupUserDummy.new(group: group) } %>
+  </tr>
+</tbody>
+
+<% if data[:invisible].presence %>
+  <tbody class="invisible-issues-summary group-<%= group.id %>-open group-<%= group.id %>-close">
+	<tr>
+	  <th class="invisible-workload-description" scope="row"><%= l(:workload_show_invisible_issues) %> </th>
+	  <%= render :partial => 'summarized_workload_for_invisible_issues', :locals => {:group => group, :summarizedWorkload => data[:invisible]} %>
+	</tr>
+  </tbody>
+<% end %>
+<% # Iterate over all assignees for the group %>
+<% assignees = data.keys.select{|key| key.kind_of?(User) || key.kind_of?(Group) || key.kind_of?(GroupUserDummy) } %>
+<% assignees.each do |assignee| %>
+  <%= render :partial => 'workload_for_user_in_group', :locals => {:group => group, :user => assignee, :data => data[assignee]} %>
+<% end %>

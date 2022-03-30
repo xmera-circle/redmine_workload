@@ -8,45 +8,63 @@ class GroupWorkload
   def initialize(user_workload:, selected_groups:, time_span:)
     self.user_workload = user_workload
     self.selected_groups = selected_groups
+    self.group_members = select_group_members
     self.time_span = time_span
   end
 
   def by_group
     selected_groups.each_with_object({}) do |group, hash|
-      group_members = user_workload.select { |user, _data| user.groups.include? group }
-      summary = summarize_over(group_members)
-      hash[group] = summary.merge(group_members)
+      summary = summarize_over_group_members(group)
+      hash[group] = summary.merge(group_members[group])
     end
   end
 
   private
 
-  attr_accessor :user_workload, :selected_groups, :time_span
+  attr_accessor :user_workload, :group_members, :selected_groups, :time_span
 
-  def summarize_over(group_members)
-    { overdue_hours: sum_of(:overdue_hours, group_members),
-      overdue_number: sum_of(:overdue_number, group_members),
-      total: total_of(group_members),
-      invisible: invisibles_of(group_members) }
-  end
-
-  def sum_of(key, group_members)
-    group_members.sum { |_member, data| data[key] || 0 }
-  end
-
-  def total_of(group_members)
-    time_span.each_with_object({}) do |day, hash|
-      hash[day] = {}
-      hash[day][:hours] = group_members.sum { |_member, data| data.dig(:total, day, :hours) || 0 }
-      hash[day][:holiday] = group_members.first[1].dig(:total, day, :holiday)
+  def select_group_members
+    selected_groups.each_with_object({}) do |group, hash|
+      hash[group] = user_workload.select { |user, _data| user.groups.include? group }
     end
   end
 
-  def invisibles_of(group_members)
+  def summarize_over_group_members(group)
+    { overdue_hours: sum_of(:overdue_hours, group),
+      overdue_number: sum_of(:overdue_number, group),
+      total: total_of_group_members(group),
+      invisible: invisibles_of_group_members(group) }
+  end
+
+  def sum_of(key, group)
+    group_members[group].sum { |_member, data| data[key.to_sym] || 0 }
+  end
+
+  def total_of_group_members(group)
     time_span.each_with_object({}) do |day, hash|
       hash[day] = {}
-      hash[day][:hours] = group_members.sum { |_member, data| data.dig(:invisible, day, :hours) || 0 }
-      hash[day][:holiday] = group_members.first[1].dig(:invisible, day, :holiday)
+      hash[day][:hours] = hours_at(day, :total, group)
+      hash[day][:holiday] = holiday_at(day, :total, group)
     end
+  end
+
+  def invisibles_of_group_members(group)
+    time_span.each_with_object({}) do |day, hash|
+      hours = hours_at(day, :invisible, group)
+      holidays = holiday_at(day, :invisible, group)
+      next if hours.zero?
+
+      hash[day] = {}
+      hash[day][:hours] = invisibles
+      hash[day][:holiday] = holidays
+    end
+  end
+
+  def hours_at(day, key, group)
+    group_members[group].sum { |_member, data| data.dig(key.to_sym, day, :hours) || 0 }
+  end
+
+  def holiday_at(day, key, group)
+    group_members[group].first[1].dig(key.to_sym, day, :holiday)
   end
 end

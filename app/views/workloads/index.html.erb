@@ -25,13 +25,20 @@
         <%= render :partial => 'day_of_week_header' %>
       </tr>
     </thead>
-    <% # Iterate over all users:
-       @workloadData.keys.each do |user| %>
-       <%= render :partial => 'workload_for_user',
-                  :locals => { :user => user,
-                               :data => @workloadData[user]
-                             }
-       %>
+    <% if @groups.selected.presence %>
+      <% @group_workload.by_group.each do |group, data| %>
+        <%= render :partial => 'workload_for_group',
+                   :locals => { :group => group,
+                                :data => data }
+        %>
+      <% end %>
+    <% else %>
+      <% @workloadData.keys.each do |user| %>
+        <%= render :partial => 'workload_for_user',
+                    :locals => { :user => user,
+                                :data => @workloadData[user] }
+        %>
+      <% end %>
     <% end %>
   </table>
 </div>
