@@ -37,9 +37,6 @@ class WlUserVacationsController < ApplicationController
         end
       else
         format.html do
-          flash[:error] = '<ul>' + @wl_user_vacation.errors.full_messages.map do |o|
-                                     "<li>#{o}</li>"
-                                   end.join + '</ul>'
           render action: 'edit'
         end
         format.xml  { render xml: @wl_user_vacation.errors, status: :unprocessable_entity }
@@ -59,9 +56,6 @@ class WlUserVacationsController < ApplicationController
         end
       else
         format.html do
-          flash[:error] = '<ul>' + @wl_user_vacation.errors.full_messages.map do |o|
-                                     "<li>#{o}</li>"
-                                   end.join + '</ul>'
           render action: 'new'
         end
         format.api { render_validation_errors(@wl_user_vacation) }
@@ -88,10 +82,10 @@ class WlUserVacationsController < ApplicationController
 
   def check_edit_rights
     is_allowed = User.current.allowed_to_globally?(:edit_user_vacations)
-    unless is_allowed
-      flash[:error] = translate 'no_right'
-      redirect_to action: 'index'
-    end
+    return if is_allowed
+
+    flash[:error] = translate 'no_right'
+    redirect_to action: 'index'
   end
 
   def wl_user_vacations_params

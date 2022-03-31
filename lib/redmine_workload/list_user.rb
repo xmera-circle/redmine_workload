@@ -46,7 +46,7 @@ module ListUser
     # The topmost hash takes a user object as key and returns a hash that takes
     # among others a project as key.
     # The projects hash takes among others an issue as key which again
-    # returns the day related data in another hash as returned by 
+    # returns the day related data in another hash as returned by
     # ListUser.hours_for_issue_per_day.
     #
     # @example Returned hash for a two day time span
@@ -56,18 +56,19 @@ module ListUser
     #                             :total => { Sat, 12 Mar 2022 => { :hours=>0.0, :holiday=>true },
     #                                         Sun, 13 Mar 2022 => { :hours=>0.0, :holiday=>true } },
     #                             :invisible => {},
-    #                             #<Project id: 4711, ...> => { :total => { Sat, 12 Mar 2022=>{:hours=>0.0, :holiday=>true},
-    #                                                                       Sun, 13 Mar 2022=>{:hours=>0.0, :holiday=>true} },
-    #                                                           :overdue_hours => 0.0,
-    #                                                           :overdue_number => 0,
-    #                                                           #<Issue id: 12176, ...> => { Sat, 12 Mar 2022 => { :hours => 0.0,
-    #                                                                                                              :active => true,
-    #                                                                                                              :noEstimate => false,
-    #                                                                                                              :holiday => true },
-    #                                                                                        Sun, 13 Mar 2022 => { :hours => 0.0,
-    #                                                                                                              :active => true, 
-    #                                                                                                              :noEstimate => false,
-    #                                                                                                              :holiday => true } } } }
+    #                             #<Project id: 4711, ...> =>
+    #                                 { :total => { Sat, 12 Mar 2022=>{:hours=>0.0, :holiday=>true},
+    #                                               Sun, 13 Mar 2022=>{:hours=>0.0, :holiday=>true} },
+    #                                   :overdue_hours => 0.0,
+    #                                   :overdue_number => 0,
+    #                                    #<Issue id: 12176, ...> => { Sat, 12 Mar 2022 => { :hours => 0.0,
+    #                                                                                       :active => true,
+    #                                                                                       :noEstimate => false,
+    #                                                                                       :holiday => true },
+    #                                                                 Sun, 13 Mar 2022 => { :hours => 0.0,
+    #                                                                                       :active => true,
+    #                                                                                       :noEstimate => false,
+    #                                                                                       :holiday => true } } } }
     #
     # Additionally, the returned hash has two special keys:
     # * :invisible. Returns a summary of all issues that are not visible for the
@@ -226,8 +227,8 @@ module ListUser
 
           # Check: Is the issue is active on day?
           result[day] = if (!issue.due_date.nil? && (day <= issue.due_date)) ||
-                          (!issue.start_date.nil? && (day >= issue.start_date)) ||
-                          (issue.start_date.nil? && issue.due_date.nil?)
+                           (!issue.start_date.nil? && (day >= issue.start_date)) ||
+                           (issue.start_date.nil? && issue.due_date.nil?)
 
                           {
                             hours: 0.0, # No estimate possible, use zero
@@ -318,7 +319,8 @@ module ListUser
       summary ||= {}
 
       time_span.each do |day|
-        summary[day] = { hours: 0.0, holiday: working_days.exclude?(day) } unless summary.key?(day)
+        holiday = { hours: 0.0, holiday: working_days.exclude?(day) }
+        summary[day] = holiday unless summary.key?(day)
         summary[day][:hours] += issue_info[day][:hours]
       end
 
