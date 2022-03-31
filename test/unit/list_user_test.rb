@@ -679,7 +679,6 @@ class ListUserTest < ActiveSupport::TestCase
   test 'users_allowed_to_display returns exactly project members if user has right to see workload of project members.' do
     user =  User.generate!
     project = Project.generate!
-    project.enable_module! :Workload
 
     project_manager_role = Role.generate!(name: 'Project manager',
                                           permissions: [:view_project_workload])

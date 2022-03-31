@@ -55,7 +55,7 @@ class WlUserDatasControllerTest < ActionDispatch::IntegrationTest
     assert :forbidden
   end
 
-  test 'should render errors messages' do
+  test 'should render errors messages when user updates with foreign group' do
     jsmith = users :users_002
     manager = roles :roles_001
     manager.add_permission! :edit_user_data
@@ -67,8 +67,7 @@ class WlUserDatasControllerTest < ActionDispatch::IntegrationTest
 
     assert :success
     # Use this assertion when error rendering is refactored!
-    # assert_select_error /is not included in the list/
-    assert_select 'div.flash.error', text: /is not included in the list/
+    assert_select_error(/is not included in the list/)
   end
 
   private

@@ -5,8 +5,8 @@ class WlUserVacationsController < ApplicationController
 
   helper :workloads
 
+  before_action :authorize_global, only: %i[create update destroy]
   before_action :find_user_workload_data
-  before_action :check_edit_rights, only: %i[edit update create destroy new]
 
   def index
     @is_allowed = User.current.allowed_to_globally?(:edit_user_vacations)
@@ -79,14 +79,6 @@ class WlUserVacationsController < ApplicationController
   end
 
   private
-
-  def check_edit_rights
-    is_allowed = User.current.allowed_to_globally?(:edit_user_vacations)
-    return if is_allowed
-
-    flash[:error] = translate 'no_right'
-    redirect_to action: 'index'
-  end
 
   def wl_user_vacations_params
     params.require(:wl_user_vacations).permit(:user_id, :date_from, :date_to, :comments, :vacation_type)
