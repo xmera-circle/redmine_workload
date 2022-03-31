@@ -15,6 +15,14 @@
   padding: 0;
 }
 
+.controller-workloads table dt {
+  margin-top: 0;
+}
+
+.controller-workloads table dd {
+  margin-bottom: 0;
+}
+
 /*******************************************************************************
  * Styles for the filter form.
  ******************************************************************************/
@@ -174,6 +182,7 @@ legend {
     font-size: 1em;
 }
 
+.controller-workloads .data .additional-group-info,
 .controller-workloads .data .additional-user-info,
 .controller-workloads .data .additional-project-info {
     font-size: 0.9em;
@@ -181,18 +190,18 @@ legend {
 	margin-left: 30px;
 }
 
+.controller-workloads .data .additional-group-info dt,
 .controller-workloads .data .additional-user-info dt,
 .controller-workloads .data .additional-project-info dt {
 	float: left;
 	clear: left;
-	width: 200px;
+	width: 210px;
 }
 
-.controller-workloads .data .additional-group-info dd
+.controller-workloads .data .additional-group-info dd,
 .controller-workloads .data .additional-user-info dd,
-.controller-workloads .data .additional-project-info dd {	
+.controller-workloads .data .additional-project-info dd {
 	margin-left: 210px;
-    padding-top: 20px;
 }
 
 /*------------------------------------------------------------------------------
@@ -236,6 +245,7 @@ legend {
 }
 
 .controller-workloads .data .issue-workload:hover,
+.controller-workloads .data .group-total-workload:hover,
 .controller-workloads .data .user-total-workload:hover,
 .controller-workloads .data .project-total-workload:hover{
     background-color: #D7D7D7!important;
