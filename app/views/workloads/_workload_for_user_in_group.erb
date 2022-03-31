@@ -5,12 +5,12 @@
 #  * data: The data to render. A hash with issues as keys.
 %>
 
-<tbody class="user-total-workload" id="user-total-workload-<%= user.id %>">
+<tbody class="user-total-workload-in-group group-<%= group.id %>-open group-<%= group.id %>-close" id="user-total-workload-<%= user.id %>">
   <tr>
 	<th class="user-description" scope="row" title="<%= l(:workload_trigger_tooltip) %>">
 	  <%= render :partial => 'trigger', :locals => {:trigger_for => "user-#{user.id}"} %>
 	  <%= "#{user.firstname} #{user.lastname}" %>
-	  <% if data[:overdue_number] > 0 %>
+	  <% if data[:overdue_number] && data[:overdue_number].positive? %>
 		<dl class="additional-user-info user-<%= user.id %>-open user-<%= user.id %>-close">
 		  <dt><%= l(:workload_overdue_issues_num) %></dt>
 		  <dd><%= data[:overdue_number] %></dd>
@@ -20,7 +20,9 @@
 	  <% end %>
 	</th>
 	<% # Print the total workload for this user for each day %>
-	<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total], :user => user} %>
+	<% if data[:total].presence %>
+		<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total], :user => user} %>
+	<% end %>
   </tr>
 </tbody>
 

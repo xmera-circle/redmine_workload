@@ -119,11 +119,13 @@ legend {
 /*------------------------------------------------------------------------------
  * Styles for the stuff that may be shown or hidden.
  -----------------------------------------------------------------------------*/
-.controller-workloads .data .project-total-workload,
-.controller-workloads .data .issue-workloads,
+.controller-workloads .data .additional-group-info,
 .controller-workloads .data .additional-user-info,
 .controller-workloads .data .additional-project-info,
-.controller-workloads .data .invisible-issues-summary {
+.controller-workloads .data .invisible-issues-summary,
+.controller-workloads .data .user-total-workload-in-group,
+.controller-workloads .data .project-total-workload,
+.controller-workloads .data .issue-workloads {
 	display: none;
 }
 
@@ -138,6 +140,7 @@ legend {
 /*------------------------------------------------------------------------------
  * Table heads on the left side.
  -----------------------------------------------------------------------------*/
+.controller-workloads .data .group-description,
 .controller-workloads .data .user-description,
 .controller-workloads .data .project-description,
 .controller-workloads .data .issue-description,
@@ -145,28 +148,26 @@ legend {
     text-align: left;
     border-left: 1px solid var(--mediumgray);
     border-right: 1px solid var(--mediumgray);
+    width:     300px;
+    min-width: 300px;
+    max-width: 300px;
+}
+
+.controller-workloads .data .group-description {
+    padding-left: 5px;
 }
 
 .controller-workloads .data .user-description {
     padding-left: 10px;
-    width:     300px;
-    min-width: 300px;
-    max-width: 300px;
 }
 
 .controller-workloads .data .project-description {
 	padding-left: 15px;
-    width:     300px;
-    min-width: 300px;
-    max-width: 300px;
 }
 
 .controller-workloads .data .issue-description,
 .controller-workloads .data .invisible-workload-description {
     padding-left: 20px;
-    width:     300px;
-    min-width: 300px;
-    max-width: 300px;
 }
 
 .controller-workloads .data .invisible-workload-description {
