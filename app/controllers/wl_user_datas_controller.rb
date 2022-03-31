@@ -23,9 +23,6 @@ class WlUserDatasController < ApplicationController
         format.xml { head :ok }
       else
         format.html do
-          flash[:error] = '<ul>' + @user_workload_data.errors.full_messages.map do |o|
-                                     "<li>#{o}</li>"
-                                   end.join + '</ul>'
           render :edit
         end
         format.xml { render xml: @user_workload_data.errors, status: :unprocessable_entity }

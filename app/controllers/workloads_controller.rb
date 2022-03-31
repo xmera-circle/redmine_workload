@@ -17,9 +17,9 @@ class WorkloadsController < ApplicationController
   def index
     workload_params = params[:workload] || {}
 
-    @first_day = sanitizeDateParameter(workload_params[:first_day],  Date.today - 10)
-    @last_day  = sanitizeDateParameter(workload_params[:last_day],   Date.today + 50)
-    @today     = sanitizeDateParameter(workload_params[:start_date], Date.today)
+    @first_day = sanitizeDateParameter(workload_params[:first_day],  Time.zone.today - 10)
+    @last_day  = sanitizeDateParameter(workload_params[:last_day],   Time.zone.today + 50)
+    @today     = sanitizeDateParameter(workload_params[:start_date], Time.zone.today)
 
     # if @today ("select as today") is before @first_day take @today as @first_day
     @first_day = [@today, @first_day].min

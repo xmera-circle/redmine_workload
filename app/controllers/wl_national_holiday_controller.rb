@@ -45,9 +45,6 @@ class WlNationalHolidayController < ApplicationController
         format.xml  { head :ok }
       else
         format.html do
-          flash[:error] = '<ul>' + @wl_national_holiday.errors.full_messages.map do |o|
-                                     "<li>#{o}</li>"
-                                   end.join + '</ul>'
           render action: 'edit'
         end
         format.xml  { render xml: @wl_national_holiday.errors, status: :unprocessable_entity }
@@ -62,9 +59,6 @@ class WlNationalHolidayController < ApplicationController
     else
       respond_to do |format|
         format.html do
-          flash[:error] = '<ul>' + @wl_national_holiday.errors.full_messages.map do |o|
-                                     "<li>#{o}</li>"
-                                   end.join + '</ul>'
           render :new
         end
         format.api { render_validation_errors(@wl_national_holiday) }
@@ -87,17 +81,17 @@ class WlNationalHolidayController < ApplicationController
 
   def check_edit_rights
     right = User.current.allowed_to_globally?(:edit_national_holiday)
-    unless right
-      flash[:error] = translate 'no_right'
-      redirect_to :back
-    end
+    return if right
+
+    flash[:error] = translate 'no_right'
+    redirect_to :back
   end
 
   def select_year
     if params[:year]
       @this_year = params[:year].to_i
     elsif @this_year.blank?
-      @this_year = Date.today.strftime('%Y').to_i
+      @this_year = Time.zone.today.strftime('%Y').to_i
     end
   end
 
