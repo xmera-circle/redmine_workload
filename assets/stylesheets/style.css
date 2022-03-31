@@ -188,14 +188,20 @@ legend {
 	width: 200px;
 }
 
+.controller-workloads .data .additional-group-info dd
 .controller-workloads .data .additional-user-info dd,
 .controller-workloads .data .additional-project-info dd {	
 	margin-left: 210px;
+    padding-top: 20px;
 }
 
 /*------------------------------------------------------------------------------
  * Real table data
  -----------------------------------------------------------------------------*/
+.controller-workloads .tooltip span.tip {
+    top: 20px;
+}
+
 .controller-workloads td.hours {
     font-weight: normal;
 }
