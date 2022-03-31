@@ -13,8 +13,11 @@ Redmine::Plugin.register :redmine_workload do
   url 'https://github.com/JostBaron/redmine_workload'
   author_url 'http://netzkönig.de/'
 
-  menu :top_menu, :WorkLoad, { controller: 'workloads', action: 'index' }, caption: :workload_title,
-                                                                           if: proc { User.current.logged? }
+  menu :top_menu,
+       :WorkLoad,
+       { controller: 'workloads', action: 'index' },
+       caption: :workload_title,
+       if: proc { User.current.logged? && User.current.allowed_to?(:view_project_workload, nil, global: true) }
 
   settings partial: 'settings/workload_settings',
            default: {
@@ -30,12 +33,10 @@ Redmine::Plugin.register :redmine_workload do
              'threshold_highload_min' => 8.5
            }
 
-  project_module :Workload do
-    permission :view_project_workload, workloads: :index
-    permission :edit_national_holiday, wl_national_holiday: %i[create update destroy]
-    permission :edit_user_vacations,   wl_user_vacations: %i[create update destroy]
-    permission :edit_user_data,        wl_user_datas: :update
-  end
+  permission :view_project_workload, workloads: :index
+  permission :edit_national_holiday, wl_national_holiday: %i[create update destroy]
+  permission :edit_user_vacations,   wl_user_vacations: %i[create update destroy]
+  permission :edit_user_data,        wl_user_datas: :update
 end
 
 plugin = Redmine::Plugin.find(:redmine_workload)

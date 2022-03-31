@@ -6,8 +6,8 @@ class WlNationalHolidayController < ApplicationController
   unloadable
   include WlUserDataFinder
 
+  before_action :authorize_global, only: %i[create update destroy]
   before_action :find_user_workload_data
-  before_action :check_edit_rights, only: %i[edit update create destroy]
   before_action :select_year
 
   helper :workloads
@@ -78,14 +78,6 @@ class WlNationalHolidayController < ApplicationController
   end
 
   private
-
-  def check_edit_rights
-    right = User.current.allowed_to_globally?(:edit_national_holiday)
-    return if right
-
-    flash[:error] = translate 'no_right'
-    redirect_to :back
-  end
 
   def select_year
     if params[:year]

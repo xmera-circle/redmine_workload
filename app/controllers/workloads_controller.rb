@@ -12,6 +12,7 @@ class WorkloadsController < ApplicationController
   include QueriesHelper
   include WlUserDataFinder
 
+  before_action :authorize_global, only: %i[index]
   before_action :find_user_workload_data
 
   def index

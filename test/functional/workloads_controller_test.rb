@@ -1,0 +1,26 @@
+# frozen_string_literal: true
+
+require File.expand_path('../test_helper', __dir__)
+
+class WorkloadsControllerTest < ActionDispatch::IntegrationTest
+  include RedmineWorkload::AuthenticateUser
+
+  fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
+           :users, :issue_statuses, :enumerations, :roles
+
+  test 'should not get index when not allowed to' do
+    log_user('jsmith', 'jsmith')
+
+    get workloads_path
+    assert_response :forbidden
+  end
+
+  test 'should get index' do
+    manager = roles :roles_001
+    manager.add_permission! :view_project_workload
+    log_user('jsmith', 'jsmith')
+
+    get workloads_path
+    assert_response :success
+  end
+end
