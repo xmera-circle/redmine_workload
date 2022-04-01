@@ -681,7 +681,7 @@ class ListUserTest < ActiveSupport::TestCase
     project = Project.generate!
 
     project_manager_role = Role.generate!(name: 'Project manager',
-                                          permissions: [:view_project_workload])
+                                          permissions: [:view_all_workloads])
 
     User.add_to_project(user, project, project_manager_role)
 

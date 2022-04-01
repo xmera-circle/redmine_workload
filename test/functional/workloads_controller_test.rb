@@ -17,7 +17,7 @@ class WorkloadsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should get index' do
     manager = roles :roles_001
-    manager.add_permission! :view_project_workload
+    manager.add_permission! :view_all_workloads
     log_user('jsmith', 'jsmith')
 
     get workloads_path

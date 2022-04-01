@@ -35,7 +35,7 @@
     <% else %>
       <% @workloadData.keys.each do |user| %>
         <%= render :partial => 'workload_for_user',
-                    :locals => { :user => user,
+                   :locals => { :user => user,
                                 :data => @workloadData[user] }
         %>
       <% end %>
