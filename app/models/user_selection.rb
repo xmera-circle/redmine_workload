@@ -44,6 +44,8 @@ class UserSelection
     return all_users if user.admin? || allowed_to?(:view_all_workloads)
 
     result = group_members_allowed_to(:view_own_group_workloads)
+    return [] if result.blank? && !allowed_to?(:view_own_workloads)
+
     result << user
     result.flatten.uniq
   end
