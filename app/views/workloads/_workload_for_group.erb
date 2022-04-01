@@ -23,12 +23,11 @@
 	<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total], :user => GroupUserDummy.new(group: group) } %>
   </tr>
 </tbody>
-
 <% if data[:invisible].presence %>
   <tbody class="invisible-issues-summary group-<%= group.id %>-open group-<%= group.id %>-close">
 	<tr>
 	  <th class="invisible-workload-description" scope="row"><%= l(:workload_show_invisible_issues) %> </th>
-	  <%= render :partial => 'summarized_workload_for_invisible_issues', :locals => {:group => group, :summarizedWorkload => data[:invisible]} %>
+	  <%= render :partial => 'summarized_workload_for_invisible_issues', :locals => {:assignee => group, :summarizedWorkload => data[:invisible]} %>
 	</tr>
   </tbody>
 <% end %>

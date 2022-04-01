@@ -30,7 +30,7 @@
   <tbody class="invisible-issues-summary user-<%= user.id %>-open user-<%= user.id %>-close">
 	<tr>
 	  <th class="invisible-workload-description" scope="row"><%= l(:workload_show_invisible_issues) %> </th>
-	  <%= render :partial => 'summarized_workload_for_invisible_issues', :locals => {:user => user, :summarizedWorkload => data[:invisible]} %>
+	  <%= render :partial => 'summarized_workload_for_invisible_issues', :locals => {:assignee => user, :summarizedWorkload => data[:invisible]} %>
 	</tr>
   </tbody>
 <% end %>
