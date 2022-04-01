@@ -1,7 +1,7 @@
 <%
 # Renders the workload data for one single issue.
 # Parameters:
-#  * user: The user to render the data for.
+#  * assignee: The user or group to render the data for.
 #  * summarizedWorkload Hash that contains the summarized workload for invisible issues.
 %>
 
@@ -12,7 +12,7 @@
      klass += ' today'   if @today === day
      klass += ' ' + load_class_for_hours(summarizedWorkload[day][:hours])
 
-     hoursString = (summarizedWorkload[day][:hours].abs < 0.01) ? '' : sprintf("%.1f", summarizedWorkload[day][:hours], user)
+     hoursString = (summarizedWorkload[day][:hours].abs < 0.01) ? '' : sprintf("%.1f", summarizedWorkload[day][:hours], assignee)
   %>
   <td class="<%= klass %>">
       <span>
