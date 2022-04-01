@@ -29,8 +29,12 @@ class GroupWorkload
 
   def select_group_members
     selected_groups.each_with_object({}) do |group, hash|
-      hash[group] = user_workload.select { |user, _data| user.groups.include? group }
+      hash[group] = sorted_user_workload.select { |user, _data| user.groups.include? group }
     end
+  end
+
+  def sorted_user_workload
+    user_workload.sort_by { |user, _data| [user.class.name, user.lastname] }.to_h
   end
 
   def summarize_over_group_members(group)
