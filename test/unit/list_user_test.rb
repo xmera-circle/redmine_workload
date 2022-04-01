@@ -656,47 +656,6 @@ class ListUserTest < ActiveSupport::TestCase
     assert_equal 'high', load_class_for_hours(10.5)
   end
 
-  test 'users_allowed_to_display returns an empty array if the current user is anonymus.' do
-    users = UserSelection.new(user: User.anonymous)
-
-    assert_equal [], users.allowed_to_display
-  end
-
-  test 'users_allowed_to_display returns only the user himself if user has no role assigned.' do
-    user = User.generate!
-    users = UserSelection.new(user: user)
-    assert_equal [user].map(&:id).sort, users.allowed_to_display.map(&:id).sort
-  end
-
-  test 'users_allowed_to_display returns all users if the current user is a admin.' do
-    user = User.generate!(admin: true)
-    users = UserSelection.new(user: user)
-    # Make this user an admin (can't do it in the attributes?!?)
-
-    assert_equal User.active.map(&:id).sort, users.allowed_to_display.map(&:id).sort
-  end
-
-  test 'users_allowed_to_display returns exactly project members if user has right to see workload of project members.' do
-    user =  User.generate!
-    project = Project.generate!
-
-    project_manager_role = Role.generate!(name: 'Project manager',
-                                          permissions: [:view_all_workloads])
-
-    User.add_to_project(user, project, project_manager_role)
-
-    project_member1 = User.generate!
-    User.add_to_project(project_member1, project)
-    project_member2 = User.generate!
-    User.add_to_project(project_member2, project)
-
-    # Create some non-member
-    User.generate!
-    users = UserSelection.new(user: user)
-    assert_equal [user, project_member1, project_member2].map(&:id).sort,
-                 users.allowed_to_display.map(&:id).sort
-  end
-
   private
 
   def months_numbers_in_time_span(first_day, last_day)
