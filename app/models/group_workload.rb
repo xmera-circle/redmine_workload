@@ -12,6 +12,10 @@ class GroupWorkload
     self.time_span = time_span
   end
 
+  ##
+  #
+  # @return [Hash(Group, ListUser.hours_per_user_issue_and_day)] Hash with
+  #  results of ListUser.hours_per_user_issue_and_day for each group.
   def by_group
     selected_groups.each_with_object({}) do |group, hash|
       summary = summarize_over_group_members(group)
@@ -49,15 +53,15 @@ class GroupWorkload
   end
 
   def invisibles_of_group_members(group)
-    time_span.each_with_object({}) do |day, hash|
+    invisible = time_span.each_with_object({}) do |day, hash|
       hours = hours_at(day, :invisible, group)
       holidays = holiday_at(day, :invisible, group)
-      next if hours.zero?
 
       hash[day] = {}
-      hash[day][:hours] = invisibles
+      hash[day][:hours] = hours
       hash[day][:holiday] = holidays
     end
+    invisible.any? { |_date, data| data[:hours].positive? } ? invisible : nil
   end
 
   def hours_at(day, key, group)
@@ -65,6 +69,7 @@ class GroupWorkload
   end
 
   def holiday_at(day, key, group)
-    group_members[group].first[1].dig(key.to_sym, day, :holiday)
+    values = group_members[group].map { |_member, data| data.dig(key.to_sym, day, :holiday) }
+    values.uniq[0]
   end
 end
