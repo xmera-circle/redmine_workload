@@ -40,7 +40,7 @@ $(document).ready(function() {
 			else {
 				$('.' + affectedObjectsClass + '-close').each(function(){
 					$(this).hide();
-					$(this).find('span').html(CLOSED);
+					$(this).find('span.trigger.open').html(CLOSED);
 				})
 			}
 			$(this).html(CLOSED);
