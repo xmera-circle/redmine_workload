@@ -20,7 +20,7 @@
 	  <% end %>
 	</th>
 	<% # Print the total workload for this user for each day %>
-	<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total], :user => user} %>
+	<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total], :user => user, :user_data => user_data } %>
   </tr>
 </tbody>
 
@@ -28,12 +28,12 @@
   <tbody class="invisible-issues-summary user-<%= user.id %>-open user-<%= user.id %>-close">
 	<tr>
 	  <th class="invisible-workload-description" scope="row"><%= l(:workload_show_invisible_issues) %> </th>
-	  <%= render :partial => 'summarized_workload_for_invisible_issues', :locals => {:assignee => user, :summarizedWorkload => data[:invisible]} %>
+	  <%= render :partial => 'summarized_workload_for_invisible_issues', :locals => {:assignee => user, :user_data => user_data, :summarizedWorkload => data[:invisible]} %>
 	</tr>
   </tbody>
 <% end %>
 <% # Iterate over all projects for the user %>
 <% projects = data.keys.select{|x| x.kind_of?(Project)} %>
 <% projects.each do |project| %>
-   <%= render :partial => 'workload_for_project', :locals => {:user => user, :project => project, :data => data[project]} %>
+   <%= render :partial => 'workload_for_project', :locals => {:user => user, :user_data => user_data, :project => project, :data => data[project]} %>
 <% end %>

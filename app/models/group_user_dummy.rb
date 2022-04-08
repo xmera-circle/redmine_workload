@@ -21,6 +21,10 @@ class GroupUserDummy
     self.group = group
   end
 
+  def wl_user_data
+    nil
+  end
+
   def groups
     [group]
   end

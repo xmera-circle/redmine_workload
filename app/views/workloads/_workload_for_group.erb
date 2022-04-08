@@ -20,7 +20,8 @@
 	  <% end %>
 	</th>
 	<% # Print the total workload for this group for each day %>
-	<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total], :user => GroupUserDummy.new(group: group) } %>
+	<% user = GroupUserDummy.new(group: group) %>
+	<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total], :user => user, :user_data => user.wl_user_data } %>
   </tr>
 </tbody>
 <% if data[:invisible].presence %>
@@ -34,5 +35,5 @@
 <% # Iterate over all assignees for the group %>
 <% assignees = data.keys.select{|key| key.kind_of?(User) || key.kind_of?(Group) || key.kind_of?(GroupUserDummy) } %>
 <% assignees.each do |assignee| %>
-  <%= render :partial => 'workload_for_user_in_group', :locals => {:group => group, :user => assignee, :data => data[assignee]} %>
+  <%= render :partial => 'workload_for_user_in_group', :locals => {:group => group, :user => assignee, :user_data => assignee.wl_user_data, :data => data[assignee]} %>
 <% end %>
