@@ -38,6 +38,7 @@ class WorkloadsController < ApplicationController
 
     @months_to_render = DateTools.months_in_time_span(@time_span_to_display)
     @workloadData   = ListUser.hours_per_user_issue_and_day(@issues_for_workload, @time_span_to_display, @today)
+
     @group_workload = GroupWorkload.new(users: @users,
                                         user_workload: @workloadData,
                                         time_span: @time_span_to_display)

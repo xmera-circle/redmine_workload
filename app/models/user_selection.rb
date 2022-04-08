@@ -14,10 +14,11 @@ class UserSelection
     self.user = params[:user] || User.current
     self.users = params[:users] || []
     self.groups = params[:group_selection]
+    self.selected_groups = groups.selected
   end
 
   def all
-    selected_groups.presence ? (selected_groups | selected) : selected
+    selected_groups | selected
   end
 
   ##
@@ -37,12 +38,12 @@ class UserSelection
 
   private
 
-  attr_accessor :user, :users
+  attr_accessor :user, :users, :selected_groups
   attr_writer :groups
 
   ##
   # If groups are given the method will query those users having one of the given
-  # groups as main group. If no groups are given the users_by_params will be 
+  # groups as main group. If no groups are given the users_by_params will be
   # returned instead.
   #
   # @return [Array(User)] An array of user objects.
@@ -52,9 +53,7 @@ class UserSelection
 
     return users_by_params if groups.selected.blank?
 
-    selected_users.select do |user|
-      user.wl_user_data.presence
-    end
+    selected_users.select(&:wl_user_data)
   end
 
   ##
@@ -77,7 +76,10 @@ class UserSelection
   end
 
   def all_users
-    User.active
+    all = User.joins(:groups).distinct
+    return all.joins(:wl_user_data).active if selected_groups.present?
+
+    all.active
   end
 
   ##
@@ -108,10 +110,6 @@ class UserSelection
   def users_of_groups
     result = selected_groups.map { |group| group.users.to_a }.flatten
     result.uniq
-  end
-
-  def selected_groups
-    groups.selected
   end
 
   def user_ids

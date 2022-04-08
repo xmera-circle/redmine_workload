@@ -19,6 +19,7 @@ class GroupUserDummy
   #
   def initialize(group:)
     self.group = group
+    self.group_members = find_group_members
   end
 
   def wl_user_data
@@ -48,6 +49,7 @@ class GroupUserDummy
   private
 
   attr_writer :group
+  attr_accessor :group_members
 
   def sum_up(attribute)
     return 0.0 unless group_members.presence
@@ -55,7 +57,7 @@ class GroupUserDummy
     group_members.sum(&attribute.to_sym)
   end
 
-  def group_members
+  def find_group_members
     WlUserData.where(user_id: group_member_ids, main_group: id)
   end
 
