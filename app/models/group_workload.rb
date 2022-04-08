@@ -5,11 +5,12 @@
 # the group user dummy.
 #
 class GroupWorkload
-  def initialize(user_workload:, selected_groups:, time_span:)
+  def initialize(users:, user_workload:, time_span:)
+    self.users = users
     self.user_workload = user_workload
-    self.selected_groups = selected_groups
-    self.group_members = select_group_members
     self.time_span = time_span
+    self.selected_groups = users.groups.selected
+    self.group_members = select_group_members
   end
 
   ##
@@ -25,7 +26,7 @@ class GroupWorkload
 
   private
 
-  attr_accessor :user_workload, :group_members, :selected_groups, :time_span
+  attr_accessor :users, :user_workload, :selected_groups, :group_members, :time_span
 
   def select_group_members
     selected_groups.each_with_object({}) do |group, hash|
@@ -34,7 +35,28 @@ class GroupWorkload
   end
 
   def sorted_user_workload
-    user_workload.sort_by { |user, _data| [user.class.name, user.lastname] }.to_h
+    user_workload_with_availabilities.sort_by { |user, _data| [user.class.name, user.lastname] }.to_h
+  end
+
+  def user_workload_with_availabilities
+    availabilities = users.selected - assignees
+    availabilities.each do |user|
+      user_workload[user] = { total: total_availabilities_of(user) }
+    end
+    user_workload
+  end
+
+  def total_availabilities_of(user)
+    working_days = DateTools.working_days_in_time_span(time_span, user.id)
+    time_span.each_with_object({}) do |day, hash|
+      hash[day] = {}
+      hash[day][:hours] = 0.0
+      hash[day][:holiday] = working_days.exclude?(day)
+    end
+  end
+
+  def assignees
+    user_workload.keys
   end
 
   def summarize_over_group_members(group)

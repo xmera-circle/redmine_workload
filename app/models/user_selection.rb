@@ -4,6 +4,8 @@
 # Presenter organising users to be used in views/workloads/_filers.erb.
 #
 class UserSelection
+  attr_reader :groups
+
   ##
   # @param users [User] Selected user objects.
   # @param groups [GroupSelection] GroupSelection object.
@@ -12,6 +14,10 @@ class UserSelection
     self.user = params[:user] || User.current
     self.users = params[:users] || []
     self.groups = params[:group_selection]
+  end
+
+  def all
+    selected_groups.presence ? (selected_groups | selected) : selected
   end
 
   ##
@@ -31,7 +37,8 @@ class UserSelection
 
   private
 
-  attr_accessor :user, :users, :groups
+  attr_accessor :user, :users
+  attr_writer :groups
 
   ##
   # If groups are given the method will query those users having one of the given
