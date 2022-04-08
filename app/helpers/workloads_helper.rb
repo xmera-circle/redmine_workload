@@ -43,7 +43,7 @@ module WorkloadsHelper
     default_normalload = Setting['plugin_redmine_workload']['threshold_normalload_min'].to_f
     default_highload = Setting['plugin_redmine_workload']['threshold_highload_min'].to_f
 
-    workload = assignee.is_a?(User) ? WlUserData.find_by(user_id: assignee.id) : assignee
+    workload = assignee.is_a?(User) ? assignee.wl_user_data : assignee
 
     lowload     = workload&.threshold_lowload_min || default_lowload
     normalload  = workload&.threshold_normalload_min || default_normalload

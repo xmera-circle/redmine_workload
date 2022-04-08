@@ -52,9 +52,8 @@ class UserSelection
 
     return users_by_params if groups.selected.blank?
 
-    user_data = WlUserData.where(user_id: users_of_groups.map(&:id), main_group: selected_groups.map(&:id))
     selected_users.select do |user|
-      user_data.map(&:user_id).include? user.id
+      user.wl_user_data.presence
     end
   end
 
