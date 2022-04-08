@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'redmine_workload/extensions/user_patch'
 require 'redmine_workload/date_tools'
 require 'redmine_workload/list_user'
 require 'redmine_workload/wl_user_data_finder'

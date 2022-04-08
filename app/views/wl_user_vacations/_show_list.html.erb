@@ -10,7 +10,7 @@
 				<% end %>
 			</tr></thead>
 			<tbody>
-		<% for vacation in wl_user_vacation -%>
+		<% for vacation in wl_user_vacations -%>
 			<tr class="<%= cycle("odd", "even") %>">
 				<td><%= vacation.date_from.blank? ? '' : vacation.date_from.to_date.to_s %></td>
 				<td><%= vacation.date_to.blank? ? '' : vacation.date_to.to_date.to_s %></td>
