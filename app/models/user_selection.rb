@@ -19,7 +19,7 @@ class UserSelection
   #
   # @return [Array(User)] An array of user objects.
   def selected
-    (users_of_groups | users_by_params) & allowed_to_display
+    (users_from_context & allowed_to_display) | [user]
   end
 
   ##
@@ -34,6 +34,24 @@ class UserSelection
   attr_accessor :user, :users, :groups
 
   ##
+  # If groups are given the method will query those users having one of the given
+  # groups as main group. If no groups are given the users_by_params will be 
+  # returned instead.
+  #
+  # @return [Array(User)] An array of user objects.
+  #
+  def users_from_context
+    selected_users = users_of_groups | users_by_params
+
+    return users_by_params if groups.selected.blank?
+
+    user_data = WlUserData.where(user_id: users_of_groups.map(&:id), main_group: selected_groups.map(&:id))
+    selected_users.select do |user|
+      user_data.map(&:user_id).include? user.id
+    end
+  end
+
+  ##
   # Collects all users across all projects where the given user has the permission
   # to view the project workload.
   #
@@ -44,9 +62,11 @@ class UserSelection
     return all_users if user.admin? || allowed_to?(:view_all_workloads)
 
     result = group_members_allowed_to(:view_own_group_workloads)
-    return [] if result.blank? && !allowed_to?(:view_own_workloads)
 
-    result << user
+    if result.blank?
+      result = allowed_to?(:view_own_workloads) ? [user] : []
+    end
+
     result.flatten.uniq
   end
 
@@ -55,7 +75,7 @@ class UserSelection
   end
 
   ##
-  # Get all active users of groups where the user has a membership.
+  # Get all active users of groups where the current user has a membership.
   #
   # @param permission [String|Symbol] Permission name.
   # @return [Array(User)] An array of user objects.
@@ -81,7 +101,6 @@ class UserSelection
   #
   def users_of_groups
     result = selected_groups.map { |group| group.users.to_a }.flatten
-    result << user
     result.uniq
   end
 
