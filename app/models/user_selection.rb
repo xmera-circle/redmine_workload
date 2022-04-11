@@ -50,7 +50,6 @@ class UserSelection
   #
   def users_from_context
     selected_users = users_of_groups | users_by_params
-
     return users_by_params if groups.selected.blank?
 
     selected_users.select(&:wl_user_data)
