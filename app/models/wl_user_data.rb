@@ -4,7 +4,7 @@
 # Holds user related data for workload calculation.
 #
 class WlUserData < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, inverse_of: :wl_user_data, optional: true
   self.table_name = 'wl_user_datas'
 
   validates :threshold_lowload_min, :threshold_normalload_min, :threshold_highload_min, presence: true

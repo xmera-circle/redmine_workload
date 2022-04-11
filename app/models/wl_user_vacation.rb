@@ -3,7 +3,7 @@
 class WlUserVacation < ActiveRecord::Base
   unloadable
 
-  belongs_to :user
+  belongs_to :user, inverse_of: :wl_user_data, optional: true
 
   validates :date_from, date: true
   validates :date_to, date: true

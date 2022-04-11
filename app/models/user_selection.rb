@@ -4,6 +4,8 @@
 # Presenter organising users to be used in views/workloads/_filers.erb.
 #
 class UserSelection
+  attr_reader :groups
+
   ##
   # @param users [User] Selected user objects.
   # @param groups [GroupSelection] GroupSelection object.
@@ -12,6 +14,11 @@ class UserSelection
     self.user = params[:user] || User.current
     self.users = params[:users] || []
     self.groups = params[:group_selection]
+    self.selected_groups = groups.selected
+  end
+
+  def all
+    selected_groups | selected
   end
 
   ##
@@ -19,7 +26,7 @@ class UserSelection
   #
   # @return [Array(User)] An array of user objects.
   def selected
-    (users_of_groups | users_by_params) & allowed_to_display
+    (users_from_context & allowed_to_display) | [user]
   end
 
   ##
@@ -31,7 +38,22 @@ class UserSelection
 
   private
 
-  attr_accessor :user, :users, :groups
+  attr_accessor :user, :users, :selected_groups
+  attr_writer :groups
+
+  ##
+  # If groups are given the method will query those users having one of the given
+  # groups as main group. If no groups are given the users_by_params will be
+  # returned instead.
+  #
+  # @return [Array(User)] An array of user objects.
+  #
+  def users_from_context
+    selected_users = users_of_groups | users_by_params
+    return users_by_params if groups.selected.blank?
+
+    selected_users.select(&:wl_user_data)
+  end
 
   ##
   # Collects all users across all projects where the given user has the permission
@@ -44,18 +66,23 @@ class UserSelection
     return all_users if user.admin? || allowed_to?(:view_all_workloads)
 
     result = group_members_allowed_to(:view_own_group_workloads)
-    return [] if result.blank? && !allowed_to?(:view_own_workloads)
 
-    result << user
+    if result.blank?
+      result = allowed_to?(:view_own_workloads) ? [user] : []
+    end
+
     result.flatten.uniq
   end
 
   def all_users
-    User.active
+    all = User.joins(:groups).distinct
+    return all.joins(:wl_user_data).active if selected_groups.present?
+
+    all.active
   end
 
   ##
-  # Get all active users of groups where the user has a membership.
+  # Get all active users of groups where the current user has a membership.
   #
   # @param permission [String|Symbol] Permission name.
   # @return [Array(User)] An array of user objects.
@@ -81,12 +108,7 @@ class UserSelection
   #
   def users_of_groups
     result = selected_groups.map { |group| group.users.to_a }.flatten
-    result << user
     result.uniq
-  end
-
-  def selected_groups
-    groups.selected
   end
 
   def user_ids

@@ -42,7 +42,7 @@ class GroupSelection
   end
 
   def all_groups
-    Group.all.to_a
+    Group.includes(users: :wl_user_data).distinct.all.to_a
   end
 
   def own_groups
@@ -50,7 +50,7 @@ class GroupSelection
   end
 
   def groups_by_params
-    Group.where(id: group_ids).to_a
+    Group.joins(users: :wl_user_data).distinct.where(id: group_ids).to_a
   end
 
   def group_ids

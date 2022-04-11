@@ -21,11 +21,11 @@ module WorkloadsHelper
   # @param [User] A user object.
   # @return [String] The css class for highlighting the hours in the workload table.
   #
-  def load_class_for_hours(hours, assignee = nil)
+  def load_class_for_hours(hours, user, user_data = nil)
     raise ArgumentError unless hours.respond_to?(:to_f)
 
     hours = hours.to_f
-    lowload, normalload, highload = threshold_values_of(assignee)
+    lowload, normalload, highload = threshold_values(user, user_data)
 
     if hours < lowload
       'none'
@@ -38,12 +38,12 @@ module WorkloadsHelper
     end
   end
 
-  def threshold_values_of(assignee)
+  def threshold_values(user, user_data)
     default_lowload = Setting['plugin_redmine_workload']['threshold_lowload_min'].to_f
     default_normalload = Setting['plugin_redmine_workload']['threshold_normalload_min'].to_f
     default_highload = Setting['plugin_redmine_workload']['threshold_highload_min'].to_f
 
-    workload = assignee.is_a?(User) ? WlUserData.find_by(user_id: assignee.id) : assignee
+    workload = user_data || user
 
     lowload     = workload&.threshold_lowload_min || default_lowload
     normalload  = workload&.threshold_normalload_min || default_normalload

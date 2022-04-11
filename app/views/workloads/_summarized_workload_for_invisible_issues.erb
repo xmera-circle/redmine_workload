@@ -10,7 +10,7 @@
      klass  = 'hours'
      klass += ' holiday' if summarizedWorkload[day][:holiday]
      klass += ' today'   if @today === day
-     klass += ' ' + load_class_for_hours(summarizedWorkload[day][:hours])
+     klass += ' ' + load_class_for_hours(summarizedWorkload[day][:hours], assignee)
 
      hoursString = (summarizedWorkload[day][:hours].abs < 0.01) ? '' : sprintf("%.1f", summarizedWorkload[day][:hours], assignee)
   %>
