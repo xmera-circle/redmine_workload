@@ -4,9 +4,14 @@ require File.expand_path('../test_helper', __dir__)
 
 class ListUserTest < ActiveSupport::TestCase
   include WorkloadsHelper
+  include WlUserDataDefaults
 
   fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
            :users, :issue_statuses, :enumerations, :roles
+
+  def setup
+    @manager = Role.find_by(name: 'Manager')
+  end
 
   def teardown
     User.current = nil
@@ -16,18 +21,18 @@ class ListUserTest < ActiveSupport::TestCase
     assert_equal [], ListUser.open_issues_for_users([])
   end
 
-  test 'open_issues_for_users returns only issues of interesting users' do
+  test 'open_issues_for_users returns only issues of given users' do
     user1 = User.generate!
     user2 = User.generate!
 
     project1 = Project.generate!
 
-    User.add_to_project(user1, project1, Role.find_by_name('Manager'))
-    User.add_to_project(user2, project1, Role.find_by_name('Manager'))
+    User.add_to_project(user1, project1, @manager)
+    User.add_to_project(user2, project1, @manager)
 
-    issue1 = Issue.generate!(assigned_to: user1,
-                             status: IssueStatus.find(1), # New, not closed
-                             project: project1)
+    Issue.generate!(assigned_to: user1,
+                    status: IssueStatus.find(1), # New, not closed
+                    project: project1)
 
     issue2 = Issue.generate!(assigned_to: user2,
                              status: IssueStatus.find(1), # New, not closed
@@ -40,66 +45,19 @@ class ListUserTest < ActiveSupport::TestCase
     user = User.generate!
     project1 = Project.generate!
 
-    User.add_to_project(user, project1, Role.find_by_name('Manager'))
+    User.add_to_project(user, project1, @manager)
 
     issue1 = Issue.generate!(assigned_to: user,
-                             # :status => IssueStatus.find(6), # rejected, closed
-                             # :status_id => 2,
                              project: project1)
-    issue1.status_id = 2
+    issue1.status_id = 2 # rejected
     issue1.status.update! is_closed: true
     issue1.save!
 
     issue2 = Issue.generate!(assigned_to: user,
-                             # :status => IssueStatus.find(1), # New, not closed
-                             status_id: 1,
+                             status_id: 1, # new
                              project: project1)
 
     assert_equal [issue2], ListUser.open_issues_for_users([user])
-  end
-
-  test 'getMonthsBetween returns [] if last day after first day' do
-    first_day = Date.new(2012, 3, 29)
-    last_day = Date.new(2012, 3, 28)
-
-    assert_equal [], DateTools.months_in_time_span(first_day..last_day)
-  end
-
-  test 'getMonthsBetween returns [3] if both days in march 2012 and equal' do
-    first_day = Date.new(2012, 3, 27)
-    last_day = Date.new(2012, 3, 27)
-
-    expected = [3]
-    current = months_numbers_in_time_span(first_day, last_day)
-    assert_equal expected, current.flatten.uniq
-  end
-
-  test 'months_in_time_span returns [3] if both days in march 2012 and different' do
-    first_day = Date.new(2012, 3, 27)
-    last_day = Date.new(2012, 3, 28)
-
-    expected = [3]
-    current = months_numbers_in_time_span(first_day, last_day)
-    assert_equal expected, current.flatten.uniq
-  end
-
-  test 'months_in_time_span returns [3, 4, 5] if first day in march and last day in may' do
-    first_day = Date.new(2012, 3, 31)
-    last_day = Date.new(2012, 5, 1)
-
-    expected = [3, 4, 5]
-    current = months_numbers_in_time_span(first_day, last_day)
-
-    assert_equal expected, current.flatten.uniq
-  end
-
-  test 'getMonthsBetween returns correct result timespan overlaps year boundary' do
-    first_day = Date.new(2011, 3, 3)
-    last_day = Date.new(2012, 5, 1)
-
-    expected = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2]
-    current = months_numbers_in_time_span(first_day, last_day)
-    assert_equal expected, current.flatten.uniq
   end
 
   test 'hours_for_issue_per_day returns {} if time span empty' do
@@ -625,55 +583,49 @@ class ListUserTest < ActiveSupport::TestCase
   end
 
   test 'load_class_for_hours returns "none" for workloads below threshold for low workload' do
-    Setting['plugin_redmine_workload']['threshold_lowload_min'] = 0.1
-    Setting['plugin_redmine_workload']['threshold_normalload_min'] = 5.0
-    Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
+    settings['threshold_lowload_min'] = 0.1
+    settings['threshold_normalload_min'] = 5.0
+    settings['threshold_highload_min'] = 7.0
 
     assert_equal 'none', load_class_for_hours(0.05)
   end
 
   test 'load_class_for_hours returns "low" for workloads between thresholds for low and normal workload' do
-    Setting['plugin_redmine_workload']['threshold_lowload_min'] = 0.1
-    Setting['plugin_redmine_workload']['threshold_normalload_min'] = 5.0
-    Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
+    settings['threshold_lowload_min'] = 0.1
+    settings['threshold_normalload_min'] = 5.0
+    settings['threshold_highload_min'] = 7.0
 
     assert_equal 'low', load_class_for_hours(3.5)
   end
 
   test 'load_class_for_hours returns "normal" for workloads between thresholds for normal and high workload' do
-    Setting['plugin_redmine_workload']['threshold_lowload_min'] = 0.1
-    Setting['plugin_redmine_workload']['threshold_normalload_min'] = 2.0
-    Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
+    settings['threshold_lowload_min'] = 0.1
+    settings['threshold_normalload_min'] = 2.0
+    settings['threshold_highload_min'] = 7.0
 
     assert_equal 'normal', load_class_for_hours(3.5)
   end
 
   test 'load_class_for_hours returns "high" for workloads above threshold for high workload' do
-    Setting['plugin_redmine_workload']['threshold_lowload_min'] = 0.1
-    Setting['plugin_redmine_workload']['threshold_normalload_min'] = 2.0
-    Setting['plugin_redmine_workload']['threshold_highload_min'] = 7.0
+    settings['threshold_lowload_min'] = 0.1
+    settings['threshold_normalload_min'] = 2.0
+    settings['threshold_highload_min'] = 7.0
 
     assert_equal 'high', load_class_for_hours(10.5)
   end
 
   private
 
-  def months_numbers_in_time_span(first_day, last_day)
-    DateTools.months_in_time_span(first_day..last_day).map do |span|
-      [span[:first_day].month, span[:last_day].month]
-    end
-  end
-
   # Set Saturday, Sunday and Wednesday to be a holiday, all others to be a
   # working day.
   def define_saturday_sunday_and_wednesday_as_holiday
-    Setting['plugin_redmine_workload']['general_workday_monday'] = 'checked'
-    Setting['plugin_redmine_workload']['general_workday_tuesday'] = 'checked'
-    Setting['plugin_redmine_workload']['general_workday_wednesday'] = ''
-    Setting['plugin_redmine_workload']['general_workday_thursday'] = 'checked'
-    Setting['plugin_redmine_workload']['general_workday_friday'] = 'checked'
-    Setting['plugin_redmine_workload']['general_workday_saturday'] = ''
-    Setting['plugin_redmine_workload']['general_workday_sunday'] = ''
+    settings['general_workday_monday'] = 'checked'
+    settings['general_workday_tuesday'] = 'checked'
+    settings['general_workday_wednesday'] = ''
+    settings['general_workday_thursday'] = 'checked'
+    settings['general_workday_friday'] = 'checked'
+    settings['general_workday_saturday'] = ''
+    settings['general_workday_sunday'] = ''
   end
 
   def assert_issue_times_hash_equals(expected, actual)

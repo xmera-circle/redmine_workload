@@ -21,7 +21,7 @@
 	  <% end %>
 	</th>
 	<% # Print the total workload for this project for each day %>
-	<%= render :partial => 'total_workload', :locals => { :totalWorkload => data[:total], :user => user, :user_data => user_data } %>
+	<%= render :partial => 'total_workload', :locals => { :totalWorkload => data[:total], :user => user } %>
   </tr>
 </tbody>
 <tbody class="issue-workloads <%= css_group_user_project_class(group&.id, user&.id, project&.id) %>">
@@ -29,6 +29,6 @@
   <% issuesForUser = data.keys.select{|x| x.kind_of?(Issue)} %>
      <% issuesForUser.each_with_index do |issue, index| %>
 
-     <%= render :partial => 'workload_for_issue', :locals => { :group => group, :user => user, :issue => issue, :data => data[issue], :index => index, :user_data => user_data } %>
+     <%= render :partial => 'workload_for_issue', :locals => { :group => group, :user => user, :issue => issue, :data => data[issue], :index => index } %>
   <% end %>
 </tbody>

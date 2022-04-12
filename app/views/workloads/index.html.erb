@@ -37,7 +37,6 @@
         <%= render :partial => 'workload_for_user',
                    :locals => { :group => nil,
                                 :user => user,
-                                :user_data => user.wl_user_data,
                                 :data => @workloadData[user] }
         %>
       <% end %>

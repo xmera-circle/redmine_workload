@@ -14,7 +14,7 @@ class UserSelection
     self.user = params[:user] || User.current
     self.users = params[:users] || []
     self.groups = params[:group_selection]
-    self.selected_groups = groups.selected
+    self.selected_groups = groups&.selected
   end
 
   def all
@@ -86,6 +86,8 @@ class UserSelection
   #
   # @param permission [String|Symbol] Permission name.
   # @return [Array(User)] An array of user objects.
+  #
+  # @note user.groups does not return the user itself as group member!
   #
   def group_members_allowed_to(permission)
     return [] unless allowed_to?(permission)
