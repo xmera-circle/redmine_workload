@@ -5,13 +5,13 @@
 #  * data: The data to render. A hash with issues as keys.
 %>
 
-<tbody class="user-total-workload-in-group group-<%= group.id %>-open group-<%= group.id %>-close" id="user-total-workload-<%= user.id %>">
+<tbody class="user-total-workload-in-<%= css_group_class(group&.id) %> user-total-workload <%= css_user_class(user&.id) %>">
   <tr>
-	<th class="user-description" scope="row" title="<%= l(:workload_trigger_tooltip) %>">
-	  <%= render :partial => 'trigger', :locals => {:trigger_for => "user-#{user.id}"} %>
+	<th class="user-description <%= css_group_class(group&.id) %> <%= css_user_class(user&.id) %>" scope="row" title="<%= l(:workload_trigger_tooltip) %>">
+	  <%= render :partial => 'trigger', :locals => { :trigger_for => css_group_user_class(group&.id, user&.id) } %>
 	  <%= "#{user.firstname} #{user.lastname}" %>
 	  <% if data[:overdue_number] && data[:overdue_number].positive? %>
-		<dl class="additional-user-info user-<%= user.id %>-open user-<%= user.id %>-close">
+		<dl class="additional-user-info">
 		  <dt><%= l(:workload_overdue_issues_num) %></dt>
 		  <dd><%= data[:overdue_number] %></dd>
 		  <dt><%= l(:workload_overdue_issues_hours) %></dt>
@@ -21,21 +21,21 @@
 	</th>
 	<% # Print the total workload for this user for each day %>
 	<% if data[:total].presence %>
-		<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total], :user => user, :user_data => user_data} %>
+		<%= render :partial => 'total_workload', :locals => {:totalWorkload => data[:total], :user => user} %>
 	<% end %>
   </tr>
 </tbody>
 
 <% if data[:invisible].presence %>
-  <tbody class="invisible-issues-summary user-<%= user.id %>-open user-<%= user.id %>-close">
+  <tbody class="invisible-issues-summary <%= css_group_class(group&.id) %>">
 	<tr>
 	  <th class="invisible-workload-description" scope="row"><%= l(:workload_show_invisible_issues) %> </th>
-	  <%= render :partial => 'summarized_workload_for_invisible_issues', :locals => {:assignee => user, :summarizedWorkload => data[:invisible], :user_data => user_data} %>
+	  <%= render :partial => 'summarized_workload_for_invisible_issues', :locals => {:assignee => user, :summarizedWorkload => data[:invisible]} %>
 	</tr>
   </tbody>
 <% end %>
 <% # Iterate over all projects for the user %>
 <% projects = data.keys.select{|x| x.kind_of?(Project)} %>
 <% projects.each do |project| %>
-   <%= render :partial => 'workload_for_project', :locals => {:user => user, :user_data => user_data, :project => project, :data => data[project]} %>
+   <%= render :partial => 'workload_for_project', :locals => {:user => user, :group => group, :project => project, :data => data[project]} %>
 <% end %>

@@ -19,7 +19,7 @@ module WorkloadFiltersHelper
     groupsToShow.each do |group|
       selected = selectedGroups.include?(group) ? 'selected="selected"' : ''
 
-      result += "<option value=\"#{h(group.id)}\" #{selected}>#{h(group.lastname)}</option>"
+      result += "<option value=\"#{h(group&.id)}\" #{selected}>#{h(group.lastname)}</option>"
     end
 
     result.html_safe

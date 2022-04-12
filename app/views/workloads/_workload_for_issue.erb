@@ -12,7 +12,7 @@
   klass += ' overdue' if !issue.due_date.nil? && (issue.due_date < @today)
 %>
 
-<tr class="issue-workload <%= klass %>">
+<tr class="issue-workloads <%= css_group_user_project_class(group&.id, user&.id, issue.project&.id) %> <%= klass %>">
   <th class="issue-description" scope="row">
     <div class="tooltip"><%= link_to_issue(issue) %>
       <span class="tip"><%= render_issue_tooltip(issue) %></span>
@@ -30,7 +30,7 @@
       klass += ' not-estimated' if  dataForDay[:noEstimate]
       klass += ' estimated'     if !dataForDay[:noEstimate]
       klass += ' today'         if  @today === day
-      klass += ' ' + load_class_for_hours(dataForDay[:hours], user, user_data)
+      klass += ' ' + load_class_for_hours(dataForDay[:hours], user)
 
       hoursString = (dataForDay[:hours].abs < 0.01) ? '' : sprintf("%.1f", dataForDay[:hours])
   %>

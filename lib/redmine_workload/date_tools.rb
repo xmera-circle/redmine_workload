@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+require_relative 'wl_user_data_defaults'
+
 class DateTools
+  extend WlUserDataDefaults
   ##
   # Returns an array with one entry for each month in the given time span.
   # Each entry is a hash with two keys: :first_day and :last_day, having the
@@ -36,13 +39,13 @@ class DateTools
   def self.working_days
     result = Set.new
 
-    result.add(1) if Setting['plugin_redmine_workload']['general_workday_monday'] != ''
-    result.add(2) if Setting['plugin_redmine_workload']['general_workday_tuesday'] != ''
-    result.add(3) if Setting['plugin_redmine_workload']['general_workday_wednesday'] != ''
-    result.add(4) if Setting['plugin_redmine_workload']['general_workday_thursday'] != ''
-    result.add(5) if Setting['plugin_redmine_workload']['general_workday_friday'] != ''
-    result.add(6) if Setting['plugin_redmine_workload']['general_workday_saturday'] != ''
-    result.add(7) if Setting['plugin_redmine_workload']['general_workday_sunday'] != ''
+    result.add(1) if settings['general_workday_monday'] != ''
+    result.add(2) if settings['general_workday_tuesday'] != ''
+    result.add(3) if settings['general_workday_wednesday'] != ''
+    result.add(4) if settings['general_workday_thursday'] != ''
+    result.add(5) if settings['general_workday_friday'] != ''
+    result.add(6) if settings['general_workday_saturday'] != ''
+    result.add(7) if settings['general_workday_sunday'] != ''
 
     result
   end

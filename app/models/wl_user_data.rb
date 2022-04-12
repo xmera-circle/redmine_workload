@@ -4,6 +4,8 @@
 # Holds user related data for workload calculation.
 #
 class WlUserData < ActiveRecord::Base
+  include WlUserDataDefaults
+
   belongs_to :user, inverse_of: :wl_user_data, optional: true
   self.table_name = 'wl_user_datas'
 
@@ -30,15 +32,5 @@ class WlUserData < ActiveRecord::Base
 
   def own_group?(user)
     self.class.own_groups(user).pluck(:id).include? main_group
-  end
-
-  def default_attributes
-    { threshold_lowload_min: settings['threshold_lowload_min'],
-      threshold_normalload_min: settings['threshold_normalload_min'],
-      threshold_highload_min: settings['threshold_highload_min'] }
-  end
-
-  def settings
-    Setting['plugin_redmine_workload']
   end
 end
