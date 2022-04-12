@@ -6,13 +6,13 @@
 #  * data: The data to render. A hash with issues as keys.
 %>
 
-<tbody class="project-total-workload user-<%= user.id %>-open user-<%= user.id %>-close">
+<tbody class="project-total-workload <%= css_group_user_class(group&.id, user&.id) %>">
   <tr>
-	<th class="project-description" scope="row" title="<%= l(:workload_trigger_tooltip) %>">
-	  <%= render :partial => 'trigger', :locals => {:trigger_for => "project-#{user.id}-#{project.identifier}"} %>
+	<th class="project-description <%=  css_group_user_project_class(group&.id, user&.id, project&.id) %>" scope="row" title="<%= l(:workload_trigger_tooltip) %>">
+	  <%= render :partial => 'trigger', :locals => {:trigger_for => css_group_user_project_class(group&.id, user&.id, project&.id) } %>
 	  <%= project.to_s %>
 	  <% if data[:overdue_number] > 0 %>
-		<dl class="additional-project-info user-<%= user.id %>-close project-<%= user.id %>-<%= project.identifier %>-open project-<%= user.id %>-<%= project.identifier %>-close">
+		<dl class="additional-project-info">
 		  <dt><%= l(:workload_overdue_issues_num) %></dt>
 		  <dd><%= data[:overdue_number] %></dd>
 		  <dt><%= l(:workload_overdue_issues_hours) %></dt>
@@ -24,11 +24,11 @@
 	<%= render :partial => 'total_workload', :locals => { :totalWorkload => data[:total], :user => user, :user_data => user_data } %>
   </tr>
 </tbody>
-<tbody class="issue-workloads user-<%= user.id %>-close project-<%= user.id %>-<%= project.identifier %>-open project-<%= user.id %>-<%= project.identifier %>-close">
+<tbody class="issue-workloads <%= css_group_user_project_class(group&.id, user&.id, project&.id) %>">
   <% # Iterate over all issues for the project %>
   <% issuesForUser = data.keys.select{|x| x.kind_of?(Issue)} %>
      <% issuesForUser.each_with_index do |issue, index| %>
 
-     <%= render :partial => 'workload_for_issue', :locals => { :user => user, :issue => issue, :data => data[issue], :index => index, :user_data => user_data } %>
+     <%= render :partial => 'workload_for_issue', :locals => { :group => group, :user => user, :issue => issue, :data => data[issue], :index => index, :user_data => user_data } %>
   <% end %>
 </tbody>

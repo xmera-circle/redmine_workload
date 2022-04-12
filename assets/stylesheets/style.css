@@ -131,7 +131,7 @@ legend {
 .controller-workloads .data .additional-user-info,
 .controller-workloads .data .additional-project-info,
 .controller-workloads .data .invisible-issues-summary,
-.controller-workloads .data .user-total-workload-in-group,
+.controller-workloads .data tbody[class^="user-total-workload-in-group-"],
 .controller-workloads .data .project-total-workload,
 .controller-workloads .data .issue-workloads {
 	display: none;
@@ -228,23 +228,23 @@ legend {
     background-color: #F6F7F8;
 }
 
-.controller-workloads .data .issue-workload.odd {
+.controller-workloads .data .issue-workloads.odd {
     background-color: #F6F7F8;
 }
 
-.controller-workloads .data .issue-workload.odd.overdue {
+.controller-workloads .data .issue-workloads.odd.overdue {
     background-color: #ecb4b4;
 }
 
-.controller-workloads .data .issue-workload.even {
+.controller-workloads .data .issue-workloads.even {
     background-color: white;
 }
 
-.controller-workloads .data .issue-workload.even.overdue {
+.controller-workloads .data .issue-workloads.even.overdue {
     background-color: #f8d0d0;
 }
 
-.controller-workloads .data .issue-workload:hover,
+.controller-workloads .data .issue-workloads:hover,
 .controller-workloads .data .group-total-workload:hover,
 .controller-workloads .data .user-total-workload:hover,
 .controller-workloads .data .project-total-workload:hover{

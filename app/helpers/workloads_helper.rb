@@ -14,6 +14,49 @@ module WorkloadsHelper
 
   deprecate :workload_admin?, deprecator: RedmineWorkload.major_release_deprecator
 
+  def css_group_user_project_class(group_id, user_id, project_id)
+    "#{css_group_class(group_id)} #{css_user_class(user_id)} #{css_project_class(project_id)}"
+  end
+
+  ##
+  # Writes the css class for a project.
+  # @param project_id [Integer] The project id.
+  #
+  def css_project_class(project_id)
+    return unless project_id
+
+    "project-#{project_id}"
+  end
+
+  ##
+  # Writes the css class for a group and user combined.
+  # @see css_group_class
+  # @see css_user_class
+  #
+  def css_group_user_class(group_id, user_id)
+    "#{css_group_class(group_id)} #{css_user_class(user_id)}"
+  end
+
+  ##
+  # Writes the css class for a group.
+  # @param group_id [Integer] The group id.
+  #
+  def css_group_class(group_id)
+    return unless group_id
+
+    "group-#{group_id}"
+  end
+
+  ##
+  # Writes the css class for a user.
+  # @param user_id [Integer] The user id.
+  #
+  def css_user_class(user_id)
+    return unless user_id
+
+    "user-#{user_id}"
+  end
+
   ##
   # Determines the css class for hours in dependence of the workload level.
   #

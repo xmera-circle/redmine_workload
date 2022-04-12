@@ -12,7 +12,7 @@
   klass += ' overdue' if !issue.due_date.nil? && (issue.due_date < @today)
 %>
 
-<tr class="issue-workload <%= klass %>">
+<tr class="issue-workloads <%= css_group_user_project_class(group&.id, user&.id, issue.project&.id) %> <%= klass %>">
   <th class="issue-description" scope="row">
     <div class="tooltip"><%= link_to_issue(issue) %>
       <span class="tip"><%= render_issue_tooltip(issue) %></span>

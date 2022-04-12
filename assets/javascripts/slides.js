@@ -1,48 +1,63 @@
 /**
-	Collapse the hierarchie tree independently of the hierarchie level where
-	the collapsing will be triggered.
+	Toggle along the hierarchie tree.
+	When opening, open level by level. When closing, close the item with all 
+	lower levels at once.
  */
 
 $(document).ready(function() {
 	$('.trigger').click(function() {
-		var OPEN = '&#x25bc;'
+		var OPENED = '&#x25bc;'
 		var CLOSED = '&#x25b6;'
-		$(this).toggleClass('closed open');
-		affectedObjectsClass = $(this).attr('data-for');
-		hierarchieTree = new Map([
-			["group-description", "user-total-workload-in-group"],
-			["user-description", "project-total-workload"],
-			["project-description", "issue-workloads"]
+		$(this).toggleClass('closed opened');
+
+		identifier = $(this).attr('data-for');
+		identifierClasses = identifier.trim().replace(/\s/g, ".");
+
+		// topDownHierarchieChain shows current hierarchie level on the left and the css
+		// class of the next hierarchie level on the right hand side.
+		topDownHierarchieChain = new Map([
+			["group-description " + identifier, ".user-total-workload-in-" + identifierClasses],
+			["user-description " + identifier, ".project-total-workload." + identifierClasses],
+			["project-description " + identifier, ".issue-workloads." + identifierClasses]
 		]);
-		currentLevel = $(this).parent().attr('class');		
-		if ($(this).hasClass('open')) {
+
+		// bottomUpHierarchies shows current hierarchie level on the left and all  
+		// lower hierarchie levels on the right hand side.
+		bottomUpHierarchieChain = new Map([
+			["group-description " + identifier, [".issue-workloads." + identifierClasses, 
+																					 ".project-total-workload." + identifierClasses, 
+																					 ".user-total-workload-in-" + identifierClasses]],
+			["user-description " + identifier, [".issue-workloads." + identifierClasses,
+																					".project-total-workload." + identifierClasses]],
+			["project-description " + identifier, [".issue-workloads." + identifierClasses]]
+		]);
+
+		currentHierarchieLevel = $(this).parent().attr('class');
+
+		if ($(this).hasClass('opened')) {
 			$(this).show();
+			// Shows additional info
 			$(this).siblings().show();
-			nextLevel = hierarchieTree.get(currentLevel);
-			nextLevelClass = '.' + nextLevel;
-			$(nextLevelClass).each(function(){
-				if ($(this).hasClass(affectedObjectsClass + '-open')) {
-					$(this).show();
-				}
+			// Reveals the next hierarchie level 
+			nextHierarchieLevelClass = topDownHierarchieChain.get(currentHierarchieLevel);
+			$(nextHierarchieLevelClass).each(function(){
+				$(this).show(); // but keep its 'children' closed if any
+				$(this).siblings('.invisible-issues-summary.' + identifierClasses).show();
 			});
-			$(this).html(OPEN);
+			$(this).html(OPENED);
 		}
 		else {
-			if (currentLevel == 'group-description') {
-				hierarchieTree.forEach(function(value, key){
-					nextLevelClass = '.' + value;
-					$(nextLevelClass).hide();
-					current = $(nextLevelClass).find('span.trigger.open').html(CLOSED);
-					current.siblings('dl').hide();
-				})
-				$(this).siblings().hide();
-			}
-			else {
-				$('.' + affectedObjectsClass + '-close').each(function(){
-					$(this).hide();
-					$(this).find('span.trigger.open').html(CLOSED);
-				})
-			}
+			lowerHierarchieLevelClasses = bottomUpHierarchieChain.get(currentHierarchieLevel);
+			// Collapses all lower levels of the currentHierarchieLevel at once 
+			// as defined in bottomUpHierarchieChain.
+			lowerHierarchieLevelClasses.forEach(function(css){
+				$(css).hide();
+				$(css).siblings('.invisible-issues-summary.' + identifierClasses).hide();
+				currentHierarchieLevel = $(css).find('span.trigger.opened');
+				currentHierarchieLevel.html(CLOSED);
+				currentHierarchieLevel.siblings('dl').hide();
+			})
+			$(this).siblings().hide();
 			$(this).html(CLOSED);
 		}
 	});

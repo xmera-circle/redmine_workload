@@ -5,13 +5,13 @@
 #  * data: The data to render. A hash with issues as keys.
 %>
 
-<tbody class="group-total-workload" id="group-total-workload-<%= group.id %>">
+<tbody class="group-total-workload" id="group-total-workload-<%= group&.id %>">
   <tr>
-	<th class="group-description" scope="row" title="<%= l(:workload_trigger_tooltip) %>">
-	  <%= render :partial => 'trigger', :locals => {:trigger_for => "group-#{group.id}"} %>
+	<th class="group-description <%= css_group_class(group&.id) %>" scope="row" title="<%= l(:workload_trigger_tooltip) %>">
+	  <%= render :partial => 'trigger', :locals => {:trigger_for => css_group_class(group&.id)} %>
 	  <%= "#{group.firstname} #{group.lastname}" %>
 	  <% if data[:overdue_number] > 0 %>
-		<dl class="additional-group-info group-<%= group.id %>-open group-<%= group.id %>-close">
+		<dl class="additional-group-info">
 		  <dt><%= l(:workload_overdue_issues_num) %></dt>
 		  <dd><%= data[:overdue_number] %></dd>
 		  <dt><%= l(:workload_overdue_issues_hours) %></dt>
@@ -25,7 +25,7 @@
   </tr>
 </tbody>
 <% if data[:invisible].presence %>
-  <tbody class="invisible-issues-summary group-<%= group.id %>-open group-<%= group.id %>-close">
+  <tbody class="invisible-issues-summary <%= css_group_class(group&.id) %>">
 	<tr>
 	  <th class="invisible-workload-description" scope="row"><%= l(:workload_show_invisible_issues) %> </th>
 	  <%= render :partial => 'summarized_workload_for_invisible_issues', :locals => {:assignee => group, :summarizedWorkload => data[:invisible]} %>
