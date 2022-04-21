@@ -140,6 +140,8 @@ class UserWorkload
     result
   end
 
+  alias by_user hours_per_user_issue_and_day
+
   private
 
   attr_writer :assignees, :issues, :time_span, :today

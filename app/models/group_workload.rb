@@ -5,7 +5,7 @@
 # the group user dummy.
 #
 class GroupWorkload
-  attr_reader :time_span
+  attr_reader :time_span, :user_workload
 
   def initialize(users:, user_workload:, time_span:)
     self.users = users
@@ -28,8 +28,8 @@ class GroupWorkload
 
   private
 
-  attr_accessor :users, :user_workload, :selected_groups, :group_members
-  attr_writer :time_span
+  attr_accessor :users, :selected_groups, :group_members
+  attr_writer :time_span, :user_workload
 
   def select_group_members
     selected_groups.each_with_object({}) do |group, hash|

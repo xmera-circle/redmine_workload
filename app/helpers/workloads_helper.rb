@@ -111,8 +111,6 @@ module WorkloadsHelper
   end
 
   def workloads_to_csv(workload, params)
-    return unless workload.is_a? GroupWorkload
-
     prepare = WlCsvExportPreparer.new(data: workload, params: params)
     Redmine::Export::CSV.generate(encoding: params[:encoding]) do |csv|
       csv << prepare.header_fields

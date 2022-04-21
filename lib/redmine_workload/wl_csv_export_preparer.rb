@@ -11,11 +11,11 @@ class WlCsvExportPreparer
   end
 
   def group_workload
-    data.by_group
+    data.respond_to?(:by_group) ? data.by_group : {}
   end
 
   def user_workload
-    data.send :user_workload
+    data.respond_to?(:by_group) ? data.user_workload : data.by_user
   end
 
   def header_fields
@@ -48,9 +48,9 @@ class WlCsvExportPreparer
   def main_group(assignee)
     return '' unless assignee.respond_to? :wl_user_data
 
-    user_data = assignee.wl_user_data
-    user_group = user_data ? user_data.main_group : assignee.main_group
-    return user_group.name unless user_group.is_a? Integer
+    dummy = assignee.is_a? GroupUserDummy
+    user_group = dummy ? dummy.main_group : assignee.wl_user_data&.main_group
+    return user_group&.name unless user_group.is_a? Integer
 
     assignee.groups.find(user_group)&.name
   end

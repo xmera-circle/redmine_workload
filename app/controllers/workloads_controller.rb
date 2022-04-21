@@ -48,7 +48,7 @@ class WorkloadsController < ApplicationController
                                         user_workload: @workload_data,
                                         time_span: @time_span_to_display)
 
-    @workload = groups?(@groups) ? @group_workload : @workload_data
+    @workload = groups?(@groups) ? @group_workload : user_workload
 
     respond_to do |format|
       format.html do
