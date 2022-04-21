@@ -1,21 +1,18 @@
 # frozen_string_literal: true
 
-class WlCsvExportPreparer
+require 'forwardable'
+
+class WlCsvExporter
   include Redmine::I18n
+  extend Forwardable
+
+  def_delegators :data, :group_workload, :user_workload, :type, :time_span, :main_group
 
   attr_reader :data, :params
 
   def initialize(data:, params:)
-    self.data = data
+    self.data = initialize_data_object(data)
     self.params = params
-  end
-
-  def group_workload
-    data.respond_to?(:by_group) ? data.by_group : {}
-  end
-
-  def user_workload
-    data.respond_to?(:by_group) ? data.user_workload : data.by_user
   end
 
   def header_fields
@@ -37,22 +34,13 @@ class WlCsvExportPreparer
 
   attr_writer :data, :params
 
-  def type(assignee)
-    assignee.is_a?(Group) ? l(:label_aggregation) : assignee.type
+  def initialize_data_object(data)
+    klass = data.class
+    "#{klass}Preparer".constantize.new(data: data, params: params)
   end
 
   def name(assignee)
     assignee.name
-  end
-
-  def main_group(assignee)
-    return '' unless assignee.respond_to? :wl_user_data
-
-    dummy = assignee.is_a? GroupUserDummy
-    user_group = dummy ? dummy.main_group : assignee.wl_user_data&.main_group
-    return user_group&.name unless user_group.is_a? Integer
-
-    assignee.groups.find(user_group)&.name
   end
 
   def overdue_issues(workload)
