@@ -11,7 +11,7 @@ class GroupWorkload
     self.users = users
     self.user_workload = user_workload
     self.time_span = time_span
-    self.selected_groups = users.groups.selected
+    self.selected_groups = users.groups&.selected
     self.group_members = select_group_members
   end
 
@@ -32,7 +32,7 @@ class GroupWorkload
   attr_writer :time_span, :user_workload
 
   def select_group_members
-    selected_groups.each_with_object({}) do |group, hash|
+    selected_groups&.each_with_object({}) do |group, hash|
       hash[group] = sorted_user_workload.select { |user, _data| user.groups.include? group }
     end
   end

@@ -20,15 +20,20 @@ class GroupWorkloadPreparer
   end
 
   def type(assignee)
-    l(:label_aggregation)
+    case assignee.class.name
+    when 'Group'
+      l(:label_aggregation)
+    else
+      assignee.type
+    end
   end
 
   def main_group(assignee)
-    case assignee.class
-    when User
+    case assignee.class.name
+    when 'User'
       user_group = assignee.wl_user_data&.main_group
-      assignee.groups.find(user_group)&.name 
-    when GroupUserDummy
+      assignee.groups.find_by(id: user_group)&.name
+    when 'GroupUserDummy'
       assignee.main_group&.name
     else
       ''

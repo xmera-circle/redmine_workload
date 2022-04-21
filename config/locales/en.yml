@@ -80,3 +80,14 @@ en:
 
   notice_settings_updated: Settings sucessfully updated.
   label_assigned_to_group: Assigned to %{value}
+
+  description_selected_groups: Selected groups
+  description_all_groups: All groups
+  description_selected_users: Selected users
+  description_all_users: All users
+
+  field_main_group: Main group
+  field_number_of_overdue_issues: Number of overdue issues
+  field_number_of_overdue_hours: Hours of overdue issues
+  label_planned: planned
+  label_aggregation: Aggregation

@@ -35,6 +35,8 @@ class WlCsvExporter
   attr_writer :data, :params
 
   def initialize_data_object(data)
+    return unless data
+
     klass = data.class
     "#{klass}Preparer".constantize.new(data: data, params: params)
   end
