@@ -8,9 +8,11 @@ class WorkloadsController < ApplicationController
   helper :projects
   helper :queries
   helper :workload_filters
+  helper :workloads
 
   include QueriesHelper
   include WlUserDataFinder
+  include WorkloadsHelper
 
   before_action :authorize_global, only: %i[index]
   before_action :find_user_workload_data
@@ -34,14 +36,28 @@ class WorkloadsController < ApplicationController
     @users = UserSelection.new(users: workload_params[:users], group_selection: @groups)
 
     assignees = @users.all
-    @issues_for_workload = ListUser.open_issues_for_users(assignees)
+    # @issues_for_workload = ListUser.open_issues_for_users(assignees)
+    user_workload = UserWorkload.new(assignees: assignees,
+                                     time_span: @time_span_to_display,
+                                     today: @today)
 
     @months_to_render = DateTools.months_in_time_span(@time_span_to_display)
-    @workloadData   = ListUser.hours_per_user_issue_and_day(@issues_for_workload, @time_span_to_display, @today)
+    @workload_data = user_workload.hours_per_user_issue_and_day
 
     @group_workload = GroupWorkload.new(users: @users,
-                                        user_workload: @workloadData,
+                                        user_workload: @workload_data,
                                         time_span: @time_span_to_display)
+
+    @workload = groups?(@groups) ? @group_workload : @workload_data
+
+    respond_to do |format|
+      format.html do
+        render action: :index
+      end
+      format.csv do
+        send_data(workloads_to_csv(@workload, params), type: 'text/csv; header=present', filename: 'workload.csv')
+      end
+    end
   end
 
   private

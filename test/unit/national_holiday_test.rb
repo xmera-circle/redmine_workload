@@ -22,7 +22,7 @@ class NationalHolidayTest < ActiveSupport::TestCase
                                     reason: 'Test Holiday')
 
     assert holiday.save, 'Holiday could not be created or saved!'
-    assert DateTools::holiday?(holiday[:start]), '2017-05-30 should be a holiday!'
+    assert DateTools.holiday?(holiday[:start]), '2017-05-30 should be a holiday!'
     assert holiday.destroy, 'Holiday could not be deleted!'
   end
 
@@ -32,11 +32,25 @@ class NationalHolidayTest < ActiveSupport::TestCase
     holiday.save
 
     assert holiday.save, 'Holiday could not be created or saved!'
-    assert DateTools::holiday?(holiday[:start]), '2017-05-30 should be a holiday!'
-    assert DateTools::holiday?(holiday[:end]), '2017-05-31 should be a holiday!'
+    assert DateTools.holiday?(holiday[:start]), '2017-05-30 should be a holiday!'
+    assert DateTools.holiday?(holiday[:end]), '2017-05-31 should be a holiday!'
   end
 
   test 'holiday is not workday' do
+    first_day = Date.new(2017, 5, 15)
+    last_day = Date.new(2017, 5, 19)
+
+    issue = Issue.generate!(
+      start_date: first_day,
+      due_date: last_day,
+      estimated_hours: 40.0,
+      done_ratio: 50
+    )
+    user_workload = UserWorkload.new(assignees: [],
+                                     time_span: first_day..last_day,
+                                     today: first_day,
+                                     issues: [issue])
+
     holiday1 = WlNationalHoliday.new(start: Date.new(2017, 5, 19), end: Date.new(2017, 5, 19),
                                      reason: 'Test Holiday')
     holiday2 = WlNationalHoliday.new(start: Date.new(2017, 5, 16), end: Date.new(2017, 5, 17),
@@ -44,26 +58,16 @@ class NationalHolidayTest < ActiveSupport::TestCase
     holiday1.save
     holiday2.save
 
-    issue = Issue.generate!(
-      start_date: Date.new(2017, 5, 15),
-      due_date: Date.new(2017, 5, 19),
-      estimated_hours: 40.0,
-      done_ratio: 50
-    )
+    result = DateTools.working_days_in_time_span(first_day..last_day, 'all').to_a
 
-    firstDay = Date.new(2017, 5, 15)
-    lastDay = Date.new(2017, 5, 19)
+    assert_equal [first_day, last_day - 1], result, 'Result should only bring 2 workdays!'
 
-    result = DateTools.working_days_in_time_span(firstDay..lastDay, 'all').to_a
+    result = user_workload.send(:hours_for_issue_per_day, issue)
 
-    assert_equal [firstDay, lastDay - 1], result, 'Result should only bring 2 workdays!'
-
-    result = ListUser.send(:hours_for_issue_per_day, issue, firstDay..lastDay, firstDay)
-
-    assert_equal 10.0, result[firstDay][:hours], 'Workday should have 10h load!'
-    assert_equal 0.0, result[firstDay + 1][:hours], 'Workday should be day off for holiday!' # holiday2[:start]
-    assert_equal 0.0, result[firstDay + 2][:hours], 'Workday should be day off for holiday!' # holiday2[:end]
-    assert_equal 10.0, result[firstDay + 3][:hours], 'Workday should have 10h load!'
-    assert_equal 0.0, result[firstDay + 4][:hours], 'Workday should be day off for holiday!' # holiday1[:start]
+    assert_equal 10.0, result[first_day][:hours], 'Workday should have 10h load!'
+    assert_equal 0.0, result[first_day + 1][:hours], 'Workday should be day off for holiday!' # holiday2[:start]
+    assert_equal 0.0, result[first_day + 2][:hours], 'Workday should be day off for holiday!' # holiday2[:end]
+    assert_equal 10.0, result[first_day + 3][:hours], 'Workday should have 10h load!'
+    assert_equal 0.0, result[first_day + 4][:hours], 'Workday should be day off for holiday!' # holiday1[:start]
   end
 end

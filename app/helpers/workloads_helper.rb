@@ -99,4 +99,50 @@ module WorkloadsHelper
 
     user&.wl_user_data || WlDefaultUserData.new
   end
+
+  def groups?(groups)
+    return false unless groups
+
+    groups.selected.presence
+  end
+
+  def filter_type(groups)
+    groups?(groups) ? 'groups' : 'users'
+  end
+
+  def workloads_to_csv(workload, params)
+    return unless workload.is_a? GroupWorkload
+
+    prepare = WlCsvExportPreparer.new(data: workload, params: params)
+    Redmine::Export::CSV.generate(encoding: params[:encoding]) do |csv|
+      csv << prepare.header_fields
+      prepare.group_workload.each do |level, data|
+        csv << prepare.line(level, data)
+      end
+      prepare.user_workload.each do |level, data|
+        csv << prepare.line(level, data)
+      end
+      csv
+    end
+  end
+
+  def workload_params_as_hidden_field_tags(params)
+    tags = ''
+    params[:workload]&.each do |key, value|
+      if value.is_a? Array
+        tags += array_to_hidden_field(key, value)
+      else
+        tags += hidden_field_tag("workload[#{key}]", value)
+      end
+    end
+    tags.html_safe
+  end
+
+  def array_to_hidden_field(key, value)
+    tags = ''
+    value.each do |entry|
+      tags += hidden_field_tag("workload[#{key}][]", entry)
+    end
+    tags
+  end
 end
