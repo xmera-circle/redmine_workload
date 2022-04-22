@@ -32,6 +32,18 @@ class GroupUserDummyTest < ActiveSupport::TestCase
     assert @dummy.respond_to? :lastname
   end
 
+  test 'should respond to name' do
+    assert @dummy.respond_to? :name
+  end
+
+  test 'should respond to main_group' do
+    assert @dummy.respond_to? :main_group
+  end
+
+  test 'should respond to type' do
+    assert @dummy.respond_to? :type
+  end
+
   test 'should respond to threshold_lowload_min' do
     assert @dummy.respond_to? :threshold_lowload_min
   end

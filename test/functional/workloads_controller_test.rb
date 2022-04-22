@@ -23,4 +23,13 @@ class WorkloadsControllerTest < ActionDispatch::IntegrationTest
     get workloads_path
     assert_response :success
   end
+
+  test 'should get index with format csv' do
+    manager = roles :roles_001
+    manager.add_permission! :view_all_workloads
+    log_user('jsmith', 'jsmith')
+
+    get workloads_path(format: 'csv')
+    assert_response :success
+  end
 end

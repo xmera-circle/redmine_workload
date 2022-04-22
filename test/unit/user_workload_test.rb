@@ -2,7 +2,7 @@
 
 require File.expand_path('../test_helper', __dir__)
 
-class ListUserTest < ActiveSupport::TestCase
+class UserWorkloadTest < ActiveSupport::TestCase
   include WorkloadsHelper
   include WlUserDataDefaults
 
@@ -18,7 +18,12 @@ class ListUserTest < ActiveSupport::TestCase
   end
 
   test 'open_issues_for_users returns empty list if no users given' do
-    assert_equal [], ListUser.open_issues_for_users([])
+    first_day = Date.new(2011, 3, 3)
+    last_day = Date.new(2012, 5, 1)
+    user_workload = UserWorkload.new(assignees: [],
+                                     time_span: first_day..last_day,
+                                     today: Time.zone.today)
+    assert_equal [], user_workload.issues
   end
 
   test 'open_issues_for_users returns only issues of given users' do
@@ -38,7 +43,12 @@ class ListUserTest < ActiveSupport::TestCase
                              status: IssueStatus.find(1), # New, not closed
                              project: project1)
 
-    assert_equal [issue2], ListUser.open_issues_for_users([user2])
+    first_day = Date.new(2011, 3, 3)
+    last_day = Date.new(2012, 5, 1)
+    user_workload = UserWorkload.new(assignees: [user2],
+                                     time_span: first_day..last_day,
+                                     today: Time.zone.today)
+    assert_equal [issue2], user_workload.issues
   end
 
   test 'open_issues_for_users returns only open issues' do
@@ -56,8 +66,13 @@ class ListUserTest < ActiveSupport::TestCase
     issue2 = Issue.generate!(assigned_to: user,
                              status_id: 1, # new
                              project: project1)
+    first_day = Date.new(2011, 3, 3)
+    last_day = Date.new(2012, 5, 1)
+    user_workload = UserWorkload.new(assignees: [user],
+                                     time_span: first_day..last_day,
+                                     today: Time.zone.today)
 
-    assert_equal [issue2], ListUser.open_issues_for_users([user])
+    assert_equal [issue2], user_workload.issues
   end
 
   test 'hours_for_issue_per_day returns {} if time span empty' do
@@ -71,10 +86,12 @@ class ListUserTest < ActiveSupport::TestCase
     first_day = Date.new(2013, 5, 31)
     last_day = Date.new(2013, 5, 29)
 
-    assert_issue_times_hash_equals({}, ListUser.send(:hours_for_issue_per_day,
-                                                     issue,
-                                                     first_day..last_day,
-                                                     first_day))
+    user_workload = UserWorkload.new(assignees: [],
+                                     time_span: first_day..last_day,
+                                     today: last_day)
+
+    assert_issue_times_hash_equals({}, user_workload.send(:hours_for_issue_per_day,
+                                                          issue))
   end
 
   test 'hours_for_issue_per_day works if issue is completely in given time span and nothing done' do
@@ -117,11 +134,13 @@ class ListUserTest < ActiveSupport::TestCase
       }
     }
 
+    user_workload = UserWorkload.new(assignees: [],
+                                     time_span: first_day..last_day,
+                                     today: first_day)
+
     assert_issue_times_hash_equals expected_result,
-                                   ListUser.send(:hours_for_issue_per_day,
-                                                 issue,
-                                                 first_day..last_day,
-                                                 first_day)
+                                   user_workload.send(:hours_for_issue_per_day,
+                                                      issue)
   end
 
   test 'hours_for_issue_per_day works if issue lasts after time span and done_ratio > 0' do
@@ -169,11 +188,13 @@ class ListUserTest < ActiveSupport::TestCase
       }
     }
 
+    user_workload = UserWorkload.new(assignees: [],
+                                     time_span: first_day..last_day,
+                                     today: first_day)
+
     assert_issue_times_hash_equals expected_result,
-                                   ListUser.send(:hours_for_issue_per_day,
-                                                 issue,
-                                                 first_day..last_day,
-                                                 first_day)
+                                   user_workload.send(:hours_for_issue_per_day,
+                                                      issue)
   end
 
   test 'hours_for_issue_per_day works if issue starts before time span' do
@@ -222,11 +243,13 @@ class ListUserTest < ActiveSupport::TestCase
       }
     }
 
+    user_workload = UserWorkload.new(assignees: [],
+                                     time_span: first_day..last_day,
+                                     today: first_day)
+
     assert_issue_times_hash_equals expected_result,
-                                   ListUser.send(:hours_for_issue_per_day,
-                                                 issue,
-                                                 first_day..last_day,
-                                                 first_day)
+                                   user_workload.send(:hours_for_issue_per_day,
+                                                      issue)
   end
 
   test 'hours_for_issue_per_day works if issue completely before time span' do
@@ -267,12 +290,13 @@ class ListUserTest < ActiveSupport::TestCase
         holiday: false
       }
     }
+    user_workload = UserWorkload.new(assignees: [],
+                                     time_span: first_day..last_day,
+                                     today: first_day)
 
     assert_issue_times_hash_equals expected_result,
-                                   ListUser.send(:hours_for_issue_per_day,
-                                                 issue,
-                                                 first_day..last_day,
-                                                 first_day)
+                                   user_workload.send(:hours_for_issue_per_day,
+                                                      issue)
   end
 
   test 'hours_for_issue_per_day works if issue has no due date' do
@@ -313,11 +337,13 @@ class ListUserTest < ActiveSupport::TestCase
       }
     }
 
+    user_workload = UserWorkload.new(assignees: [],
+                                     time_span: first_day..last_day,
+                                     today: first_day)
+
     assert_issue_times_hash_equals expected_result,
-                                   ListUser.send(:hours_for_issue_per_day,
-                                                 issue,
-                                                 first_day..last_day,
-                                                 first_day)
+                                   user_workload.send(:hours_for_issue_per_day,
+                                                      issue)
   end
 
   test 'hours_for_issue_per_day works if issue has no start date' do
@@ -357,12 +383,13 @@ class ListUserTest < ActiveSupport::TestCase
         holiday: false
       }
     }
+    user_workload = UserWorkload.new(assignees: [],
+                                     time_span: first_day..last_day,
+                                     today: first_day)
 
     assert_issue_times_hash_equals expected_result,
-                                   ListUser.send(:hours_for_issue_per_day,
-                                                 issue,
-                                                 first_day..last_day,
-                                                 first_day)
+                                   user_workload.send(:hours_for_issue_per_day,
+                                                      issue)
   end
 
   test 'hours_for_issue_per_day works if in time span and issue overdue' do
@@ -425,12 +452,13 @@ class ListUserTest < ActiveSupport::TestCase
         holiday: false
       }
     }
+    user_workload = UserWorkload.new(assignees: [],
+                                     time_span: first_day..last_day,
+                                     today: today)
 
     assert_issue_times_hash_equals expected_result,
-                                   ListUser.send(:hours_for_issue_per_day,
-                                                 issue,
-                                                 first_day..last_day,
-                                                 today)
+                                   user_workload.send(:hours_for_issue_per_day,
+                                                      issue)
   end
 
   test 'hours_for_issue_per_day works if issue is completely in given time span, but has started' do
@@ -491,12 +519,13 @@ class ListUserTest < ActiveSupport::TestCase
         holiday: true
       }
     }
+    user_workload = UserWorkload.new(assignees: [],
+                                     time_span: first_day..last_day,
+                                     today: today)
 
     assert_issue_times_hash_equals expected_result,
-                                   ListUser.send(:hours_for_issue_per_day,
-                                                 issue,
-                                                 first_day..last_day,
-                                                 today)
+                                   user_workload.send(:hours_for_issue_per_day,
+                                                      issue)
   end
 
   test 'hours_per_user_issue_and_day returns correct structure' do
@@ -532,26 +561,34 @@ class ListUserTest < ActiveSupport::TestCase
     last_day = Date.new(2013, 6, 4)
     today = Date.new(2013, 5, 31)
 
-    workloadData = ListUser.hours_per_user_issue_and_day(Issue.assigned_to(user).to_a,
-                                                         first_day..last_day,
-                                                         today)
+    user_workload = UserWorkload.new(assignees: [],
+                                     time_span: first_day..last_day,
+                                     today: today,
+                                     issues: Issue.assigned_to(user).to_a)
 
-    assert workloadData.key?(user)
+    workload_data = user_workload.hours_per_user_issue_and_day
+
+    assert workload_data.key?(user)
 
     # Check structure returns the 4 elements :overdue_hours, :overdue_number, :total, :invisible
     # AND 2 Projects
-    assert_equal 6, workloadData[user].keys.count
-    assert workloadData[user].key?(:overdue_hours)
-    assert workloadData[user].key?(:overdue_number)
-    assert workloadData[user].key?(:total)
-    assert workloadData[user].key?(:invisible)
-    assert workloadData[user].key?(project1)
-    assert workloadData[user].key?(project2)
+    assert_equal 6, workload_data[user].keys.count
+    assert workload_data[user].key?(:overdue_hours)
+    assert workload_data[user].key?(:overdue_number)
+    assert workload_data[user].key?(:total)
+    assert workload_data[user].key?(:invisible)
+    assert workload_data[user].key?(project1)
+    assert workload_data[user].key?(project2)
   end
 
   test 'estimated_time_for_issue works for issue without children.' do
     issue = Issue.generate!(estimated_hours: 13.2)
-    assert_in_delta 13.2, ListUser.send(:estimated_time_for_issue, issue), 1e-4
+    first_day = Date.new(2013, 5, 25)
+    last_day = Date.new(2013, 6, 4)
+    user_workload = UserWorkload.new(assignees: [],
+                                     time_span: first_day..last_day,
+                                     today: first_day)
+    assert_in_delta 13.2, user_workload.send(:estimated_time_for_issue, issue), 1e-4
   end
 
   test 'estimated_time_for_issue works for issue with children.' do
@@ -561,10 +598,15 @@ class ListUserTest < ActiveSupport::TestCase
 
     # Force parent to reload so the data from the children is incorporated.
     parent.reload
+    first_day = Date.new(2013, 5, 25)
+    last_day = Date.new(2013, 6, 4)
+    user_workload = UserWorkload.new(assignees: [],
+                                     time_span: first_day..last_day,
+                                     today: first_day)
 
-    assert_in_delta 0.0, ListUser.send(:estimated_time_for_issue, parent), 1e-4
-    assert_in_delta 0.5, ListUser.send(:estimated_time_for_issue, child1), 1e-4
-    assert_in_delta 9.0, ListUser.send(:estimated_time_for_issue, child2), 1e-4
+    assert_in_delta 0.0, user_workload.send(:estimated_time_for_issue, parent), 1e-4
+    assert_in_delta 0.5, user_workload.send(:estimated_time_for_issue, child1), 1e-4
+    assert_in_delta 9.0, user_workload.send(:estimated_time_for_issue, child2), 1e-4
   end
 
   test 'estimated_time_for_issue works for issue with grandchildren.' do
@@ -576,10 +618,15 @@ class ListUserTest < ActiveSupport::TestCase
     # incorporated.
     parent.reload
     child.reload
+    first_day = Date.new(2013, 5, 25)
+    last_day = Date.new(2013, 6, 4)
+    user_workload = UserWorkload.new(assignees: [],
+                                     time_span: first_day..last_day,
+                                     today: first_day)
 
-    assert_in_delta 0.0, ListUser.send(:estimated_time_for_issue, parent), 1e-4
-    assert_in_delta 0.0, ListUser.send(:estimated_time_for_issue, child), 1e-4
-    assert_in_delta 5.4, ListUser.send(:estimated_time_for_issue, grandchild), 1e-4
+    assert_in_delta 0.0, user_workload.send(:estimated_time_for_issue, parent), 1e-4
+    assert_in_delta 0.0, user_workload.send(:estimated_time_for_issue, child), 1e-4
+    assert_in_delta 5.4, user_workload.send(:estimated_time_for_issue, grandchild), 1e-4
   end
 
   test 'load_class_for_hours returns "none" for workloads below threshold for low workload' do

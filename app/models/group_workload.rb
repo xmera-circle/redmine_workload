@@ -5,18 +5,20 @@
 # the group user dummy.
 #
 class GroupWorkload
+  attr_reader :time_span, :user_workload
+
   def initialize(users:, user_workload:, time_span:)
     self.users = users
     self.user_workload = user_workload
     self.time_span = time_span
-    self.selected_groups = users.groups.selected
+    self.selected_groups = users.groups&.selected
     self.group_members = select_group_members
   end
 
   ##
   #
-  # @return [Hash(Group, ListUser.hours_per_user_issue_and_day)] Hash with
-  #  results of ListUser.hours_per_user_issue_and_day for each group.
+  # @return [Hash(Group, UserWorkload#hours_per_user_issue_and_day)] Hash with
+  #  results of UserWorkload#hours_per_user_issue_and_day for each group.
   def by_group
     selected_groups.each_with_object({}) do |group, hash|
       summary = summarize_over_group_members(group)
@@ -26,10 +28,11 @@ class GroupWorkload
 
   private
 
-  attr_accessor :users, :user_workload, :selected_groups, :group_members, :time_span
+  attr_accessor :users, :selected_groups, :group_members
+  attr_writer :time_span, :user_workload
 
   def select_group_members
-    selected_groups.each_with_object({}) do |group, hash|
+    selected_groups&.each_with_object({}) do |group, hash|
       hash[group] = sorted_user_workload.select { |user, _data| user.groups.include? group }
     end
   end

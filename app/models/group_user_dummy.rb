@@ -34,6 +34,8 @@ class GroupUserDummy
     l(:label_assigned_to_group, value: group.lastname)
   end
 
+  alias name lastname
+
   def threshold_lowload_min
     sum_up(:threshold_lowload_min)
   end
@@ -44,6 +46,14 @@ class GroupUserDummy
 
   def threshold_highload_min
     sum_up(:threshold_highload_min)
+  end
+
+  def main_group
+    group
+  end
+
+  def type
+    'Group'
   end
 
   private

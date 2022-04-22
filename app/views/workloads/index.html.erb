@@ -25,7 +25,7 @@
         <%= render :partial => 'day_of_week_header' %>
       </tr>
     </thead>
-    <% if @groups.selected.presence %>
+    <% if groups? @groups %>
       <% @group_workload.by_group.each do |group, data| %>
         <%= render :partial => 'workload_for_group',
                    :locals => { :group => group,
@@ -33,17 +33,19 @@
         %>
       <% end %>
     <% else %>
-      <% @workloadData.keys.each do |user| %>
+      <% @workload_data.keys.each do |user| %>
         <%= render :partial => 'workload_for_user',
                    :locals => { :group => nil,
                                 :user => user,
-                                :data => @workloadData[user] }
+                                :data => @workload_data[user] }
         %>
       <% end %>
     <% end %>
   </table>
 </div>
 
+<%= render partial: 'export', locals: { groups: @groups } %>
+
 <% content_for :sidebar do %>
-	<%= render :partial => 'filters' %>
+	<%= render partial: 'filters' %>
 <% end %>

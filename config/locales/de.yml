@@ -81,3 +81,14 @@ de:
 
   notice_settings_updated: Einstellungen erfolgreich aktualisiert.
   label_assigned_to_group: Zugewiesen an %{value}
+
+  description_selected_groups: Ausgewählte Gruppen
+  description_all_groups: Alle Gruppen
+  description_selected_users: Ausgewählte Nutzer
+  description_all_users: Alle Nutzer
+
+  field_main_group: Hauptgruppe
+  field_number_of_overdue_issues: Anzahl überfälliger Tickets
+  field_number_of_overdue_hours: Stunden aus überfälligen Tickets
+  label_planned: geplant 
+  label_aggregation: Aggregation
