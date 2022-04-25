@@ -52,3 +52,8 @@ Layout/TrailingWhitespace:
 
 Rails/ApplicationRecord:
   Enabled: false
+
+Rails/OutputSafety:
+  Exclude:
+    - 'app/helpers/workload_filters_helper.rb'
+    - 'app/helpers/workloads_helper.rb'

@@ -127,11 +127,11 @@ module WorkloadsHelper
   def workload_params_as_hidden_field_tags(params)
     tags = ''
     params[:workload]&.each do |key, value|
-      if value.is_a? Array
-        tags += array_to_hidden_field(key, value)
-      else
-        tags += hidden_field_tag("workload[#{key}]", value)
-      end
+      tags += if value.is_a? Array
+                array_to_hidden_field(key, value)
+              else
+                hidden_field_tag("workload[#{key}]", value)
+              end
     end
     tags.html_safe
   end

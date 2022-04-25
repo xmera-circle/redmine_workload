@@ -209,8 +209,8 @@ class UserWorkload
 
         # Check: Is the issue is active on day?
         result[day] = if (!issue.due_date.nil? && (day <= issue.due_date)) ||
-                          (!issue.start_date.nil? && (day >= issue.start_date)) ||
-                          (issue.start_date.nil? && issue.due_date.nil?)
+                         (!issue.start_date.nil? && (day >= issue.start_date)) ||
+                         (issue.start_date.nil? && issue.due_date.nil?)
 
                         {
                           hours: 0.0, # No estimate possible, use zero
