@@ -15,12 +15,14 @@ class WlUserVacation < ActiveRecord::Base
   after_save :clearCache
 
   def check_datum
-    if date_from && date_to && (date_from_changed? || date_to_changed?) && date_to < date_from
-      errors.add :date_to, :workload_end_before_start
-    end
+    errors.add :date_to, :workload_end_before_start if workload_end_before_start?
   end
 
   private
+
+  def workload_end_before_start?
+    date_from && date_to && (date_from_changed? || date_to_changed?) && date_to < date_from
+  end
 
   def clearCache
     Rails.cache.clear

@@ -12,12 +12,14 @@ class WlNationalHoliday < ActiveRecord::Base
   after_save :clearCache
 
   def check_datum
-    if start && self.end && (start_changed? || end_changed?) && self.end < start
-      errors.add :end, :workload_end_before_start
-    end
+    errors.add :end, :workload_end_before_start if workload_end_before_start?
   end
 
   private
+
+  def workload_end_before_start?
+    start && self.end && (start_changed? || end_changed?) && self.end < start
+  end
 
   def clearCache
     Rails.cache.clear
