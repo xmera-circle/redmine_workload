@@ -24,6 +24,10 @@ class GroupSelection
     groups_allowed_to_display.sort_by { |group| group[:lastname] }
   end
 
+  def all_group_ids
+    all_groups.map(&:id)
+  end
+
   private
 
   attr_accessor :user, :groups

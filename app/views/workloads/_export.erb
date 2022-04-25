@@ -7,8 +7,12 @@
     <%= form_tag(workloads_path(:format => 'csv'), :method => :get, :id => 'csv-export-form') do %>
       <%= workload_params_as_hidden_field_tags(params) %>
       <p>
+      <% if User.current.allowed_to_globally? :view_all_workloads %>
         <label><%= radio_button_tag 'filter_type[]', '', true %> <%= l("description_selected_#{filter_type(groups)}") %></label><br />
-        <label><%= radio_button_tag 'filter_type[]', 'all' %> <%= l("description_all_#{filter_type(groups)}") %></label>
+        <label><%= radio_button_tag 'filter_type[]', "all_#{filter_type(groups)}" %> <%= l("description_all_#{filter_type(groups)}") %></label>
+      <% else %>
+        <%= hidden_field_tag 'filter_type[]', '' %>
+      <% end %>
       </p>
       <%= export_csv_encoding_select_tag %>
       <p class="buttons">

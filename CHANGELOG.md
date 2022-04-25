@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * calculation of group workload based on user main group setting
 * presentation of summarized group workload in workload table
 * permissions :view_all_workloads, :view_own_group_workloads, :view_own_workloads
+* csv export of users or groups
 
 ### Changed
 
