@@ -17,7 +17,7 @@ class UserSelection
     self.selected_groups = groups&.selected
   end
 
-  def all
+  def all_selected
     selected_groups | selected
   end
 
@@ -34,6 +34,10 @@ class UserSelection
   # @return [Array(User)] An array of user objects.
   def allowed_to_display
     users_allowed_to_display.sort_by(&:lastname)
+  end
+
+  def all_user_ids
+    all_users.map(&:id)
   end
 
   private

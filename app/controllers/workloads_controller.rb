@@ -18,8 +18,6 @@ class WorkloadsController < ApplicationController
   before_action :find_user_workload_data
 
   def index
-    workload_params = params[:workload] || {}
-
     @first_day = sanitizeDateParameter(workload_params[:first_day],  Time.zone.today - 10)
     @last_day  = sanitizeDateParameter(workload_params[:last_day],   Time.zone.today + 50)
     @today     = sanitizeDateParameter(workload_params[:start_date], Time.zone.today)
@@ -35,8 +33,7 @@ class WorkloadsController < ApplicationController
     @groups = GroupSelection.new(groups: workload_params[:groups])
     @users = UserSelection.new(users: workload_params[:users], group_selection: @groups)
 
-    assignees = @users.all
-    # @issues_for_workload = ListUser.open_issues_for_users(assignees)
+    assignees = @users.all_selected
     user_workload = UserWorkload.new(assignees: assignees,
                                      time_span: @time_span_to_display,
                                      today: @today)
@@ -61,6 +58,25 @@ class WorkloadsController < ApplicationController
   end
 
   private
+
+  ##
+  # Prepares workload params based on params[:workload] and params[:filter_type]
+  # where the latter is relevant for exporting the data via csv.
+  #
+  def workload_params
+    wl_params = params[:workload]&.merge(filter_type: params[:filter_type]) || {}
+    return wl_params if wl_params[:filter_type].blank?
+
+    wl_params.merge(assignee_ids)
+  end
+
+  def assignee_ids
+    filter = params[:filter_type]&.first
+    return if filter.blank?
+
+    groups = filter.include? 'groups'
+    groups ? { groups: GroupSelection.new.all_group_ids } : { users: UserSelection.new.all_user_ids }
+  end
 
   def sanitizeDateParameter(parameter, default)
     if parameter.respond_to?(:to_date)
