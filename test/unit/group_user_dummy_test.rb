@@ -2,7 +2,7 @@
 
 require File.expand_path('../test_helper', __dir__)
 
-class GroupUserDummyTest < ActiveSupport::TestCase
+class WlGroupUserDummyTest < ActiveSupport::TestCase
   include WlUserDataFinder
   include WorkloadsHelper
 
@@ -21,7 +21,7 @@ class GroupUserDummyTest < ActiveSupport::TestCase
     @user2_wl_data = find_user_workload_data(@user2.id)
     @user2_wl_data.main_group = @group.id
     @user2_wl_data.save
-    @dummy = GroupUserDummy.new(group: @group)
+    @dummy = WlGroupUserDummy.new(group: @group)
   end
 
   test 'should respond to group' do
@@ -68,7 +68,7 @@ class GroupUserDummyTest < ActiveSupport::TestCase
     user2_wl_data = WlUserData.new(user_id: user2.id)
     user2_wl_data.main_group = group.id
     user2_wl_data.save
-    dummy = GroupUserDummy.new(group: group)
+    dummy = WlGroupUserDummy.new(group: group)
     expected = 0.0
     thresholds = %i[threshold_lowload_min threshold_normalload_min threshold_highload_min]
     thresholds.each do |threshold|

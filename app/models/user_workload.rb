@@ -63,10 +63,10 @@ class UserWorkload
     result = {}
 
     issues.group_by(&:assigned_to).each do |assignee, issue_set|
-      working_days = DateTools.working_days_in_time_span(time_span, assignee.id)
+      working_days = WlDateTools.working_days_in_time_span(time_span, assignee.id)
       first_working_day_from_today_on = working_days.select { |day| day >= today }.min || today
 
-      assignee = GroupUserDummy.new(group: assignee) if assignee.is_a? Group
+      assignee = WlGroupUserDummy.new(group: assignee) if assignee.is_a? Group
 
       unless result.key?(assignee)
         result[assignee] = {
@@ -175,7 +175,7 @@ class UserWorkload
 
     hours_remaining = estimated_time_for_issue(issue)
     assignee = issue.assigned_to.nil? ? 'all' : issue.assigned_to.id
-    working_days = DateTools.working_days_in_time_span(time_span, assignee)
+    working_days = WlDateTools.working_days_in_time_span(time_span, assignee)
 
     result = {}
 
@@ -196,7 +196,7 @@ class UserWorkload
         }
       end
 
-      first_working_day_after_today = DateTools.working_days_in_time_span(today..time_span.end, assignee).min
+      first_working_day_after_today = WlDateTools.working_days_in_time_span(today..time_span.end, assignee).min
       result[first_working_day_after_today] = {} if result[first_working_day_after_today].nil?
       result[first_working_day_after_today][:hours] = hours_remaining
 
@@ -236,7 +236,7 @@ class UserWorkload
     else
       # Number of remaining working days for the issue:
       remaining_time_span = [today, issue.start_date].max..issue.due_date
-      number_of_workdays_for_issue = DateTools.real_distance_in_days(remaining_time_span, assignee)
+      number_of_workdays_for_issue = WlDateTools.real_distance_in_days(remaining_time_span, assignee)
       hours_per_workday = hours_remaining / number_of_workdays_for_issue.to_f
 
       time_span.each do |day|
@@ -297,7 +297,7 @@ class UserWorkload
   # @param time_span
   #
   def add_issue_info_to_summary(summary, issue_info)
-    working_days = DateTools.working_days_in_time_span(time_span)
+    working_days = WlDateTools.working_days_in_time_span(time_span)
     summary ||= {}
 
     time_span.each do |day|

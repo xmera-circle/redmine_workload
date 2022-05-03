@@ -60,6 +60,7 @@ en:
 
   workload_settings_holiday_setup:	        "Configure holidays"
  
+  workload_user_vacation_site_title: "Vacation Overview"
   workload_user_vacation:           "Vacation"
   workload_user_vacation_menu:      "My Vacations"
   workload_user_vacation_new:       "Create new Vacation"

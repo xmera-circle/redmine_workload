@@ -29,6 +29,8 @@ selected explicitly
 ### Fixed
 
 * broken unit test
+* missing closing selectors in some views causing the site footer to be displayed
+not at the bottom of the page
 
 ---
 

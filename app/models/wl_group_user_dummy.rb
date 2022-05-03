@@ -6,7 +6,7 @@ require 'forwardable'
 # Dummy representing a user of a group who holds all issues haven't been assigned
 # to a real group member yet.
 #
-class GroupUserDummy
+class WlGroupUserDummy
   include Redmine::I18n
   extend Forwardable
 

@@ -2,7 +2,7 @@
     <%= render_action_links %>
 </div>
 
-<h1><%= l(:workload_user_vacation_menu)%></h1>
+<h2><%= l(:workload_user_vacation_site_title) %> » <%= User.current.name %></h2>
 
 <%= link_to l(:label_new), new_wl_user_vacation_path, :class => 'icon icon-add' if @is_allowed %>
 

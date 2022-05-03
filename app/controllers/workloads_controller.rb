@@ -30,15 +30,15 @@ class WorkloadsController < ApplicationController
     @last_day = [(@first_day >> 12) - 1, @last_day].min
     @time_span_to_display = @first_day..@last_day
 
-    @groups = GroupSelection.new(groups: workload_params[:groups])
-    @users = UserSelection.new(users: workload_params[:users], group_selection: @groups)
+    @groups = WlGroupSelection.new(groups: workload_params[:groups])
+    @users = WlUserSelection.new(users: workload_params[:users], group_selection: @groups)
 
     assignees = @users.all_selected
     user_workload = UserWorkload.new(assignees: assignees,
                                      time_span: @time_span_to_display,
                                      today: @today)
 
-    @months_to_render = DateTools.months_in_time_span(@time_span_to_display)
+    @months_to_render = WlDateTools.months_in_time_span(@time_span_to_display)
     @workload_data = user_workload.hours_per_user_issue_and_day
 
     @group_workload = GroupWorkload.new(users: @users,
@@ -75,7 +75,7 @@ class WorkloadsController < ApplicationController
     return if filter.blank?
 
     groups = filter.include? 'groups'
-    groups ? { groups: GroupSelection.new.all_group_ids } : { users: UserSelection.new.all_user_ids }
+    groups ? { groups: WlGroupSelection.new.all_group_ids } : { users: WlUserSelection.new.all_user_ids }
   end
 
   def sanitizeDateParameter(parameter, default)

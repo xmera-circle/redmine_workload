@@ -2,7 +2,7 @@
 
 require File.expand_path('../test_helper', __dir__)
 
-class GroupSelectionTest < ActiveSupport::TestCase
+class WlGroupSelectionTest < ActiveSupport::TestCase
   fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
            :users, :issue_statuses, :enumerations, :roles
 
@@ -13,7 +13,7 @@ class GroupSelectionTest < ActiveSupport::TestCase
 
   test 'should return all groups if the current user is admin' do
     admin = users :users_001 # admin
-    groups = GroupSelection.new(user: admin)
+    groups = WlGroupSelection.new(user: admin)
 
     assert_equal @groups.map(&:id).sort, groups.allowed_to_display.map(&:id).sort
   end
@@ -22,7 +22,7 @@ class GroupSelectionTest < ActiveSupport::TestCase
     current_user = users :users_002 # jsmith
     manager = roles :roles_001 # manager
     manager.add_permission! :view_all_workloads
-    groups = GroupSelection.new(user: current_user)
+    groups = WlGroupSelection.new(user: current_user)
     expected = @groups.map(&:id).sort
     current = groups.allowed_to_display.map(&:id).sort
     assert_equal expected, current
@@ -43,14 +43,14 @@ class GroupSelectionTest < ActiveSupport::TestCase
     current_user.groups << [group1, group3]
     manager = roles :roles_001 # manager
     manager.add_permission! :view_own_group_workloads
-    groups = GroupSelection.new(user: current_user)
+    groups = WlGroupSelection.new(user: current_user)
     expected = [group1, group3].map(&:id).sort
     current = groups.allowed_to_display.map(&:id).sort
     assert_equal expected, current
   end
 
   test 'should return an empty array if the current user has no permission to view workloads' do
-    groups = GroupSelection.new(user: User.anonymous)
+    groups = WlGroupSelection.new(user: User.anonymous)
 
     assert_equal [], groups.allowed_to_display
   end

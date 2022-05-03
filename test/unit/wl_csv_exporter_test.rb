@@ -26,7 +26,7 @@ class WlCsvExporterTest < ActiveSupport::TestCase
   end
 
   test 'should initialize GroupWorkloadPreparer object' do
-    data = GroupWorkload.new(users: UserSelection.new, user_workload: {}, time_span: 1..5)
+    data = GroupWorkload.new(users: WlUserSelection.new, user_workload: {}, time_span: 1..5)
     assert_equal 'GroupWorkloadPreparer', @exporter.send(:initialize_data_object, data).class.name
   end
 end

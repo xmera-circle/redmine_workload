@@ -33,7 +33,7 @@ class GroupWorkloadPreparer
     when 'User'
       user_group = assignee.wl_user_data&.main_group
       assignee.groups.find_by(id: user_group)&.name
-    when 'GroupUserDummy'
+    when 'WlGroupUserDummy'
       assignee.main_group&.name
     else
       ''

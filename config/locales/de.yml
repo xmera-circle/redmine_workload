@@ -60,6 +60,7 @@ de:
   workload_settings_holiday_setup:	        "Feiertage bearbeiten"
   workload_settings_holiday_new:            "Feiertag anlegen"
  
+  workload_user_vacation_site_title: "Urlaubsübersicht"
   workload_user_vacation:           "Urlaub"
   workload_user_vacation_menu:      "Meine Urlaube"
   workload_user_vacation_new:       "Neuen Urlaub anlegen"
