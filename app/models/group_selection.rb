@@ -4,9 +4,14 @@
 # Presenter organising groups to be used in views/workloads/_filers.erb.
 #
 class GroupSelection
+  ##
+  # @param groups [Array(Group)] List of Group objects.
+  # @param user [User] A user object.
+  #
+  # @note params[:user] is currently used for tests only!
   def initialize(**params)
-    self.user = params[:user] || User.current
     self.groups = params[:groups] || []
+    self.user = define_user(params[:user])
   end
 
   ##
@@ -31,6 +36,13 @@ class GroupSelection
   private
 
   attr_accessor :user, :groups
+
+  ##
+  # Define the current user.
+  #
+  def define_user(user)
+    user || User.current
+  end
 
   ##
   # Queries the groups the user is allowed to view.

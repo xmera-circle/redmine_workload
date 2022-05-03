@@ -7,7 +7,8 @@ class UserSelectionTest < ActiveSupport::TestCase
 
   fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
            :users, :issue_statuses, :enumerations, :roles
-  def setup 
+
+  def setup
     @group1 = Group.generate!
     @group2 = Group.generate!
     @group3 = Group.generate!
@@ -76,5 +77,34 @@ class UserSelectionTest < ActiveSupport::TestCase
     users = UserSelection.new(user: current_user, group_selection: groups)
 
     assert_equal [], users.allowed_to_display
+  end
+
+  test 'should return current user if no other users given' do
+    current_user = users :users_002 # jsmith
+    manager = roles :roles_001 # manager
+    manager.add_permission! :view_all_workloads
+    groups = GroupSelection.new(user: current_user, groups: [])
+    users = UserSelection.new(user: current_user, group_selection: groups)
+    expected = [current_user]
+    current = users.send(:include_current_user)
+    assert_equal expected, current
+  end
+
+  test 'should not return current user if not selected' do
+    @user1.create_wl_user_data(default_attributes.merge(main_group: @group1.id))
+    current_user = users :users_002 # jsmith
+    manager = roles :roles_001 # manager
+    manager.add_permission! :view_all_workloads
+    groups = GroupSelection.new(user: current_user, groups: [@group1.id, @group2.id, @group3.id])
+    users = UserSelection.new(user: current_user, group_selection: groups)
+    expected = []
+    current = users.send(:include_current_user)
+    assert_equal expected, current
+
+    groups = GroupSelection.new(user: current_user, groups: [])
+    users = UserSelection.new(user: current_user, users: [@user1.id, @user2.id, @user3.id], group_selection: groups)
+    expected = []
+    current = users.send(:include_current_user)
+    assert_equal expected, current
   end
 end
