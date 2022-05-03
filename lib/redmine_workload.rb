@@ -8,9 +8,3 @@ require 'redmine_workload/wl_date_tools'
 require 'redmine_workload/wl_issue_query'
 require 'redmine_workload/wl_user_data_finder'
 require 'redmine_workload/wl_user_data_defaults'
-
-module RedmineWorkload
-  def self.major_release_deprecator
-    ActiveSupport::Deprecation.new('2.0.0', 'Redmine Workload')
-  end
-end
