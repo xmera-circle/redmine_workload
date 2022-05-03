@@ -313,3 +313,12 @@ legend {
 .controller-workloads .data .active.holiday span {
     background-color: transparent;
 }
+
+/*******************************************************************************
+ * Styles for national holiday page.
+ ******************************************************************************/
+
+ #year-nav {
+    padding-top: 2rem;
+ }
+ 
