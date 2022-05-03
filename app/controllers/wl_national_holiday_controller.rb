@@ -3,7 +3,6 @@
 require 'json'
 
 class WlNationalHolidayController < ApplicationController
-  unloadable
   include WlUserDataFinder
 
   before_action :authorize_global, only: %i[create update destroy]
@@ -39,8 +38,8 @@ class WlNationalHolidayController < ApplicationController
     respond_to do |format|
       if @wl_national_holiday.update(wl_national_holiday_params)
         format.html do
-          redirect_to(action: 'index', notice: 'Holiday was successfully updated.',
-                      params: { year: params[:year] })
+          flash[:notice] = l(:notice_holiday_updated)
+          redirect_to(action: 'index', params: { year: params[:year] })
         end
         format.xml  { head :ok }
       else
@@ -55,7 +54,8 @@ class WlNationalHolidayController < ApplicationController
   def create
     @wl_national_holiday = WlNationalHoliday.new(wl_national_holiday_params)
     if @wl_national_holiday.save
-      redirect_to action: 'index', notice: 'Holiday was successfully saved.', year: params[:year]
+      flash[:notice] = l(:notice_holiday_saved)
+      redirect_to action: 'index', year: params[:year]
     else
       respond_to do |format|
         format.html do
@@ -73,8 +73,8 @@ class WlNationalHolidayController < ApplicationController
       nil
     end
     @wl_national_holiday.destroy
-
-    redirect_to(action: 'index', notice: 'Holiday was successfully deleted.', year: params[:year])
+    flash[:notice] = l(:notice_holiday_deleted)
+    redirect_to(action: 'index', year: params[:year])
   end
 
   private

@@ -67,8 +67,6 @@ en:
   workload_user_vacation_type:      "Type"
   workload_user_vacation_comments:  "Coment"
   workload_user_vacation_date_end:  "End"
-  workload_user_vacation_saved:     "Vacation has been saved"
-  workload_user_vacation_deleted:   "Vacation has been deleted"
   
   workload_user_data_site_title:   "User Workload Information"
   workload_user_data_title:        "My Setup"
@@ -78,7 +76,12 @@ en:
   permission_edit_user_vacations:   "Edit own vacations"
   permission_edit_user_data:        "Edit own workload thresholds"
 
-  notice_settings_updated: Settings sucessfully updated.
+  notice_settings_updated: Settings sucessfully updated
+  notice_holiday_updated: Holiday was successfully updated
+  notice_holiday_saved: Holiday was successfully saved
+  notice_holiday_deleted: Holiday was successfully deleted
+  notice_user_vacation_saved: Vacation has been saved
+  notice_user_vacation_deleted: Vacation has been deleted
   label_assigned_to_group: Assigned to %{value}
 
   description_selected_groups: Selected groups
@@ -91,3 +94,5 @@ en:
   field_number_of_overdue_hours: Hours of overdue issues
   label_planned: planned
   label_aggregation: Aggregation
+
+  

@@ -32,7 +32,7 @@ class WlUserVacationsController < ApplicationController
     respond_to do |format|
       if @wl_user_vacation.update(wl_user_vacation_params)
         format.html do
-          flash[:notice] = l(:workload_user_vacation_saved)
+          flash[:notice] = l(:notice_user_vacation_saved)
           redirect_to(action: 'index', params: { year: params[:year] })
         end
       else
@@ -51,7 +51,7 @@ class WlUserVacationsController < ApplicationController
     respond_to do |format|
       if @wl_user_vacation.save
         format.html do
-          flash[:notice] = l(:workload_user_vacation_saved)
+          flash[:notice] = l(:notice_user_vacation_saved)
           redirect_to(action: 'index', params: { year: params[:year] })
         end
       else
@@ -72,7 +72,7 @@ class WlUserVacationsController < ApplicationController
     @wl_user_vacation.destroy
     respond_to do |format|
       format.html do
-        flash[:notice] = l(:workload_user_vacation_deleted)
+        flash[:notice] = l(:notice_user_vacation_deleted)
         redirect_to(action: 'index', params: { year: params[:year] })
       end
     end
