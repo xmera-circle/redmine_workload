@@ -30,7 +30,7 @@ class WlNationalHolidayControllerTest < ActionDispatch::IntegrationTest
     post wl_national_holiday_index_path,
          params: { wl_national_holiday:
                     { start: today, end: tomorrow, reason: 'Eastern' } }
-    assert_redirected_to wl_national_holiday_index_path(notice: 'Holiday was successfully saved.')
+    assert_redirected_to wl_national_holiday_index_path
   end
 
   test 'should not update holiday when user is not allowed to' do
@@ -50,7 +50,7 @@ class WlNationalHolidayControllerTest < ActionDispatch::IntegrationTest
 
     patch wl_national_holiday_path(id: holiday.id),
           params: { wl_national_holiday: { reason: 'New Year' } }
-    assert_redirected_to wl_national_holiday_index_path(notice: 'Holiday was successfully updated.')
+    assert_redirected_to wl_national_holiday_index_path
   end
 
   test 'should not destroy holiday when user is not allowed to' do
@@ -68,7 +68,7 @@ class WlNationalHolidayControllerTest < ActionDispatch::IntegrationTest
     log_user('jsmith', 'jsmith')
 
     delete wl_national_holiday_path(id: holiday.id)
-    assert_redirected_to wl_national_holiday_index_path(notice: 'Holiday was successfully deleted.')
+    assert_redirected_to wl_national_holiday_index_path
   end
 
   private

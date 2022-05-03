@@ -7,14 +7,17 @@ class UserSelection
   attr_reader :groups
 
   ##
-  # @param users [User] Selected user objects.
-  # @param groups [GroupSelection] GroupSelection object.
+  # @param users [Array(User)] Selected user objects.
+  # @param group_selection [GroupSelection] GroupSelection object.
+  # @param user [User] A user object.
+  #
+  # @note params[:user] is currently used for tests only!
   #
   def initialize(**params)
-    self.user = params[:user] || User.current
     self.users = params[:users] || []
     self.groups = params[:group_selection]
     self.selected_groups = groups&.selected
+    self.user = define_user(params[:user])
   end
 
   def all_selected
@@ -26,7 +29,7 @@ class UserSelection
   #
   # @return [Array(User)] An array of user objects.
   def selected
-    (users_from_context & allowed_to_display) | [user]
+    (users_from_context & allowed_to_display) | include_current_user
   end
 
   ##
@@ -44,6 +47,24 @@ class UserSelection
 
   attr_accessor :user, :users, :selected_groups
   attr_writer :groups
+
+  ##
+  # Define the current user.
+  #
+  def define_user(user)
+    user || User.current
+  end
+
+  ##
+  # It is expected to return the current user only if the user visits the
+  # workload index page but not if she hasn't selected herself in the filter
+  # fields afterwards.
+  #
+  def include_current_user
+    return [user] if users_from_context.blank?
+
+    []
+  end
 
   ##
   # If groups are given the method will query those users having one of the given
