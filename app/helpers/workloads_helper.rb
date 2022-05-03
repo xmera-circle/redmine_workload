@@ -15,7 +15,7 @@ module WorkloadsHelper
   deprecate :workload_admin?, deprecator: RedmineWorkload.major_release_deprecator
 
   def render_action_links
-    render partial: 'redmine_workload/action_links'
+    render partial: 'wl_shared/action_links'
   end
 
   ##
@@ -95,7 +95,7 @@ module WorkloadsHelper
   end
 
   def user_settings(user)
-    return user if user.is_a?(GroupUserDummy)
+    return user if user.is_a?(WlGroupUserDummy)
 
     user&.wl_user_data || WlDefaultUserData.new
   end

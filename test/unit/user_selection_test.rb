@@ -2,7 +2,7 @@
 
 require File.expand_path('../test_helper', __dir__)
 
-class UserSelectionTest < ActiveSupport::TestCase
+class WlUserSelectionTest < ActiveSupport::TestCase
   include WlUserDataDefaults
 
   fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
@@ -27,8 +27,8 @@ class UserSelectionTest < ActiveSupport::TestCase
 
   test 'should return all users if the current user is admin' do
     current_user = User.generate!(admin: true)
-    groups = GroupSelection.new(user: current_user, groups: [@group1.id, @group2.id, @group3.id])
-    users = UserSelection.new(user: current_user, group_selection: groups)
+    groups = WlGroupSelection.new(user: current_user, groups: [@group1.id, @group2.id, @group3.id])
+    users = WlUserSelection.new(user: current_user, group_selection: groups)
     assert_equal @group_member_ids.flatten.sort, users.allowed_to_display.map(&:id).sort
   end
 
@@ -36,9 +36,9 @@ class UserSelectionTest < ActiveSupport::TestCase
     current_user = users :users_002 # jsmith
     manager = roles :roles_001 # manager
     manager.add_permission! :view_all_workloads
-    groups = GroupSelection.new(user: current_user, groups: [@group1.id, @group2.id, @group3.id])
+    groups = WlGroupSelection.new(user: current_user, groups: [@group1.id, @group2.id, @group3.id])
 
-    users = UserSelection.new(user: current_user, group_selection: groups)
+    users = WlUserSelection.new(user: current_user, group_selection: groups)
     expected = @group_member_ids.flatten.sort
     current = users.send(:all_users).map(&:id).sort
     assert_equal expected, current
@@ -54,9 +54,9 @@ class UserSelectionTest < ActiveSupport::TestCase
 
     manager = roles :roles_001 # manager
     manager.add_permission! :view_own_group_workloads
-    groups = GroupSelection.new(user: current_user, groups: [@group1.id, @group2.id, @group3.id])
+    groups = WlGroupSelection.new(user: current_user, groups: [@group1.id, @group2.id, @group3.id])
 
-    users = UserSelection.new(user: current_user, group_selection: groups)
+    users = WlUserSelection.new(user: current_user, group_selection: groups)
     expected = [@user1, @user3].map(&:id).sort
     current = users.allowed_to_display.map(&:id).sort
     assert_equal expected, current
@@ -66,15 +66,15 @@ class UserSelectionTest < ActiveSupport::TestCase
     current_user = users :users_002 # jsmith
     manager = roles :roles_001 # manager
     manager.add_permission! :view_own_workloads
-    groups = GroupSelection.new(user: current_user, groups: [@group1.id, @group2.id, @group3.id])
-    users = UserSelection.new(user: current_user, group_selection: groups)
+    groups = WlGroupSelection.new(user: current_user, groups: [@group1.id, @group2.id, @group3.id])
+    users = WlUserSelection.new(user: current_user, group_selection: groups)
     assert_equal [current_user.id], users.allowed_to_display.map(&:id)
   end
 
   test 'should return an empty array if the current user has no permission to view workloads' do
     current_user = User.anonymous
-    groups = GroupSelection.new(user: current_user, groups: [@group1.id, @group2.id, @group3.id])
-    users = UserSelection.new(user: current_user, group_selection: groups)
+    groups = WlGroupSelection.new(user: current_user, groups: [@group1.id, @group2.id, @group3.id])
+    users = WlUserSelection.new(user: current_user, group_selection: groups)
 
     assert_equal [], users.allowed_to_display
   end
@@ -83,8 +83,8 @@ class UserSelectionTest < ActiveSupport::TestCase
     current_user = users :users_002 # jsmith
     manager = roles :roles_001 # manager
     manager.add_permission! :view_all_workloads
-    groups = GroupSelection.new(user: current_user, groups: [])
-    users = UserSelection.new(user: current_user, group_selection: groups)
+    groups = WlGroupSelection.new(user: current_user, groups: [])
+    users = WlUserSelection.new(user: current_user, group_selection: groups)
     expected = [current_user]
     current = users.send(:include_current_user)
     assert_equal expected, current
@@ -95,14 +95,14 @@ class UserSelectionTest < ActiveSupport::TestCase
     current_user = users :users_002 # jsmith
     manager = roles :roles_001 # manager
     manager.add_permission! :view_all_workloads
-    groups = GroupSelection.new(user: current_user, groups: [@group1.id, @group2.id, @group3.id])
-    users = UserSelection.new(user: current_user, group_selection: groups)
+    groups = WlGroupSelection.new(user: current_user, groups: [@group1.id, @group2.id, @group3.id])
+    users = WlUserSelection.new(user: current_user, group_selection: groups)
     expected = []
     current = users.send(:include_current_user)
     assert_equal expected, current
 
-    groups = GroupSelection.new(user: current_user, groups: [])
-    users = UserSelection.new(user: current_user, users: [@user1.id, @user2.id, @user3.id], group_selection: groups)
+    groups = WlGroupSelection.new(user: current_user, groups: [])
+    users = WlUserSelection.new(user: current_user, users: [@user1.id, @user2.id, @user3.id], group_selection: groups)
     expected = []
     current = users.send(:include_current_user)
     assert_equal expected, current

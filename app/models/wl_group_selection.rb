@@ -3,7 +3,7 @@
 ##
 # Presenter organising groups to be used in views/workloads/_filers.erb.
 #
-class GroupSelection
+class WlGroupSelection
   ##
   # @param groups [Array(Group)] List of Group objects.
   # @param user [User] A user object.

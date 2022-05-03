@@ -2,7 +2,7 @@
 
 require_relative 'wl_user_data_defaults'
 
-class DateTools
+class WlDateTools
   extend WlUserDataDefaults
   ##
   # Returns an array with one entry for each month in the given time span.

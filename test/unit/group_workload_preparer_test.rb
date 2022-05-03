@@ -28,7 +28,7 @@ class GroupWorkloadPreparerTest < ActiveSupport::TestCase
 
   test 'should return main group of assignee' do
     group = Group.generate!
-    dummy = GroupUserDummy.new(group: group)
+    dummy = WlGroupUserDummy.new(group: group)
     user = User.generate!
     user.groups << group
     user.create_wl_user_data(main_group: group.id)

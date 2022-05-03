@@ -3,12 +3,12 @@
 ##
 # Presenter organising users to be used in views/workloads/_filers.erb.
 #
-class UserSelection
+class WlUserSelection
   attr_reader :groups
 
   ##
   # @param users [Array(User)] Selected user objects.
-  # @param group_selection [GroupSelection] GroupSelection object.
+  # @param group_selection [WlGroupSelection] WlGroupSelection object.
   # @param user [User] A user object.
   #
   # @note params[:user] is currently used for tests only!
