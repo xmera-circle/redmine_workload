@@ -82,7 +82,7 @@ module WorkloadsHelper
   end
 
   def user_settings(user)
-    return user if user.is_a?(WlGroupUserDummy)
+    return user if user.is_a?(GroupUserDummy)
 
     user&.wl_user_data || WlDefaultUserData.new
   end

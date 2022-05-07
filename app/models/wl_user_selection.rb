@@ -134,7 +134,10 @@ class WlUserSelection
   # @return [Array(User)] An array of user objects.
   #
   def users_of_groups
-    result = selected_groups.map { |group| group.users.to_a }.flatten
+    return [] if selected_groups.blank?
+
+    result = selected_groups.map { |group| group.users.to_a }
+    result.flatten!
     result.uniq
   end
 

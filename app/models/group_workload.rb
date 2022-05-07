@@ -6,13 +6,17 @@
 #
 class GroupWorkload
   attr_reader :time_span, :user_workload
-
+  ##
+  # @param users [WlUserSelection] Users given as WlUserSelection object.
+  # @param user_workload [UserWorkload] User workload given as UserWorkload object.
+  # @param time_span [Range] A time span given as Range object.
+  #
   def initialize(users:, user_workload:, time_span:)
     self.users = users
     self.user_workload = user_workload
     self.time_span = time_span
-    self.selected_groups = users.groups&.selected
-    self.group_members = select_group_members
+    self.selected_groups = define_selected_groups
+    self.group_members = define_group_members
   end
 
   ##
@@ -20,7 +24,7 @@ class GroupWorkload
   # @return [Hash(Group, UserWorkload#hours_per_user_issue_and_day)] Hash with
   #  results of UserWorkload#hours_per_user_issue_and_day for each group.
   def by_group
-    selected_groups.each_with_object({}) do |group, hash|
+    selected_groups&.each_with_object({}) do |group, hash|
       summary = summarize_over_group_members(group)
       hash[group] = summary.merge(group_members[group])
     end
@@ -31,12 +35,20 @@ class GroupWorkload
   attr_accessor :users, :selected_groups, :group_members
   attr_writer :time_span, :user_workload
 
-  def select_group_members
+  def define_selected_groups
+    users.groups&.selected
+  end
+
+  def define_group_members
     selected_groups&.each_with_object({}) do |group, hash|
-      hash[group] = sorted_user_workload.select { |user, _data| user.groups.include? group }
+      hash[group] = sorted_user_workload.select { |user, _data| user.main_group_id == group.id }
     end
   end
 
+  ##
+  # Sorting of users lastname and their class name in order to ensure that the 
+  # GroupUserDummy will come first.
+  #
   def sorted_user_workload
     user_workload_with_availabilities.sort_by { |user, _data| [user.class.name, user.lastname] }.to_h
   end
