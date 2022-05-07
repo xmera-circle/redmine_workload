@@ -6,6 +6,7 @@
 #
 class GroupWorkload
   attr_reader :time_span, :user_workload
+
   ##
   # @param users [WlUserSelection] Users given as WlUserSelection object.
   # @param user_workload [UserWorkload] User workload given as UserWorkload object.
@@ -46,7 +47,7 @@ class GroupWorkload
   end
 
   ##
-  # Sorting of users lastname and their class name in order to ensure that the 
+  # Sorting of users lastname and their class name in order to ensure that the
   # GroupUserDummy will come first.
   #
   def sorted_user_workload

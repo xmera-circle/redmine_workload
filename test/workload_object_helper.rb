@@ -2,23 +2,23 @@
 
 module RedmineWorkload
   module WorkloadObjectHelper
-    def prepare_group_workload(user:, role:,groups: nil)
+    def prepare_group_workload(user:, role:, groups: nil)
       if groups
         groups.compact!
         groups_params = groups.map(&:id)
-      else   
-        group_params = nil
+      else
+        groups_params = nil
       end
-      if users = users_defined
+      users = users_defined
+      if users
         users.compact!
-        user1, user2 = users
         users_params = users.map(&:id)
       else
-        user_params = nil
+        users_params = nil
       end
       user_setup(groups: groups, users: users) if groups
       issue_setup(groups: groups, users: users, role: role)
-      group_selection = WlGroupSelection.new(groups: groups_params, 
+      group_selection = WlGroupSelection.new(groups: groups_params,
                                              user: user)
       user_selection = WlUserSelection.new(users: users_params,
                                            user: user,
@@ -68,10 +68,10 @@ module RedmineWorkload
     def issue_setup(**params)
       project = Project.generate!
       params[:groups]&.each do |group|
-        project.members << Member.new(:principal => group, 
-                                      :roles => [params[:role]])
+        project.members << Member.new(principal: group,
+                                      roles: [params[:role]])
       end
-      with_settings :issue_group_assignment => '1' do
+      with_settings issue_group_assignment: '1' do
         params[:users].each do |user|
           group = user.groups.take
           User.add_to_project(user, project, @manager) unless params[:groups]
@@ -84,17 +84,17 @@ module RedmineWorkload
                           estimated_hours: 12.0,
                           start_date: first_day,
                           due_date: last_day)
-          if user.groups.any?                
-            Issue.generate!(author: user,
-                                  assigned_to: group,
-                                  status: IssueStatus.find(1), # New, not closed
-                                  project: project,
-                                  tracker: trackers(:trackers_001),
-                                  priority: enumerations(:enumerations_004),
-                                  estimated_hours: 12.0,
-                                  start_date: first_day,
-                                  due_date: last_day)
-          end
+          next unless user.groups.any?
+
+          Issue.generate!(author: user,
+                          assigned_to: group,
+                          status: IssueStatus.find(1), # New, not closed
+                          project: project,
+                          tracker: trackers(:trackers_001),
+                          priority: enumerations(:enumerations_004),
+                          estimated_hours: 12.0,
+                          start_date: first_day,
+                          due_date: last_day)
         end
       end
     end
@@ -105,6 +105,6 @@ module RedmineWorkload
 
     def last_day
       Date.new(2013, 6, 4)
-    end  
+    end
   end
 end
