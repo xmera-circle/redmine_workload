@@ -3,10 +3,13 @@
 require 'forwardable'
 
 ##
-# Dummy representing a user of a group who holds all issues haven't been assigned
+# GroupUserDummy representing a user of a group who holds all issues haven't been assigned
 # to a real group member yet.
 #
-class WlGroupUserDummy
+# @note The class name is relevant for sorting GroupUserDummy against User classes
+#       in alphabetical order.
+#
+class GroupUserDummy
   include Redmine::I18n
   extend Forwardable
 
@@ -50,6 +53,10 @@ class WlGroupUserDummy
 
   def main_group
     group
+  end
+
+  def main_group_id
+    group.id
   end
 
   def type

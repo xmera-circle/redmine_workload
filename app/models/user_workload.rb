@@ -66,7 +66,7 @@ class UserWorkload
       working_days = WlDateTools.working_days_in_time_span(time_span, assignee.id)
       first_working_day_from_today_on = working_days.select { |day| day >= today }.min || today
 
-      assignee = WlGroupUserDummy.new(group: assignee) if assignee.is_a? Group
+      assignee = GroupUserDummy.new(group: assignee) if assignee.is_a? Group
 
       unless result.key?(assignee)
         result[assignee] = {
