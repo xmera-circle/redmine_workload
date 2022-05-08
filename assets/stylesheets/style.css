@@ -118,6 +118,7 @@ legend {
     table-layout: fixed;
     border-spacing: 0 3px;
     border-collapse: collapse;
+    margin-bottom: 10px;
 }
 
 .controller-workloads .data th {
