@@ -6,6 +6,7 @@
 #
 class GroupWorkload
   attr_reader :time_span, :user_workload
+
   ##
   # @param users [WlUserSelection] Users given as WlUserSelection object.
   # @param user_workload [UserWorkload] User workload given as UserWorkload object.
@@ -39,6 +40,10 @@ class GroupWorkload
     users.groups&.selected
   end
 
+  ##
+  # Select only those group members having their main group equal to the group
+  # given.
+  #
   def define_group_members
     selected_groups&.each_with_object({}) do |group, hash|
       hash[group] = sorted_user_workload.select { |user, _data| user.main_group_id == group.id }
@@ -46,13 +51,17 @@ class GroupWorkload
   end
 
   ##
-  # Sorting of users lastname and their class name in order to ensure that the 
+  # Sorting of users lastname and their class name in order to ensure that the
   # GroupUserDummy will come first.
   #
   def sorted_user_workload
     user_workload_with_availabilities.sort_by { |user, _data| [user.class.name, user.lastname] }.to_h
   end
 
+  ##
+  # Adds those users which are selected but not considered for the workload
+  # table since they have no issues assigned yet.
+  #
   def user_workload_with_availabilities
     availabilities = users.selected - assignees
     availabilities.each do |user|
@@ -70,6 +79,10 @@ class GroupWorkload
     end
   end
 
+  ##
+  # Users having issues assigned and are therefore considered in user_workload
+  # calculation.
+  #
   def assignees
     user_workload.keys
   end
@@ -109,8 +122,15 @@ class GroupWorkload
     group_members[group].sum { |_member, data| data.dig(key.to_sym, day, :hours) || 0 }
   end
 
+  ##
+  # Checks for holiday of group members (but ignores GroupUserDummy)
+  # for a given day and returns true if all group members are in holiday at a
+  # given day or false if not.
+  #
   def holiday_at(day, key, group)
-    values = group_members[group].map { |_member, data| data.dig(key.to_sym, day, :holiday) }
-    values.uniq[0]
+    values = group_members[group].map do |member, data|
+      data.dig(key.to_sym, day, :holiday) if member.is_a? User
+    end
+    values.compact.all?
   end
 end

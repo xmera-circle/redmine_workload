@@ -3,12 +3,14 @@
 require File.expand_path('../test_helper', __dir__)
 
 class WlDateToolsTest < ActiveSupport::TestCase
+  include RedmineWorkload::WorkloadObjectHelper
+
   test 'working_days_in_time_span works if start and end day are equal and no holiday.' do
     # Set friday to be a working day.
     Setting['plugin_redmine_workload']['general_workday_friday'] = 'checked'
 
     date = Date.new(2005, 12, 30); # A friday
-    assert_equal Set.new([date]), WlDateTools.working_days_in_time_span(date..date, 'all', no_cache: true)
+    assert_equal Set.new([date]), WlDateTools.working_days_in_time_span(date..date, 'group', no_cache: true)
   end
 
   test 'working_days_in_time_span works if start and end day are equal and a holiday.' do
@@ -16,13 +18,13 @@ class WlDateToolsTest < ActiveSupport::TestCase
     Setting['plugin_redmine_workload']['general_workday_friday'] = ''
 
     date = Date.new(2005, 12, 30);      # A friday
-    assert_equal Set.new, WlDateTools.working_days_in_time_span(date..date, 'all', no_cache: true)
+    assert_equal Set.new, WlDateTools.working_days_in_time_span(date..date, 'group', no_cache: true)
   end
 
   test 'working_days_in_time_span works if start day before end day.' do
     startDate = Date.new(2005, 12, 30); # A friday
     endDate = Date.new(2005, 12, 28);   # A wednesday
-    assert_equal Set.new, WlDateTools.working_days_in_time_span(startDate..endDate, 'all', no_cache: true)
+    assert_equal Set.new, WlDateTools.working_days_in_time_span(startDate..endDate, 'group', no_cache: true)
   end
 
   test 'working_days_in_time_span works if both days follow each other and are holidays.' do
@@ -32,7 +34,7 @@ class WlDateToolsTest < ActiveSupport::TestCase
 
     startDate = Date.new(2005, 12, 28); # A wednesday
     endDate = Date.new(2005, 12, 29); # A thursday
-    assert_equal Set.new, WlDateTools.working_days_in_time_span(startDate..endDate, 'all', no_cache: true)
+    assert_equal Set.new, WlDateTools.working_days_in_time_span(startDate..endDate, 'group', no_cache: true)
   end
 
   test 'working_days_in_time_span works if only weekends and mondays are holidays and startday is thursday, endday is tuesday.' do
@@ -54,7 +56,7 @@ class WlDateToolsTest < ActiveSupport::TestCase
       endDate
     ]
 
-    assert_equal Set.new(expectedResult), WlDateTools.working_days_in_time_span(startDate..endDate, 'all', no_cache: true)
+    assert_equal Set.new(expectedResult), WlDateTools.working_days_in_time_span(startDate..endDate, 'group', no_cache: true)
   end
 
   test 'working_days returns the working days.' do
@@ -112,6 +114,14 @@ class WlDateToolsTest < ActiveSupport::TestCase
     expected = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2]
     current = months_numbers_in_time_span(first_day, last_day)
     assert_equal expected, current.flatten.uniq
+  end
+
+  test 'should recognize a users vacation day' do
+    user1, user2 = users_defined
+    user1.wl_user_vacations.create(date_from: first_day, date_to: first_day)
+    user2.wl_user_vacations.create(date_from: last_day, date_to: last_day)
+    assert WlDateTools.vacation?(first_day, user1.id)
+    assert_not WlDateTools.vacation?(first_day, user2.id)
   end
 
   private
