@@ -537,7 +537,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
     User.add_to_project(user, project1, Role.find_by_name('Manager'))
     User.add_to_project(user, project2, Role.find_by_name('Manager'))
 
-    issue1 = Issue.generate!(
+    Issue.generate!(
       assigned_to: user,
       start_date: Date.new(2013, 5, 31), # A Friday
       due_date: Date.new(2013, 6, 4),    # A Tuesday
@@ -547,7 +547,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
       project: project1
     )
 
-    issue2 = Issue.generate!(
+    Issue.generate!(
       assigned_to: user,
       start_date: Date.new(2013, 6, 3), # A Friday
       due_date: Date.new(2013, 6, 6), # A Tuesday
