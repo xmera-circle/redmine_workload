@@ -12,7 +12,7 @@ class WlNationalHoliday < ActiveRecord::Base
   after_save :clearCache
 
   def check_datum
-    errors.add :end, :workload_end_before_start if workload_end_before_start?
+    errors.add :end, :greater_than_start_date if workload_end_before_start?
   end
 
   private
