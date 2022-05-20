@@ -1,7 +1,6 @@
 # English strings go here
 en:
   permission_view_project_workload: "Show workload of own projects"
-
   workload_title: "Workload"
   workload_site_title: "Workload"
   workload_show_label: "Workload"
@@ -40,7 +39,6 @@ en:
   workload_trigger_tooltip: "Click the triangle for more details"
   workload_overdue_issues_num: "Number of overdue issues:"
   workload_overdue_issues_hours: "Hours from overdue issues:"
-
   workload_settings_general_workdays: "Weekly working days"
   workload_settings_general_workdays_explanation: "The following days will be considered as working days when computing the workload:"
   workload_settings_general_workdays_monday:    "Monday:"
@@ -50,16 +48,14 @@ en:
   workload_settings_general_workdays_friday:    "Friday:"
   workload_settings_general_workdays_saturday:  "Saturday:"
   workload_settings_general_workdays_sunday:    "Sunday:"
-
   workload_settings_hours:                      "Workload thresholds"
   workload_settings_leastdailyworkload:         "Smallest workload that is considered to be ..."
   workload_settings_hours_low_min:              "... low:"
   workload_settings_hours_normal_min:           "... normal:"
   workload_settings_hours_high_min:             "... overloaded:"
-  workload_settings_main_group: Main group 
-
-  workload_settings_holiday_setup:	        "Configure holidays"
- 
+  workload_settings_main_group:                 "Main group"
+  workload_settings_holiday_setup:	        "Edit holidays"
+  workload_settings_holiday_new:	        "Create holiday"
   workload_user_vacation_site_title: "Vacation Overview"
   workload_user_vacation:           "Vacation"
   workload_user_vacation_menu:      "My Vacations"
@@ -68,32 +64,31 @@ en:
   workload_user_vacation_type:      "Type"
   workload_user_vacation_comments:  "Coment"
   workload_user_vacation_date_end:  "End"
-  
+  notice_user_vacation_saved:       "Vacation successfully saved"
+  notice_user_vacation_deleted:     "Vacation successfully deleted"
   workload_user_data_site_title:   "User Workload Information"
   workload_user_data_title:        "My Setup"
   workload_holiday_title:           "Holidays"
-  workload_end_before_start:        "End must be greater or equal to start date"
+  workload_holiday_reason:          "Reason"
   permission_edit_national_holiday: "Edit national Holidays"
   permission_edit_user_vacations:   "Edit own vacations"
   permission_edit_user_data:        "Edit own workload thresholds"
-
   notice_settings_updated: Settings sucessfully updated
   notice_holiday_updated: Holiday was successfully updated
   notice_holiday_saved: Holiday was successfully saved
   notice_holiday_deleted: Holiday was successfully deleted
-  notice_user_vacation_saved: Vacation has been saved
-  notice_user_vacation_deleted: Vacation has been deleted
   label_assigned_to_group: Assigned to %{value}
-
   description_selected_groups: Selected groups
   description_all_groups: All groups
   description_selected_users: Selected users
   description_all_users: All users
-
   field_main_group: Main group
   field_number_of_overdue_issues: Number of overdue issues
   field_number_of_overdue_hours: Hours of overdue issues
   label_planned: planned
   label_aggregation: Aggregation
-
-  
+  field_end: End
+  field_start: Begin
+  field_date_to: End
+  field_date_from: Begin
+  field_reason: Reason 

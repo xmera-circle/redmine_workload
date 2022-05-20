@@ -1,7 +1,6 @@
 # German strings go here
 de:
   permission_view_project_workload: "Workload der Mitglieder in eigenen Projekten anzeigen"
-
   workload_title: "Workload"
   workload_site_title: "Workload"
   workload_show_label: "Workload"
@@ -40,7 +39,6 @@ de:
   workload_trigger_tooltip: "Pfeil anklicken für mehr Details"
   workload_overdue_issues_num: "Anzahl überfälliger Tickets:"
   workload_overdue_issues_hours: "Stunden aus überfälligen Tickets:"
-
   workload_settings_general_workdays: "Wöchentliche Arbeitstage"
   workload_settings_general_workdays_explanation: "Diese Tage werden bei der Berechnung der Arbeitsbelastung als Arbeitstage angenommen:"
   workload_settings_general_workdays_monday:    "Montag"
@@ -50,16 +48,14 @@ de:
   workload_settings_general_workdays_friday:    "Freitag"
   workload_settings_general_workdays_saturday:  "Samstag"
   workload_settings_general_workdays_sunday:    "Sonntag"
-
   workload_settings_hours:                      "Belastungsgrenzen"
   workload_settings_leastdailyworkload:         "Kleinste Arbeitsbelastung pro Tag, deren Last als ..."
   workload_settings_hours_low_min:              "... niedrig angesehen wird:"
   workload_settings_hours_normal_min:           "... normal angesehen wird:"
   workload_settings_hours_high_min:             "... überlastet angesehen wird:"
-
+  workload_settings_main_group:                 "Hauptgruppe"
   workload_settings_holiday_setup:	        "Feiertage bearbeiten"
   workload_settings_holiday_new:            "Feiertag anlegen"
- 
   workload_user_vacation_site_title: "Urlaubsübersicht"
   workload_user_vacation:           "Urlaub"
   workload_user_vacation_menu:      "Meine Urlaube"
@@ -70,26 +66,30 @@ de:
   workload_user_vacation_date_end:  "Ende"
   notice_user_vacation_saved:     "Urlaub wurde erfolgreich gespeichert"
   notice_user_vacation_deleted:   "Urlaub wurde erfolgreich gelöscht"
-  
   workload_user_data_site_title:   "Benutzer Workload Information"
   workload_user_data_title:        "Meine Einstellungen"
   workload_holiday_title:           "Feiertage"
   workload_holiday_reason:          "Anlass"
-  workload_end_before_start:        "Das Enddatum muss hinter dem Anfangsdatum liegen"
   permission_edit_national_holiday: "Feiertage bearbeiten"
   permission_edit_user_vacations:   "Eigene Urlaube bearbeiten"
   permission_edit_user_data:        "Eigene Belastungsgrenzen bearbeiten"
-
   notice_settings_updated: Einstellungen erfolgreich aktualisiert.
+  notice_holiday_updated: "Feiertag wurde erfolgreich aktualisiert"
+  notice_holiday_saved: "Feiertag wurde erfolgreich gespeichert"
+  notice_holiday_deleted: "Feiertag wurde erfolgreich gelöscht"
   label_assigned_to_group: Zugewiesen an %{value}
-
   description_selected_groups: Ausgewählte Gruppen
   description_all_groups: Alle Gruppen
   description_selected_users: Ausgewählte Nutzer
   description_all_users: Alle Nutzer
-
   field_main_group: Hauptgruppe
   field_number_of_overdue_issues: Anzahl überfälliger Tickets
   field_number_of_overdue_hours: Stunden aus überfälligen Tickets
   label_planned: geplant 
   label_aggregation: Aggregation
+  field_end: Ende
+  field_start: Beginn
+  field_date_to: Ende
+  field_date_from: Beginn
+  field_reason: Anlass 
+
