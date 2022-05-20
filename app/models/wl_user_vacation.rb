@@ -15,7 +15,7 @@ class WlUserVacation < ActiveRecord::Base
   after_save :clearCache
 
   def check_datum
-    errors.add :date_to, :workload_end_before_start if workload_end_before_start?
+    errors.add :date_to, :greater_than_start_date if workload_end_before_start?
   end
 
   private
