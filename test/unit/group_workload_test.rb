@@ -144,4 +144,18 @@ class GroupWorkloadTest < ActiveSupport::TestCase
     current = group_workload.send(:holiday_at, first_day, :total, group)
     assert_equal expected, current
   end
+
+  test 'should count unscheduled issues and hours on group level' do
+    group1, group2 = groups_defined
+    workload = prepare_group_workload(user: @user,
+                                      role: @manager,
+                                      groups: [group1, group2],
+                                      main_group_strategy: :distinct,
+                                      vacation_strategy: :distinct)
+
+    assert_equal 2, workload.by_group[group1][:unscheduled_number]
+    assert_equal 24.0, workload.by_group[group1][:unscheduled_hours]
+    assert_equal 0, workload.by_group[group2][:unscheduled_number]
+    assert_equal 0.0, workload.by_group[group2][:unscheduled_hours]
+  end
 end

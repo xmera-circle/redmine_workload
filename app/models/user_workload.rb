@@ -72,6 +72,8 @@ class UserWorkload
         result[assignee] = {
           overdue_hours: 0.0,
           overdue_number: 0,
+          unscheduled_hours: 0.0,
+          unscheduled_number: 0,
           total: {},
           invisible: {}
         }
@@ -86,6 +88,14 @@ class UserWorkload
 
       ## Iterate over each issue in the array
       issue_set.each do |issue|
+        project = issue.project
+
+        # Count issues and hours if unscheduled
+        if issue.due_date.nil? || issue.start_date.nil?
+          result[assignee][:unscheduled_number] += 1
+          result[assignee][:unscheduled_hours] += issue.estimated_hours || 0.0
+        end
+
         hours_for_issue = hours_for_issue_per_day(issue)
 
         # Add the issue to the total workload, unless its overdue.
@@ -100,13 +110,13 @@ class UserWorkload
         # Otherwise, add it to the project (and its summary) to which it belongs
         # to.
         if issue.visible?
-          project = issue.project
-
           unless result[assignee].key?(project)
             result[assignee][project] = {
               total: {},
               overdue_hours: 0.0,
-              overdue_number: 0
+              overdue_number: 0,
+              unscheduled_hours: 0.0,
+              unscheduled_number: 0
             }
 
             time_span.each do |day|
@@ -115,6 +125,12 @@ class UserWorkload
                 holiday: working_days.exclude?(day)
               }
             end
+          end
+
+          # Count issues and hours if unscheduled
+          if issue.due_date.nil? || issue.start_date.nil?
+            result[assignee][project][:unscheduled_number] += 1
+            result[assignee][project][:unscheduled_hours] += issue.estimated_hours || 0.0
           end
 
           # Add the issue to the project workload summary, unless its overdue.

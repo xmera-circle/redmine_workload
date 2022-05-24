@@ -17,6 +17,15 @@ class UserWorkloadTest < ActiveSupport::TestCase
     User.current = nil
   end
 
+  test 'should respond to by_user' do
+    first_day = Date.new(2011, 3, 3)
+    last_day = Date.new(2012, 5, 1)
+    workload = UserWorkload.new(assignees: [],
+                                time_span: first_day..last_day,
+                                today: Time.zone.today)
+    assert workload.by_user
+  end
+
   test 'open_issues_for_users returns empty list if no users given' do
     first_day = Date.new(2011, 3, 3)
     last_day = Date.new(2012, 5, 1)
@@ -73,6 +82,35 @@ class UserWorkloadTest < ActiveSupport::TestCase
                                      today: Time.zone.today)
 
     assert_equal [issue2], user_workload.issues
+  end
+
+  test 'counts unscheduled issues and hours on project and user level' do
+    user = User.generate!
+    project1 = Project.generate!
+
+    User.add_to_project(user, project1, @manager)
+
+    issue1 = Issue.generate!(assigned_to: user,
+                             project: project1)
+    issue1.status_id = 2 # rejected
+    issue1.status.update! is_closed: true
+    issue1.save!
+
+    Issue.generate!(assigned_to: user,
+                    status_id: 1, # new
+                    estimated_hours: 5.0,
+                    project: project1)
+    first_day = Date.new(2011, 3, 3)
+    last_day = Date.new(2012, 5, 1)
+    user_workload = UserWorkload.new(assignees: [user],
+                                     time_span: first_day..last_day,
+                                     today: Time.zone.today)
+
+    data = user_workload.by_user
+    assert_equal 1, data[user][:unscheduled_number]
+    assert_equal 5.0, data[user][:unscheduled_hours]
+    assert_equal 1, data[user][project1][:unscheduled_number]
+    assert_equal 5.0, data[user][project1][:unscheduled_hours]
   end
 
   test 'hours_for_issue_per_day returns {} if time span empty' do
@@ -570,11 +608,14 @@ class UserWorkloadTest < ActiveSupport::TestCase
 
     assert workload_data.key?(user)
 
-    # Check structure returns the 4 elements :overdue_hours, :overdue_number, :total, :invisible
+    # Check structure returns the 6 elements :overdue_hours, :overdue_number,
+    # :unscheduled_number, :unscheduled_hours, :total, :invisible
     # AND 2 Projects
-    assert_equal 6, workload_data[user].keys.count
+    assert_equal 8, workload_data[user].keys.count
     assert workload_data[user].key?(:overdue_hours)
     assert workload_data[user].key?(:overdue_number)
+    assert workload_data[user].key?(:unscheduled_number)
+    assert workload_data[user].key?(:unscheduled_hours)
     assert workload_data[user].key?(:total)
     assert workload_data[user].key?(:invisible)
     assert workload_data[user].key?(project1)

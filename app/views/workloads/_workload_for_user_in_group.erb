@@ -10,12 +10,16 @@
 	<th class="user-description <%= css_group_class(group&.id) %> <%= css_user_class(user&.id) %>" scope="row" title="<%= l(:workload_trigger_tooltip) %>">
 	  <%= render :partial => 'trigger', :locals => { :trigger_for => css_group_user_class(group&.id, user&.id) } %>
 	  <%= "#{user.firstname} #{user.lastname}" %>
-	  <% if data[:overdue_number] && data[:overdue_number].positive? %>
+	  <% if data[:overdue_number] > 0 || data[:unscheduled_number] > 0 %>
 		<dl class="additional-user-info">
 		  <dt><%= l(:workload_overdue_issues_num) %></dt>
 		  <dd><%= data[:overdue_number] %></dd>
 		  <dt><%= l(:workload_overdue_issues_hours) %></dt>
 		  <dd><%= "%0.2f" % data[:overdue_hours] %></dd>
+			<dt class='mt-5'><%= l(:workload_unscheduled_issues_num) %></dt>
+		  <dd class='mt-5'><%= data[:unscheduled_number] %></dd>
+		  <dt><%= l(:workload_unscheduled_issues_hours) %></dt>
+		  <dd><%= "%0.2f" % data[:unscheduled_hours] %></dd>
 		</dl>
 	  <% end %>
 	</th>
