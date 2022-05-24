@@ -10,7 +10,7 @@
 	<th class="group-description <%= css_group_class(group&.id) %>" scope="row" title="<%= l(:workload_trigger_tooltip) %>">
 	  <%= render :partial => 'trigger', :locals => {:trigger_for => css_group_class(group&.id)} %>
 	  <%= "#{group.firstname} #{group.lastname}" %>
-	  <% if data[:overdue_number] > 0 || data[:unscheduled_number] > 0 %>
+	  <% if data[:overdue_number]&.positive? || data[:unscheduled_number]&.positive? %>
 		<dl class="additional-group-info">
 		  <dt><%= l(:workload_overdue_issues_num) %></dt>
 		  <dd><%= data[:overdue_number] %></dd>
