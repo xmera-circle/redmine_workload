@@ -91,5 +91,6 @@ de:
   field_start: Beginn
   field_date_to: Ende
   field_date_from: Beginn
-  field_reason: Anlass 
-
+  field_reason: Anlass
+  workload_unscheduled_issues_num: 'Anzahl ungeplanter Tickets:'
+  workload_unscheduled_issues_hours: 'Stunden aus ungeplanten Tickets:'

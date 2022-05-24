@@ -91,4 +91,6 @@ en:
   field_start: Begin
   field_date_to: End
   field_date_from: Begin
-  field_reason: Reason 
+  field_reason: Reason
+  workload_unscheduled_issues_num: 'Number of unscheduled issues:'
+  workload_unscheduled_issues_hours: 'Hours of unscheduled issues:'

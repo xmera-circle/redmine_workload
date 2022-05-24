@@ -90,6 +90,8 @@ class GroupWorkload
   def summarize_over_group_members(group)
     { overdue_hours: sum_of(:overdue_hours, group),
       overdue_number: sum_of(:overdue_number, group),
+      unscheduled_number: sum_of(:unscheduled_number, group),
+      unscheduled_hours: sum_of(:unscheduled_hours, group),
       total: total_of_group_members(group),
       invisible: invisibles_of_group_members(group) }
   end

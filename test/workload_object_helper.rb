@@ -140,6 +140,14 @@ module RedmineWorkload
                           estimated_hours: 12.0,
                           start_date: first_day,
                           due_date: last_day)
+
+          Issue.generate!(author: user,
+                          assigned_to: group,
+                          status: IssueStatus.find(1), # New, not closed
+                          project: project,
+                          tracker: trackers(:trackers_001),
+                          priority: enumerations(:enumerations_004),
+                          estimated_hours: 12.0) # unscheduled: without dates
         end
       end
     end

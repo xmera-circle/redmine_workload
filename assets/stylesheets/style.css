@@ -146,6 +146,11 @@ legend {
     margin-right: 4px;
 }
 
+.controller-workloads table dt.mt-5,
+.controller-workloads table dd.mt-5 {
+    margin-top: 5px;
+}
+
 /*------------------------------------------------------------------------------
  * Table heads on the left side.
  -----------------------------------------------------------------------------*/
