@@ -21,6 +21,7 @@ class GroupWorkload
   end
 
   ##
+  # Gives all aggregated data of the group and details for each user.
   #
   # @return [Hash(Group, UserWorkload#hours_per_user_issue_and_day)] Hash with
   #  results of UserWorkload#hours_per_user_issue_and_day for each group.
@@ -73,9 +74,14 @@ class GroupWorkload
   def total_availabilities_of(user)
     working_days = WlDateTools.working_days_in_time_span(time_span, user.id)
     time_span.each_with_object({}) do |day, hash|
+      holiday = working_days.exclude?(day)
+      capacity = WlDayCapacity.new(holiday: holiday, assignee: user)
       hash[day] = {}
       hash[day][:hours] = 0.0
-      hash[day][:holiday] = working_days.exclude?(day)
+      hash[day][:holiday] = holiday
+      hash[day][:lowload] = capacity.threshold_at(:lowload)
+      hash[day][:normalload] = capacity.threshold_at(:normalload)
+      hash[day][:highload] = capacity.threshold_at(:highload)
     end
   end
 
@@ -105,6 +111,9 @@ class GroupWorkload
       hash[day] = {}
       hash[day][:hours] = hours_at(day, :total, group)
       hash[day][:holiday] = holiday_at(day, :total, group)
+      hash[day][:lowload] = threshold_at(day, :lowload, group)
+      hash[day][:normalload] = threshold_at(day, :normalload, group)
+      hash[day][:highload] = threshold_at(day, :highload, group)
     end
   end
 
@@ -134,5 +143,14 @@ class GroupWorkload
       data.dig(key.to_sym, day, :holiday) if member.is_a? User
     end
     values.compact.all?
+  end
+
+  ##
+  # Sums up threshold values per day and group but ignores GroupUserDummy.
+  #
+  def threshold_at(day, key, group)
+    group_members[group].sum do |member, data|
+      member.is_a?(User) ? (data.dig(:total, day, key.to_sym) || 0.0) : 0.0
+    end
   end
 end

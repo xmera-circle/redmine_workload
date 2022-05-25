@@ -158,4 +158,28 @@ class GroupWorkloadTest < ActiveSupport::TestCase
     assert_equal 0, workload.by_group[group2][:unscheduled_number]
     assert_equal 0.0, workload.by_group[group2][:unscheduled_hours]
   end
+
+  test 'should calculate day dependent threshold values for group workload' do
+    group1, group2 = groups_defined
+    workload = prepare_group_workload(user: @user,
+                                      role: @manager,
+                                      groups: [group1, group2],
+                                      main_group_strategy: :same, # group1
+                                      # first_day for one user and last_day for the other
+                                      vacation_strategy: :distinct)
+
+    # threshold default values: highload = 6, lowload = 3, normalload = 4
+    # holiday for one of two group members
+    assert_equal 3.0, workload.send(:threshold_at, first_day, :lowload, group1)
+    assert_equal 4.0, workload.send(:threshold_at, first_day, :normalload, group1)
+    assert_equal 6.0, workload.send(:threshold_at, first_day, :highload, group1)
+    # Saturday
+    assert_equal 0.0, workload.send(:threshold_at, first_day + 3, :lowload, group1)
+    assert_equal 0.0, workload.send(:threshold_at, first_day + 3, :normalload, group1)
+    assert_equal 0.0, workload.send(:threshold_at, first_day + 3, :highload, group1)
+    # both group members are working
+    assert_equal 6.0, workload.send(:threshold_at, first_day + 1, :lowload, group1)
+    assert_equal 8.0, workload.send(:threshold_at, first_day + 1, :normalload, group1)
+    assert_equal 12.0, workload.send(:threshold_at, first_day + 1, :highload, group1)
+  end
 end

@@ -71,9 +71,9 @@ module RedmineWorkload
       user1.groups.reload
       assert Group.find(group1.id).users.include? user1
 
-      user1.create_wl_user_data(threshold_highload_min: 6,
-                                threshold_lowload_min: 3,
-                                threshold_normalload_min: 4,
+      user1.create_wl_user_data(threshold_highload_min: 6.0,
+                                threshold_lowload_min: 3.0,
+                                threshold_normalload_min: 4.0,
                                 main_group: group1.id)
       assert_equal group1.id, user1.wl_user_data.main_group
 
@@ -85,9 +85,9 @@ module RedmineWorkload
       assert Group.find(group1.id).users.include? user2
       assert Group.find(group2.id).users.include? user2
 
-      user2.create_wl_user_data(threshold_highload_min: 6,
-                                threshold_lowload_min: 3,
-                                threshold_normalload_min: 4,
+      user2.create_wl_user_data(threshold_highload_min: 6.0,
+                                threshold_lowload_min: 3.0,
+                                threshold_normalload_min: 4.0,
                                 main_group: with_main_group_strategy(group1, group2, main_group_strategy))
       assert_equal with_main_group_strategy(group1, group2, main_group_strategy), user2.wl_user_data.main_group
     end
