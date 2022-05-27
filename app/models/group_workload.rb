@@ -134,13 +134,13 @@ class GroupWorkload
   end
 
   ##
-  # Checks for holiday of group members (but ignores GroupUserDummy)
-  # for a given day and returns true if all group members are in holiday at a
-  # given day or false if not.
+  # Checks for holiday of group members including GroupUserDummy, who never will
+  # be on vacation, for a given day and returns true if all group members are in
+  # holiday at a given day or false if not.
   #
   def holiday_at(day, key, group)
-    values = group_members[group].map do |member, data|
-      data.dig(key.to_sym, day, :holiday) if member.is_a? User
+    values = group_members[group].map do |_member, data|
+      data.dig(key.to_sym, day, :holiday)
     end
     values.compact.all?
   end

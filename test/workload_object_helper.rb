@@ -16,7 +16,14 @@ module RedmineWorkload
     #        RedmineWorkload::WorkloadObjectHelper#groups_defined.
     # @return [GroupWorkload] A GroupWorkload object.
     #
-    def prepare_group_workload(user:, role:, main_group_strategy:, vacation_strategy:, groups: nil)
+    def prepare_group_workload(**params)
+      user = params[:user]
+      role = params[:role]
+      groups = params[:groups]
+      main_group_strategy = params[:main_group_strategy]
+      vacation_strategy = params[:vacation_strategy]
+      group_user_dummy_strategy = params[:group_user_dummy_strategy]
+
       if groups
         groups.compact!
         groups_params = groups.map(&:id)
@@ -31,7 +38,7 @@ module RedmineWorkload
         users_params = nil
       end
       user_setup(groups: groups, users: users, main_group_strategy: main_group_strategy, vacation_strategy: vacation_strategy) if groups
-      issue_setup(groups: groups, users: users, role: role)
+      issue_setup(groups: groups, users: users, role: role, group_user_dummy_strategy: group_user_dummy_strategy)
       group_selection = WlGroupSelection.new(groups: groups_params,
                                              user: user)
       user_selection = WlUserSelection.new(users: users_params,
@@ -111,15 +118,20 @@ module RedmineWorkload
     end
 
     def issue_setup(**params)
+      users = params[:users]
+      role = params[:role]
+      groups = params[:groups]
+      group_user_dummy_strategy = params[:group_user_dummy_strategy]
       project = Project.generate!
-      params[:groups]&.each do |group|
+
+      groups&.each do |group|
         project.members << Member.new(principal: group,
-                                      roles: [params[:role]])
+                                      roles: [role])
       end
       with_settings issue_group_assignment: '1' do
-        params[:users].each do |user|
+        users.each do |user|
           group = user.groups.take
-          User.add_to_project(user, project, @manager) unless params[:groups]
+          User.add_to_project(user, project, @manager) unless groups
           Issue.generate!(author: user,
                           assigned_to: user,
                           status: IssueStatus.find(1), # New, not closed
@@ -130,24 +142,25 @@ module RedmineWorkload
                           start_date: first_day,
                           due_date: last_day)
           next unless user.groups.any?
-
-          Issue.generate!(author: user,
-                          assigned_to: group,
-                          status: IssueStatus.find(1), # New, not closed
-                          project: project,
-                          tracker: trackers(:trackers_001),
-                          priority: enumerations(:enumerations_004),
-                          estimated_hours: 12.0,
-                          start_date: first_day,
-                          due_date: last_day)
-
-          Issue.generate!(author: user,
-                          assigned_to: group,
-                          status: IssueStatus.find(1), # New, not closed
-                          project: project,
-                          tracker: trackers(:trackers_001),
-                          priority: enumerations(:enumerations_004),
-                          estimated_hours: 12.0) # unscheduled: without dates
+          if group_user_dummy_strategy
+            Issue.generate!(author: user,
+                            assigned_to: group,
+                            status: IssueStatus.find(1), # New, not closed
+                            project: project,
+                            tracker: trackers(:trackers_001),
+                            priority: enumerations(:enumerations_004),
+                            estimated_hours: 12.0,
+                            start_date: first_day,
+                            due_date: last_day)
+            # unscheduled: without dates
+            Issue.generate!(author: user,
+                            assigned_to: group,
+                            status: IssueStatus.find(1), # New, not closed
+                            project: project,
+                            tracker: trackers(:trackers_001),
+                            priority: enumerations(:enumerations_004),
+                            estimated_hours: 12.0)
+          end
         end
       end
     end

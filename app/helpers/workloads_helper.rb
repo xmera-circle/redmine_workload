@@ -64,8 +64,6 @@ module WorkloadsHelper
   # @return [String] The css class for highlighting the hours in the workload table.
   #
   def load_class_for_hours(hours, lowload, normalload, highload)
-    return '' unless lowload.positive? || normalload.positive? || highload.positive?
-
     hours = hours.to_f
 
     if hours < lowload
