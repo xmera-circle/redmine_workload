@@ -54,7 +54,8 @@ class GroupWorkloadTest < ActiveSupport::TestCase
                                             role: @manager,
                                             groups: groups_defined,
                                             main_group_strategy: :distinct,
-                                            vacation_strategy: :distinct)
+                                            vacation_strategy: :distinct,
+                                            group_user_dummy_strategy: true)
     selected_groups = group_workload.send(:selected_groups)
     group1 = selected_groups.first
     group2 = selected_groups.last
@@ -73,7 +74,8 @@ class GroupWorkloadTest < ActiveSupport::TestCase
                                             role: @manager,
                                             groups: groups_defined,
                                             main_group_strategy: :distinct,
-                                            vacation_strategy: :distinct)
+                                            vacation_strategy: :distinct,
+                                            group_user_dummy_strategy: true)
     sorted_user_workload = group_workload.send(:sorted_user_workload)
     assert sorted_user_workload.keys.first.is_a? GroupUserDummy
   end
@@ -114,6 +116,7 @@ class GroupWorkloadTest < ActiveSupport::TestCase
   end
 
   test 'should return holiday when all group members are on vacation for a given day' do
+    # and no group user dummy exists
     group_workload = prepare_group_workload(user: @user,
                                             role: @manager,
                                             groups: groups_defined,
@@ -145,13 +148,33 @@ class GroupWorkloadTest < ActiveSupport::TestCase
     assert_equal expected, current
   end
 
+  test 'should return no holiday when all group members are on holiday except group user dummy' do
+    # group user dummy cannot go to holiday
+    group_workload = prepare_group_workload(user: @user,
+                                            role: @manager,
+                                            groups: groups_defined,
+                                            main_group_strategy: :same,
+                                            vacation_strategy: :same,
+                                            group_user_dummy_strategy: true)
+
+    user1_id = group_workload.send(:users).send(:users).first
+    user1 = User.find(user1_id)
+    assert user1.is_a? User
+    group = Group.find(user1.main_group_id)
+
+    expected = false
+    current = group_workload.send(:holiday_at, first_day, :total, group)
+    assert_equal expected, current
+  end
+
   test 'should count unscheduled issues and hours on group level' do
     group1, group2 = groups_defined
     workload = prepare_group_workload(user: @user,
                                       role: @manager,
                                       groups: [group1, group2],
                                       main_group_strategy: :distinct,
-                                      vacation_strategy: :distinct)
+                                      vacation_strategy: :distinct,
+                                      group_user_dummy_strategy: true)
 
     assert_equal 2, workload.by_group[group1][:unscheduled_number]
     assert_equal 24.0, workload.by_group[group1][:unscheduled_hours]
@@ -159,7 +182,7 @@ class GroupWorkloadTest < ActiveSupport::TestCase
     assert_equal 0.0, workload.by_group[group2][:unscheduled_hours]
   end
 
-  test 'should calculate day dependent threshold values for group workload' do
+  test 'should calculate day dependent threshold values for group workload without dummy' do
     group1, group2 = groups_defined
     workload = prepare_group_workload(user: @user,
                                       role: @manager,
@@ -167,6 +190,31 @@ class GroupWorkloadTest < ActiveSupport::TestCase
                                       main_group_strategy: :same, # group1
                                       # first_day for one user and last_day for the other
                                       vacation_strategy: :distinct)
+
+    # threshold default values: highload = 6, lowload = 3, normalload = 4
+    # holiday for one of two group members
+    assert_equal 3.0, workload.send(:threshold_at, first_day, :lowload, group1)
+    assert_equal 4.0, workload.send(:threshold_at, first_day, :normalload, group1)
+    assert_equal 6.0, workload.send(:threshold_at, first_day, :highload, group1)
+    # Saturday
+    assert_equal 0.0, workload.send(:threshold_at, first_day + 3, :lowload, group1)
+    assert_equal 0.0, workload.send(:threshold_at, first_day + 3, :normalload, group1)
+    assert_equal 0.0, workload.send(:threshold_at, first_day + 3, :highload, group1)
+    # both group members are working
+    assert_equal 6.0, workload.send(:threshold_at, first_day + 1, :lowload, group1)
+    assert_equal 8.0, workload.send(:threshold_at, first_day + 1, :normalload, group1)
+    assert_equal 12.0, workload.send(:threshold_at, first_day + 1, :highload, group1)
+  end
+
+  test 'should calculate day dependent threshold values for group workload with dummy' do
+    group1, group2 = groups_defined
+    workload = prepare_group_workload(user: @user,
+                                      role: @manager,
+                                      groups: [group1, group2],
+                                      main_group_strategy: :same, # group1
+                                      # first_day for one user and last_day for the other
+                                      vacation_strategy: :distinct,
+                                      group_user_dummy_strategy: true)
 
     # threshold default values: highload = 6, lowload = 3, normalload = 4
     # holiday for one of two group members
