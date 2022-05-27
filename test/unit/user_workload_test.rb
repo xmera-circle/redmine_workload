@@ -675,7 +675,10 @@ class UserWorkloadTest < ActiveSupport::TestCase
     settings['threshold_normalload_min'] = 5.0
     settings['threshold_highload_min'] = 7.0
 
-    assert_equal 'none', load_class_for_hours(0.05)
+    assert_equal 'none', load_class_for_hours(0.05,
+                                              settings['threshold_lowload_min'],
+                                              settings['threshold_normalload_min'],
+                                              settings['threshold_highload_min'])
   end
 
   test 'load_class_for_hours returns "low" for workloads between thresholds for low and normal workload' do
@@ -683,7 +686,10 @@ class UserWorkloadTest < ActiveSupport::TestCase
     settings['threshold_normalload_min'] = 5.0
     settings['threshold_highload_min'] = 7.0
 
-    assert_equal 'low', load_class_for_hours(3.5)
+    assert_equal 'low', load_class_for_hours(3.5,
+                                             settings['threshold_lowload_min'],
+                                             settings['threshold_normalload_min'],
+                                             settings['threshold_highload_min'])
   end
 
   test 'load_class_for_hours returns "normal" for workloads between thresholds for normal and high workload' do
@@ -691,7 +697,10 @@ class UserWorkloadTest < ActiveSupport::TestCase
     settings['threshold_normalload_min'] = 2.0
     settings['threshold_highload_min'] = 7.0
 
-    assert_equal 'normal', load_class_for_hours(3.5)
+    assert_equal 'normal', load_class_for_hours(3.5,
+                                                settings['threshold_lowload_min'],
+                                                settings['threshold_normalload_min'],
+                                                settings['threshold_highload_min'])
   end
 
   test 'load_class_for_hours returns "high" for workloads above threshold for high workload' do
@@ -699,7 +708,10 @@ class UserWorkloadTest < ActiveSupport::TestCase
     settings['threshold_normalload_min'] = 2.0
     settings['threshold_highload_min'] = 7.0
 
-    assert_equal 'high', load_class_for_hours(10.5)
+    assert_equal 'high', load_class_for_hours(10.5,
+                                              settings['threshold_lowload_min'],
+                                              settings['threshold_normalload_min'],
+                                              settings['threshold_highload_min'])
   end
 
   private

@@ -11,7 +11,7 @@
 	<th class="project-description <%=  css_group_user_project_class(group&.id, user&.id, project&.id) %>" scope="row" title="<%= l(:workload_trigger_tooltip) %>">
 	  <%= render :partial => 'trigger', :locals => {:trigger_for => css_group_user_project_class(group&.id, user&.id, project&.id) } %>
 	  <%= project.to_s %>
-	  <% if data[:overdue_number] > 0 || data[:unscheduled_number] > 0 %>
+	  <% if data[:overdue_number]&.positive? || data[:unscheduled_number]&.positive? %>
 		<dl class="additional-project-info">
 		  <dt><%= l(:workload_overdue_issues_num) %></dt>
 		  <dd><%= data[:overdue_number] %></dd>

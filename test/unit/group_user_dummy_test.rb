@@ -78,12 +78,12 @@ class GroupUserDummyTest < ActiveSupport::TestCase
   end
 
   test 'should sum up thresholds of group members when given' do
-    lowload1, normalload1, highload1 = threshold_values(@user1)
+    lowload1, normalload1, highload1 = [2, 4, 6]
     @user1_wl_data.threshold_lowload_min = lowload1
     @user1_wl_data.threshold_normalload_min = normalload1
     @user1_wl_data.threshold_highload_min = highload1
     @user1_wl_data.save
-    lowload2, normalload2, highload2 = threshold_values(@user2)
+    lowload2, normalload2, highload2 = [3, 5, 7]
     @user2_wl_data.threshold_lowload_min = lowload2
     @user2_wl_data.threshold_normalload_min = normalload2
     @user2_wl_data.threshold_highload_min = highload2

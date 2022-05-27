@@ -21,7 +21,10 @@
   <%
     data.keys.sort.each do |day|
       dataForDay = data[day]
-
+      hours = dataForDay[:hours]
+      lowload = dataForDay[:lowload]
+      normalload = dataForDay[:normalload]
+      highload = dataForDay[:highload]
       klass  = 'hours'
       klass += ' active'        if  dataForDay[:active]
       klass += ' not-active'    if !dataForDay[:active]
@@ -30,9 +33,9 @@
       klass += ' not-estimated' if  dataForDay[:noEstimate]
       klass += ' estimated'     if !dataForDay[:noEstimate]
       klass += ' today'         if  @today === day
-      klass += ' ' + load_class_for_hours(dataForDay[:hours], user)
+      klass += ' ' + load_class_for_hours(hours, lowload, normalload, highload)
 
-      hoursString = (dataForDay[:hours].abs < 0.01) ? '' : sprintf("%.1f", dataForDay[:hours])
+      hoursString = (hours.abs < 0.01) ? '' : sprintf("%.1f", hours)
   %>
     <td class="<%= klass %>">
       <span>

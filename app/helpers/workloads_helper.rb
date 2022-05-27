@@ -57,13 +57,16 @@ module WorkloadsHelper
   ##
   # Determines the css class for hours in dependence of the workload level.
   #
-  # @param [Float] The decimal number of hours.
-  # @param [User] A user object.
+  # @param hours [Float] The decimal number of hours.
+  # @param lowload [Float] The threshold lowload min value.
+  # @param normalload [Float] The threshold normalload min value.
+  # @param highload [Float] The threshold highload min value.
   # @return [String] The css class for highlighting the hours in the workload table.
   #
-  def load_class_for_hours(hours, user = nil)
+  def load_class_for_hours(hours, lowload, normalload, highload)
+    return '' unless lowload.positive? || normalload.positive? || highload.positive?
+
     hours = hours.to_f
-    lowload, normalload, highload = threshold_values(user)
 
     if hours < lowload
       'none'
@@ -74,17 +77,6 @@ module WorkloadsHelper
     else
       'high'
     end
-  end
-
-  def threshold_values(user)
-    settings = user_settings(user)
-    [settings.threshold_lowload_min, settings.threshold_normalload_min, settings.threshold_highload_min]
-  end
-
-  def user_settings(user)
-    return user if user.is_a?(GroupUserDummy)
-
-    user&.wl_user_data || WlDefaultUserData.new
   end
 
   def groups?(groups)
