@@ -13,6 +13,13 @@ module RedmineWorkload
       end
 
       module InstanceMethods
+        ##
+        # Prefer to use main_group_id over User#wl_user_data.main_group since
+        # the latter may lead to
+        # NoMethodError Exception: undefined method `main_group' for nil:NilClass
+        # when no data set for wl_user_data exists. In contrast, the delegation
+        # of main_group, as used below, will handle this case.
+        #
         def main_group_id
           main_group
         end

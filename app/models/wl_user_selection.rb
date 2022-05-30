@@ -78,7 +78,7 @@ class WlUserSelection
     return users_by_params if selected_groups.blank?
 
     selected_users.select do |user|
-      selected_groups.map(&:id).include? user.wl_user_data.main_group
+      selected_groups.map(&:id).include? user.main_group_id
     end
   end
 
