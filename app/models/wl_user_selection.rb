@@ -75,9 +75,11 @@ class WlUserSelection
   #
   def users_from_context
     selected_users = users_of_groups | users_by_params
-    return users_by_params if groups.selected.blank?
+    return users_by_params if selected_groups.blank?
 
-    selected_users.select(&:wl_user_data)
+    selected_users.select do |user|
+      selected_groups.map(&:id).include? user.wl_user_data.main_group
+    end
   end
 
   ##
@@ -129,14 +131,14 @@ class WlUserSelection
   end
 
   ##
-  # Collects all users belonging to selected groups.
+  # Collects all users belonging to selected groups if the user is still active.
   #
   # @return [Array(User)] An array of user objects.
   #
   def users_of_groups
     return [] if selected_groups.blank?
 
-    result = selected_groups.map { |group| group.users.to_a }
+    result = selected_groups.map { |group| group.users.select(&:active?) }
     result.flatten!
     result.uniq
   end

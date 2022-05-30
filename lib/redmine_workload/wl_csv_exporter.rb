@@ -27,6 +27,8 @@ class WlCsvExporter
      main_group(assignee),
      overdue_issues(workload),
      overdue_hours(workload),
+     unscheduled_issues(workload),
+     unscheduled_hours(workload),
      workload_over_time(workload)].flatten
   end
 
@@ -53,6 +55,14 @@ class WlCsvExporter
     workload[:overdue_hours]
   end
 
+  def unscheduled_issues(workload)
+    workload[:unscheduled_number]
+  end
+
+  def unscheduled_hours(workload)
+    workload[:unscheduled_hours]
+  end
+
   def workload_over_time(workload)
     data.time_span.map do |day|
       workload[:total][day][:hours]
@@ -65,7 +75,9 @@ class WlCsvExporter
         name
         main_group
         number_of_overdue_issues
-        number_of_overdue_hours]
+        number_of_overdue_hours
+        number_of_unscheduled_issues
+        number_of_unscheduled_hours]
   end
 
   def dynamic_column_names

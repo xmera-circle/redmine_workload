@@ -85,6 +85,8 @@ de:
   field_main_group: Hauptgruppe
   field_number_of_overdue_issues: Anzahl überfälliger Tickets
   field_number_of_overdue_hours: Stunden aus überfälligen Tickets
+  field_number_of_unscheduled_issues: Anzahl nicht geplanter Tickets
+  field_number_of_unscheduled_hours: Stunden aus nicht geplanten Tickets
   label_planned: geplant 
   label_aggregation: Aggregation
   field_end: Ende

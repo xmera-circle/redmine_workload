@@ -85,6 +85,8 @@ en:
   field_main_group: Main group
   field_number_of_overdue_issues: Number of overdue issues
   field_number_of_overdue_hours: Hours of overdue issues
+  field_number_of_unscheduled_issues: Number of unscheduled issues
+  field_number_of_unscheduled_hours: Hours of unscheduled issues
   label_planned: planned
   label_aggregation: Aggregation
   field_end: End
