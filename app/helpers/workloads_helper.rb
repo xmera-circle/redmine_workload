@@ -92,10 +92,11 @@ module WorkloadsHelper
     Redmine::Export::CSV.generate(encoding: params[:encoding]) do |csv|
       csv << prepare.header_fields
       prepare.group_workload.each do |level, data|
-        csv << prepare.line(level, data)
+        csv << prepare.line(level, data, :available) if level.instance_of? Group
+        csv << prepare.line(level, data, :planned)
       end
       prepare.user_workload.each do |level, data|
-        csv << prepare.line(level, data)
+        csv << prepare.line(level, data, :planned)
       end
       csv
     end
