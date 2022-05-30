@@ -20,14 +20,8 @@ class WlCsvExporter
       dynamic_column_names
   end
 
-  def line(assignee, workload)
-    [l(:label_planned),
-     type(assignee),
-     name(assignee),
-     main_group(assignee),
-     overdue_issues(workload),
-     overdue_hours(workload),
-     workload_over_time(workload)].flatten
+  def line(assignee, workload, status)
+    send("#{status}_line", assignee, workload)
   end
 
   private
@@ -39,6 +33,30 @@ class WlCsvExporter
 
     klass = data.class
     "#{klass}Preparer".constantize.new(data: data, params: params)
+  end
+
+  def planned_line(assignee, workload)
+    [l(:label_planned),
+     type(assignee),
+     name(assignee),
+     main_group(assignee),
+     overdue_issues(workload),
+     overdue_hours(workload),
+     unscheduled_issues(workload),
+     unscheduled_hours(workload),
+     workload_over_time(workload)].flatten
+  end
+
+  def available_line(assignee, workload)
+    [l(:label_available),
+     type(assignee),
+     name(assignee),
+     '',
+     '',
+     '',
+     '',
+     '',
+     max_capacities_over_time(workload)].flatten
   end
 
   def name(assignee)
@@ -53,9 +71,23 @@ class WlCsvExporter
     workload[:overdue_hours]
   end
 
+  def unscheduled_issues(workload)
+    workload[:unscheduled_number]
+  end
+
+  def unscheduled_hours(workload)
+    workload[:unscheduled_hours]
+  end
+
   def workload_over_time(workload)
     data.time_span.map do |day|
       workload[:total][day][:hours]
+    end
+  end
+
+  def max_capacities_over_time(workload)
+    data.time_span.map do |day|
+      workload[:total][day][:highload]
     end
   end
 
@@ -65,7 +97,9 @@ class WlCsvExporter
         name
         main_group
         number_of_overdue_issues
-        number_of_overdue_hours]
+        number_of_overdue_hours
+        number_of_unscheduled_issues
+        number_of_unscheduled_hours]
   end
 
   def dynamic_column_names

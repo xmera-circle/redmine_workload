@@ -28,7 +28,7 @@ class UserWorkloadPreparer
   end
 
   def main_group(assignee)
-    user_group = assignee.wl_user_data&.main_group
+    user_group = assignee.main_group_id
     assignee.groups.find_by(id: user_group)&.name
   end
 

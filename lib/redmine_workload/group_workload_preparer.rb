@@ -31,7 +31,7 @@ class GroupWorkloadPreparer
   def main_group(assignee)
     case assignee.class.name
     when 'User'
-      user_group = assignee.wl_user_data&.main_group
+      user_group = assignee.main_group_id
       assignee.groups.find_by(id: user_group)&.name
     when 'GroupUserDummy'
       assignee.main_group&.name
