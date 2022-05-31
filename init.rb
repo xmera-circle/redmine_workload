@@ -5,11 +5,11 @@ require_dependency 'redmine_workload'
 
 Redmine::Plugin.register :redmine_workload do
   name 'Redmine workload plugin'
-  author 'Jost Baron'
+  author 'Jost Baron, Liane Hampe'
   description 'This is a plugin for Redmine, originally developed by Rafael Calleja. It ' \
-              'displays the estimated number of hours users have to work to finish ' \
+              'displays the estimated number of hours users and groups have to work to finish ' \
               'all their assigned issus on time.'
-  version '1.1.0'
+  version '2.0.0'
   url 'https://github.com/JostBaron/redmine_workload'
   author_url 'http://netzkönig.de/'
 
