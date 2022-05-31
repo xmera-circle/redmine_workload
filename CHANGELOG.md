@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## unreleased
+## 2.0.0 - unreleased
 
 ### Added
 
@@ -13,18 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * group issues to workload table if a group is selected
 * calculation of group workload based on user main group setting
 * presentation of summarized group workload in workload table
+* additional infos about unscheduled issues
 * permissions :view_all_workloads, :view_own_group_workloads, :view_own_workloads
 * csv export of users or groups
 
 ### Changed
 
-* WorkLoadHelper#workload_admin? to be deprecated in Redmine Workload 2.0.0
 * using of dynamic action segments in routes due to deprecation warning
-* styling of worload table to look similar as gantt diagram
+* styling of workload table to look similar as gantt diagram
 * user and group selection to be in a separate class to make it reusable
-* permissions to be global again
+* permissions to be global again, i.e., not dependend of project module enabled
 * display of current user to show only if visited workload index page or when
 selected explicitly
+* error messages to translate field names
 
 ### Fixed
 
