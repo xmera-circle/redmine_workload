@@ -75,13 +75,13 @@ class GroupWorkload
     working_days = WlDateTools.working_days_in_time_span(time_span, user.id)
     time_span.each_with_object({}) do |day, hash|
       holiday = working_days.exclude?(day)
-      capacity = WlDayCapacity.new(holiday: holiday, assignee: user)
+      capacity = WlDayCapacity.new(assignee: user)
       hash[day] = {}
       hash[day][:hours] = 0.0
       hash[day][:holiday] = holiday
-      hash[day][:lowload] = capacity.threshold_at(:lowload)
-      hash[day][:normalload] = capacity.threshold_at(:normalload)
-      hash[day][:highload] = capacity.threshold_at(:highload)
+      hash[day][:lowload] = capacity.threshold_at(:lowload, holiday)
+      hash[day][:normalload] = capacity.threshold_at(:normalload, holiday)
+      hash[day][:highload] = capacity.threshold_at(:highload, holiday)
     end
   end
 

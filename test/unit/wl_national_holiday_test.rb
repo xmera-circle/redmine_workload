@@ -2,7 +2,7 @@
 
 require File.expand_path('../test_helper', __dir__)
 
-class NationalHolidayTest < ActiveSupport::TestCase
+class WlNationalHolidayTest < ActiveSupport::TestCase
   fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
            :users, :issue_statuses, :enumerations, :roles
 
@@ -39,6 +39,8 @@ class NationalHolidayTest < ActiveSupport::TestCase
   test 'holiday is not workday' do
     first_day = Date.new(2017, 5, 15)
     last_day = Date.new(2017, 5, 19)
+    user = User.generate!
+    cap = WlDayCapacity.new(assignee: user)
 
     issue = Issue.generate!(
       start_date: first_day,
@@ -58,11 +60,11 @@ class NationalHolidayTest < ActiveSupport::TestCase
     holiday1.save
     holiday2.save
 
-    result = WlDateTools.working_days_in_time_span(first_day..last_day, 'group').to_a
+    result = WlDateTools.working_days_in_time_span(first_day..last_day, user).to_a
 
     assert_equal [first_day, last_day - 1], result, 'Result should only bring 2 workdays!'
 
-    result = user_workload.send(:hours_for_issue_per_day, issue)
+    result = user_workload.send(:hours_for_issue_per_day, issue, cap, user)
 
     assert_equal 10.0, result[first_day][:hours], 'Workday should have 10h load!'
     assert_equal 0.0, result[first_day + 1][:hours], 'Workday should be day off for holiday!' # holiday2[:start]

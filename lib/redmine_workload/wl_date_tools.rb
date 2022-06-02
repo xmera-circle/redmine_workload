@@ -50,16 +50,16 @@ class WlDateTools
     result
   end
 
-  def self.working_days_in_time_span(time_span, assignee_id = 'group', no_cache: false)
+  def self.working_days_in_time_span(time_span, assignee, no_cache: false)
     raise ArgumentError unless time_span.is_a?(Range)
 
     Rails.cache.clear if no_cache
 
-    Rails.cache.fetch("#{assignee_id}/#{time_span}", expires_in: 12.hours) do
+    Rails.cache.fetch("#{assignee.id}/#{time_span}", expires_in: 12.hours) do
       result = Set.new
 
       time_span.each do |day|
-        next if vacation?(day, assignee_id)
+        next if vacation?(day, assignee)
         next if holiday?(day)
 
         result.add(day) if working_days.include?(day.cwday)
@@ -69,27 +69,19 @@ class WlDateTools
     end
   end
 
-  def self.real_distance_in_days(time_span, assignee_id = 'group')
+  def self.real_distance_in_days(time_span, assignee)
     raise ArgumentError unless time_span.is_a?(Range)
 
-    working_days_in_time_span(time_span, assignee_id).size
+    working_days_in_time_span(time_span, assignee).size
   end
 
   def self.holiday?(day)
     !WlNationalHoliday.where('start <= ? AND end >= ?', day, day).empty?
   end
 
-  def self.vacation?(day, assignee_id)
-    return false if group?(assignee_id)
+  def self.vacation?(day, assignee)
+    return false unless assignee.is_a?(User)
 
-    !WlUserVacation.where('user_id = ? AND date_from <= ? AND date_to >= ?', assignee_id, day, day).empty?
+    !WlUserVacation.where('user_id = ? AND date_from <= ? AND date_to >= ?', assignee.id, day, day).empty?
   end
-
-  private
-
-  def self.group?(id)
-    id == 'group'
-  end
-
-  private_class_method :group?
 end

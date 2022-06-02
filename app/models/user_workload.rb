@@ -63,8 +63,9 @@ class UserWorkload
     result = {}
 
     issues.group_by(&:assigned_to).each do |assignee, issue_set|
-      working_days = working_days_in_time_span(assignee_id: assignee.id)
+      working_days = working_days_in_time_span(assignee: assignee)
       first_working_day_from_today_on = working_days.select { |day| day >= today }.min || today
+      cap = WlDayCapacity.new(assignee: assignee)
 
       assignee = GroupUserDummy.new(group: assignee) if assignee.is_a? Group
 
@@ -83,9 +84,9 @@ class UserWorkload
           result[assignee][:total][day] = {
             hours: 0.0,
             holiday: holiday,
-            lowload: threshold_at(assignee, holiday, :lowload),
-            normalload: threshold_at(assignee, holiday, :normalload),
-            highload: threshold_at(assignee, holiday, :highload)
+            lowload: threshold_at(cap, holiday, :lowload),
+            normalload: threshold_at(cap, holiday, :normalload),
+            highload: threshold_at(cap, holiday, :highload)
           }
         end
       end
@@ -93,21 +94,21 @@ class UserWorkload
       ## Iterate over each issue in the array
       issue_set.each do |issue|
         project = issue.project
+        hours_for_issue = hours_for_issue_per_day(issue, cap, assignee)
+        remaining_estimated_hours = estimated_time_for_issue(issue)
 
-        # Count issues and hours if unscheduled
-        if issue.due_date.nil? || issue.start_date.nil?
-          result[assignee][:unscheduled_number] += 1
-          result[assignee][:unscheduled_hours] += issue.estimated_hours || 0.0
-        end
-
-        hours_for_issue = hours_for_issue_per_day(issue)
-
-        # Add the issue to the total workload, unless its overdue.
+        # Add the issue to the total workload unless its overdue or unscheduled.
+        # @note issue.overdue? implies there is a due_date. In order to avoid
+        #   double counting a missing start_date will be ignored as criteria of
+        #   beeing unscheduled.
         if issue.overdue?
           result[assignee][:overdue_hours] += hours_for_issue[first_working_day_from_today_on][:hours]
           result[assignee][:overdue_number] += 1
+        elsif issue.due_date.nil?
+          result[assignee][:unscheduled_hours] += remaining_estimated_hours
+          result[assignee][:unscheduled_number] += 1
         else
-          result[assignee][:total] = add_issue_info_to_summary(result[assignee][:total], hours_for_issue)
+          result[assignee][:total] = add_issue_info_to_summary(result[assignee][:total], hours_for_issue, assignee)
         end
 
         # If the issue is invisible, add it to the invisible issues summary.
@@ -128,26 +129,26 @@ class UserWorkload
               result[assignee][project][:total][day] = {
                 hours: 0.0,
                 holiday: holiday,
-                lowload: threshold_at(assignee, holiday, :lowload),
-                normalload: threshold_at(assignee, holiday, :normalload),
-                highload: threshold_at(assignee, holiday, :highload)
+                lowload: threshold_at(cap, holiday, :lowload),
+                normalload: threshold_at(cap, holiday, :normalload),
+                highload: threshold_at(cap, holiday, :highload)
               }
             end
           end
 
-          # Count issues and hours if unscheduled
-          if issue.due_date.nil? || issue.start_date.nil?
-            result[assignee][project][:unscheduled_number] += 1
-            result[assignee][project][:unscheduled_hours] += issue.estimated_hours || 0.0
-          end
-
-          # Add the issue to the project workload summary, unless its overdue.
+          # Add the issue to the project workload summary unless its overdue or unscheduled.
+          # @note issue.overdue? implies there is a due_date. In order to avoid
+          #   double counting a missing start_date will be ignored as criteria of
+          #   beeing unscheduled.
           if issue.overdue?
             result[assignee][project][:overdue_hours] += hours_for_issue[first_working_day_from_today_on][:hours]
             result[assignee][project][:overdue_number] += 1
+          elsif issue.due_date.nil?
+            result[assignee][project][:unscheduled_hours] += remaining_estimated_hours
+            result[assignee][project][:unscheduled_number] += 1
           else
             result[assignee][project][:total] =
-              add_issue_info_to_summary(result[assignee][project][:total], hours_for_issue)
+              add_issue_info_to_summary(result[assignee][project][:total], hours_for_issue, assignee)
           end
 
           # Add it to the issues for that project in any case.
@@ -155,7 +156,7 @@ class UserWorkload
         else
           unless issue.overdue?
             result[assignee][:invisible] =
-              add_issue_info_to_summary(result[assignee][:invisible], hours_for_issue)
+              add_issue_info_to_summary(result[assignee][:invisible], hours_for_issue, assignee)
           end
         end
       end
@@ -192,15 +193,13 @@ class UserWorkload
   #
   # @return [Hash] If the given time span is empty, an empty hash is returned.
   #
-  def hours_for_issue_per_day(issue)
+  def hours_for_issue_per_day(issue, cap, assignee)
     raise ArgumentError unless issue.is_a?(Issue)
     raise ArgumentError unless time_span.is_a?(Range)
     raise ArgumentError unless today.is_a?(Date)
 
     hours_remaining = estimated_time_for_issue(issue)
-    assignee_id = issue.assigned_to.nil? ? 'unassigned' : issue.assigned_to.id
-    assignee = issue.assigned_to.nil? ? 'unassigned' : issue.assigned_to
-    working_days = working_days_in_time_span(assignee_id: assignee_id)
+    working_days = working_days_in_time_span(assignee: assignee)
 
     result = {}
 
@@ -219,9 +218,9 @@ class UserWorkload
           active: is_active,
           noEstimate: false,
           holiday: holiday,
-          lowload: threshold_at(assignee, holiday, :lowload),
-          normalload: threshold_at(assignee, holiday, :normalload),
-          highload: threshold_at(assignee, holiday, :highload)
+          lowload: threshold_at(cap, holiday, :lowload),
+          normalload: threshold_at(cap, holiday, :normalload),
+          highload: threshold_at(cap, holiday, :highload)
         }
       end
 
@@ -248,9 +247,9 @@ class UserWorkload
                           noEstimate: true && !holiday, # On holidays, the zero hours
                           # are *not* estimated
                           holiday: holiday,
-                          lowload: threshold_at(assignee, holiday, :lowload),
-                          normalload: threshold_at(assignee, holiday, :normalload),
-                          highload: threshold_at(assignee, holiday, :highload)
+                          lowload: threshold_at(cap, holiday, :lowload),
+                          normalload: threshold_at(cap, holiday, :normalload),
+                          highload: threshold_at(cap, holiday, :highload)
                         }
 
                       # Issue is not active
@@ -260,9 +259,9 @@ class UserWorkload
                           active: false,
                           noEstimate: false,
                           holiday: holiday,
-                          lowload: threshold_at(assignee, holiday, :lowload),
-                          normalload: threshold_at(assignee, holiday, :normalload),
-                          highload: threshold_at(assignee, holiday, :highload)
+                          lowload: threshold_at(cap, holiday, :lowload),
+                          normalload: threshold_at(cap, holiday, :normalload),
+                          highload: threshold_at(cap, holiday, :highload)
                         }
                       end
       end
@@ -286,9 +285,9 @@ class UserWorkload
                             active: true,
                             noEstimate: issue.estimated_hours.nil? && !holiday,
                             holiday: holiday,
-                            lowload: threshold_at(assignee, holiday, :lowload),
-                            normalload: threshold_at(assignee, holiday, :normalload),
-                            highload: threshold_at(assignee, holiday, :highload)
+                            lowload: threshold_at(cap, holiday, :lowload),
+                            normalload: threshold_at(cap, holiday, :normalload),
+                            highload: threshold_at(cap, holiday, :highload)
                           }
                         else
                           {
@@ -296,9 +295,9 @@ class UserWorkload
                             active: true,
                             noEstimate: false,
                             holiday: holiday,
-                            lowload: threshold_at(assignee, holiday, :lowload),
-                            normalload: threshold_at(assignee, holiday, :normalload),
-                            highload: threshold_at(assignee, holiday, :highload)
+                            lowload: threshold_at(cap, holiday, :lowload),
+                            normalload: threshold_at(cap, holiday, :normalload),
+                            highload: threshold_at(cap, holiday, :highload)
                           }
                         end
                       else
@@ -307,9 +306,9 @@ class UserWorkload
                           active: false,
                           noEstimate: false,
                           holiday: holiday,
-                          lowload: threshold_at(assignee, holiday, :lowload),
-                          normalload: threshold_at(assignee, holiday, :normalload),
-                          highload: threshold_at(assignee, holiday, :highload)
+                          lowload: threshold_at(cap, holiday, :lowload),
+                          normalload: threshold_at(cap, holiday, :normalload),
+                          highload: threshold_at(cap, holiday, :highload)
                         }
                       end
       end
@@ -340,11 +339,11 @@ class UserWorkload
   # @param summary
   # @param issue_info
   #
-  def add_issue_info_to_summary(summary, issue_info)
+  def add_issue_info_to_summary(summary, issue_info, assignee)
     summary ||= {}
 
     time_span.each do |day|
-      holiday = { hours: 0.0, holiday: working_days_in_time_span.exclude?(day) }
+      holiday = { hours: 0.0, holiday: working_days_in_time_span(assignee: assignee).exclude?(day) }
       summary[day] = holiday unless summary.key?(day)
       summary[day][:hours] += issue_info[day][:hours]
     end
@@ -355,21 +354,18 @@ class UserWorkload
   ##
   # Collects all working days within a given time span.
   #
-  def working_days_in_time_span(assignee_id: 'group', no_cache: false)
-    WlDateTools.working_days_in_time_span(time_span, assignee_id, no_cache: no_cache)
+  def working_days_in_time_span(assignee:, no_cache: false)
+    WlDateTools.working_days_in_time_span(time_span, assignee, no_cache: no_cache)
   end
 
   ##
   # Calculates the day and user dependent threshold value of the workload.
   #
-  # @param assignee [User|Group|GroupUserDummy|String|Integer] An object representing
-  #                                                            a User, Group, or
-  #                                                            GroupUserDummy.
+  # @param cap [WlDayCapacity] An object able to calculate the workload day capacity.
   # @param holiday [Boolean] Either a true or false value.
   # @param key [Symbol|String] The short form of the threshold: lowload, normalload, highload.
   #
-  def threshold_at(assignee, holiday, key)
-    capacity = WlDayCapacity.new(assignee: assignee, holiday: holiday)
-    capacity.threshold_at(key)
+  def threshold_at(cap, holiday, key)
+    cap.threshold_at(key, holiday)
   end
 end
