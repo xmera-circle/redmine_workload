@@ -95,6 +95,7 @@ class UserWorkload
       issue_set.each do |issue|
         project = issue.project
         hours_for_issue = hours_for_issue_per_day(issue, cap, assignee)
+        remaining_estimated_hours = estimated_time_for_issue(issue)
 
         # Add the issue to the total workload unless its overdue or unscheduled.
         # @note issue.overdue? implies there is a due_date. In order to avoid
@@ -104,8 +105,8 @@ class UserWorkload
           result[assignee][:overdue_hours] += hours_for_issue[first_working_day_from_today_on][:hours]
           result[assignee][:overdue_number] += 1
         elsif issue.due_date.nil?
+          result[assignee][:unscheduled_hours] += remaining_estimated_hours
           result[assignee][:unscheduled_number] += 1
-          result[assignee][:unscheduled_hours] += hours_for_issue[first_working_day_from_today_on][:hours]
         else
           result[assignee][:total] = add_issue_info_to_summary(result[assignee][:total], hours_for_issue, assignee)
         end
@@ -143,8 +144,8 @@ class UserWorkload
             result[assignee][project][:overdue_hours] += hours_for_issue[first_working_day_from_today_on][:hours]
             result[assignee][project][:overdue_number] += 1
           elsif issue.due_date.nil?
+            result[assignee][project][:unscheduled_hours] += remaining_estimated_hours
             result[assignee][project][:unscheduled_number] += 1
-            result[assignee][project][:unscheduled_hours] += hours_for_issue[first_working_day_from_today_on][:hours]
           else
             result[assignee][project][:total] =
               add_issue_info_to_summary(result[assignee][project][:total], hours_for_issue, assignee)

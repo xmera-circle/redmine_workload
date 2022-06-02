@@ -142,6 +142,7 @@ module RedmineWorkload
                           start_date: first_day,
                           due_date: last_day)
           next unless user.groups.any?
+
           if group_user_dummy_strategy
             Issue.generate!(author: user,
                             assigned_to: group,

@@ -10,7 +10,9 @@ class UserWorkloadTest < ActiveSupport::TestCase
            :users, :issue_statuses, :enumerations, :roles
 
   def setup
-    @manager = Role.find_by(name: 'Manager')
+    @manager = roles :roles_001
+    @jsmith = users :users_002
+    @cap = WlDayCapacity.new(assignee: @jsmith)
   end
 
   def teardown
@@ -22,7 +24,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
     last_day = Date.new(2012, 5, 1)
     workload = UserWorkload.new(assignees: [],
                                 time_span: first_day..last_day,
-                                today: Time.zone.today)
+                                today: first_day + 1)
     assert workload.by_user
   end
 
@@ -31,7 +33,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
     last_day = Date.new(2012, 5, 1)
     user_workload = UserWorkload.new(assignees: [],
                                      time_span: first_day..last_day,
-                                     today: Time.zone.today)
+                                     today: first_day + 1)
     assert_equal [], user_workload.issues
   end
 
@@ -56,7 +58,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
     last_day = Date.new(2012, 5, 1)
     user_workload = UserWorkload.new(assignees: [user2],
                                      time_span: first_day..last_day,
-                                     today: Time.zone.today)
+                                     today: first_day + 1)
     assert_equal [issue2], user_workload.issues
   end
 
@@ -79,7 +81,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
     last_day = Date.new(2012, 5, 1)
     user_workload = UserWorkload.new(assignees: [user],
                                      time_span: first_day..last_day,
-                                     today: Time.zone.today)
+                                     today: first_day + 1)
 
     assert_equal [issue2], user_workload.issues
   end
@@ -104,7 +106,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
     last_day = Date.new(2012, 5, 1)
     user_workload = UserWorkload.new(assignees: [user],
                                      time_span: first_day..last_day,
-                                     today: Time.zone.today)
+                                     today: first_day + 1)
 
     data = user_workload.by_user
     assert_equal 1, data[user][:unscheduled_number]
@@ -129,7 +131,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
                                      today: last_day)
 
     assert_issue_times_hash_equals({}, user_workload.send(:hours_for_issue_per_day,
-                                                          issue))
+                                                          issue, @cap, @jsmith))
   end
 
   test 'hours_for_issue_per_day works if issue is completely in given time span and nothing done' do
@@ -137,13 +139,13 @@ class UserWorkloadTest < ActiveSupport::TestCase
 
     issue = Issue.generate!(
       start_date: Date.new(2013, 5, 31), # A Friday
-      due_date: Date.new(2013, 6, 2),    # A Sunday
+      due_date: Date.new(2013, 6, 2), # A Sunday
       estimated_hours: 10.0,
       done_ratio: 0
     )
 
     first_day = Date.new(2013, 5, 31) # A Friday
-    last_day = Date.new(2013, 6, 3)   # A Monday
+    last_day = Date.new(2013, 6, 3) # A Monday
 
     expected_result = {
       Date.new(2013, 5, 31) => {
@@ -178,7 +180,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
 
     assert_issue_times_hash_equals expected_result,
                                    user_workload.send(:hours_for_issue_per_day,
-                                                      issue)
+                                                      issue, @cap, @jsmith)
   end
 
   test 'hours_for_issue_per_day works if issue lasts after time span and done_ratio > 0' do
@@ -187,7 +189,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
     # 30 hours still need to be done, 3 working days until issue is finished.
     issue = Issue.generate!(
       start_date: Date.new(2013, 5, 28), # A Tuesday
-      due_date: Date.new(2013, 6, 1),    # A Saturday
+      due_date: Date.new(2013, 6, 1), # A Saturday
       estimated_hours: 40.0,
       done_ratio: 25
     )
@@ -232,7 +234,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
 
     assert_issue_times_hash_equals expected_result,
                                    user_workload.send(:hours_for_issue_per_day,
-                                                      issue)
+                                                      issue, @cap, @jsmith)
   end
 
   test 'hours_for_issue_per_day works if issue starts before time span' do
@@ -242,13 +244,13 @@ class UserWorkloadTest < ActiveSupport::TestCase
     # One day has already passed with 10% done.
     issue = Issue.generate!(
       start_date: Date.new(2013, 5, 28), # A Thursday
-      due_date: Date.new(2013, 6, 1),    # A Saturday
+      due_date: Date.new(2013, 6, 1), # A Saturday
       estimated_hours: 40.0,
       done_ratio: 10
     )
 
     first_day = Date.new(2013, 5, 29) # A Wednesday, before issue starts
-    last_day = Date.new(2013, 6, 1)   # Saturday, before issue ends
+    last_day = Date.new(2013, 6, 1) # Saturday, before issue ends
 
     expected_result = {
       # Wednesday, holiday, first day of time span.
@@ -287,7 +289,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
 
     assert_issue_times_hash_equals expected_result,
                                    user_workload.send(:hours_for_issue_per_day,
-                                                      issue)
+                                                      issue, @cap, @jsmith)
   end
 
   test 'hours_for_issue_per_day works if issue completely before time span' do
@@ -302,8 +304,8 @@ class UserWorkloadTest < ActiveSupport::TestCase
       done_ratio: 90
     )
 
-    first_day = Date.new(2013, 6, 2)  # Sunday, after issue due date
-    last_day = Date.new(2013, 6, 4)   # Tuesday
+    first_day = Date.new(2013, 6, 2) # Sunday, after issue due date
+    last_day = Date.new(2013, 6, 4) # Tuesday
 
     expected_result = {
       # Sunday, holiday.
@@ -334,7 +336,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
 
     assert_issue_times_hash_equals expected_result,
                                    user_workload.send(:hours_for_issue_per_day,
-                                                      issue)
+                                                      issue, @cap, @jsmith)
   end
 
   test 'hours_for_issue_per_day works if issue has no due date' do
@@ -348,8 +350,8 @@ class UserWorkloadTest < ActiveSupport::TestCase
       done_ratio: 90
     )
 
-    first_day = Date.new(2013, 6, 2)  # Sunday
-    last_day = Date.new(2013, 6, 4)   # Tuesday
+    first_day = Date.new(2013, 6, 2) # Sunday
+    last_day = Date.new(2013, 6, 4) # Tuesday
 
     expected_result = {
       # Sunday, holiday.
@@ -381,7 +383,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
 
     assert_issue_times_hash_equals expected_result,
                                    user_workload.send(:hours_for_issue_per_day,
-                                                      issue)
+                                                      issue, @cap, @jsmith)
   end
 
   test 'hours_for_issue_per_day works if issue has no start date' do
@@ -395,8 +397,8 @@ class UserWorkloadTest < ActiveSupport::TestCase
       done_ratio: 90
     )
 
-    first_day = Date.new(2013, 6, 2)  # Sunday
-    last_day = Date.new(2013, 6, 4)   # Tuesday
+    first_day = Date.new(2013, 6, 2) # Sunday
+    last_day = Date.new(2013, 6, 4) # Tuesday
 
     expected_result = {
       # Sunday, holiday.
@@ -427,7 +429,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
 
     assert_issue_times_hash_equals expected_result,
                                    user_workload.send(:hours_for_issue_per_day,
-                                                      issue)
+                                                      issue, @cap, @jsmith)
   end
 
   test 'hours_for_issue_per_day works if in time span and issue overdue' do
@@ -442,9 +444,9 @@ class UserWorkloadTest < ActiveSupport::TestCase
       done_ratio: 90
     )
 
-    first_day = Date.new(2013, 5, 30)  # Thursday
-    last_day = Date.new(2013, 6, 4)    # Tuesday
-    today = Date.new(2013, 6, 2)      # After issue end
+    first_day = Date.new(2013, 5, 30) # Thursday
+    last_day = Date.new(2013, 6, 4) # Tuesday
+    today = Date.new(2013, 6, 2) # After issue end
 
     expected_result = {
       # Thursday, in the past.
@@ -496,7 +498,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
 
     assert_issue_times_hash_equals expected_result,
                                    user_workload.send(:hours_for_issue_per_day,
-                                                      issue)
+                                                      issue, @cap, @jsmith)
   end
 
   test 'hours_for_issue_per_day works if issue is completely in given time span, but has started' do
@@ -504,14 +506,14 @@ class UserWorkloadTest < ActiveSupport::TestCase
 
     issue = Issue.generate!(
       start_date: Date.new(2013, 5, 31), # A Friday
-      due_date: Date.new(2013, 6, 4),    # A Tuesday
+      due_date: Date.new(2013, 6, 4), # A Tuesday
       estimated_hours: 10.0,
       done_ratio: 0
     )
 
     first_day = Date.new(2013, 5, 31) # A Friday
-    last_day = Date.new(2013, 6, 5)   # A Wednesday
-    today = Date.new(2013, 6, 2)     # A Sunday
+    last_day = Date.new(2013, 6, 5) # A Wednesday
+    today = Date.new(2013, 6, 2) # A Sunday
 
     expected_result = {
       # Friday
@@ -563,17 +565,18 @@ class UserWorkloadTest < ActiveSupport::TestCase
 
     assert_issue_times_hash_equals expected_result,
                                    user_workload.send(:hours_for_issue_per_day,
-                                                      issue)
+                                                      issue, @cap, @jsmith)
   end
 
   test 'hours_per_user_issue_and_day returns correct structure' do
     user = User.generate!
+    manager = roles :roles_001
 
     project1 = Project.generate!
     project2 = Project.generate!
 
-    User.add_to_project(user, project1, Role.find_by_name('Manager'))
-    User.add_to_project(user, project2, Role.find_by_name('Manager'))
+    User.add_to_project(user, project1, manager)
+    User.add_to_project(user, project2, manager)
 
     Issue.generate!(
       assigned_to: user,
@@ -599,7 +602,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
     last_day = Date.new(2013, 6, 4)
     today = Date.new(2013, 5, 31)
 
-    user_workload = UserWorkload.new(assignees: [],
+    user_workload = UserWorkload.new(assignees: [user],
                                      time_span: first_day..last_day,
                                      today: today,
                                      issues: Issue.assigned_to(user).to_a)
