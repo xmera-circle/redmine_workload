@@ -65,6 +65,7 @@ class UserWorkload
     issues.group_by(&:assigned_to).each do |assignee, issue_set|
       working_days = working_days_in_time_span(assignee_id: assignee.id)
       first_working_day_from_today_on = working_days.select { |day| day >= today }.min || today
+      cap = WlDayCapacity.new(assignee: assignee)
 
       assignee = GroupUserDummy.new(group: assignee) if assignee.is_a? Group
 
@@ -83,9 +84,9 @@ class UserWorkload
           result[assignee][:total][day] = {
             hours: 0.0,
             holiday: holiday,
-            lowload: threshold_at(assignee, holiday, :lowload),
-            normalload: threshold_at(assignee, holiday, :normalload),
-            highload: threshold_at(assignee, holiday, :highload)
+            lowload: threshold_at(cap, holiday, :lowload),
+            normalload: threshold_at(cap, holiday, :normalload),
+            highload: threshold_at(cap, holiday, :highload)
           }
         end
       end
@@ -100,7 +101,7 @@ class UserWorkload
           result[assignee][:unscheduled_hours] += issue.estimated_hours || 0.0
         end
 
-        hours_for_issue = hours_for_issue_per_day(issue)
+        hours_for_issue = hours_for_issue_per_day(issue, cap)
 
         # Add the issue to the total workload, unless its overdue.
         if issue.overdue?
@@ -128,9 +129,9 @@ class UserWorkload
               result[assignee][project][:total][day] = {
                 hours: 0.0,
                 holiday: holiday,
-                lowload: threshold_at(assignee, holiday, :lowload),
-                normalload: threshold_at(assignee, holiday, :normalload),
-                highload: threshold_at(assignee, holiday, :highload)
+                lowload: threshold_at(cap, holiday, :lowload),
+                normalload: threshold_at(cap, holiday, :normalload),
+                highload: threshold_at(cap, holiday, :highload)
               }
             end
           end
@@ -192,7 +193,7 @@ class UserWorkload
   #
   # @return [Hash] If the given time span is empty, an empty hash is returned.
   #
-  def hours_for_issue_per_day(issue)
+  def hours_for_issue_per_day(issue, cap)
     raise ArgumentError unless issue.is_a?(Issue)
     raise ArgumentError unless time_span.is_a?(Range)
     raise ArgumentError unless today.is_a?(Date)
@@ -219,9 +220,9 @@ class UserWorkload
           active: is_active,
           noEstimate: false,
           holiday: holiday,
-          lowload: threshold_at(assignee, holiday, :lowload),
-          normalload: threshold_at(assignee, holiday, :normalload),
-          highload: threshold_at(assignee, holiday, :highload)
+          lowload: threshold_at(cap, holiday, :lowload),
+          normalload: threshold_at(cap, holiday, :normalload),
+          highload: threshold_at(cap, holiday, :highload)
         }
       end
 
@@ -248,9 +249,9 @@ class UserWorkload
                           noEstimate: true && !holiday, # On holidays, the zero hours
                           # are *not* estimated
                           holiday: holiday,
-                          lowload: threshold_at(assignee, holiday, :lowload),
-                          normalload: threshold_at(assignee, holiday, :normalload),
-                          highload: threshold_at(assignee, holiday, :highload)
+                          lowload: threshold_at(cap, holiday, :lowload),
+                          normalload: threshold_at(cap, holiday, :normalload),
+                          highload: threshold_at(cap, holiday, :highload)
                         }
 
                       # Issue is not active
@@ -260,9 +261,9 @@ class UserWorkload
                           active: false,
                           noEstimate: false,
                           holiday: holiday,
-                          lowload: threshold_at(assignee, holiday, :lowload),
-                          normalload: threshold_at(assignee, holiday, :normalload),
-                          highload: threshold_at(assignee, holiday, :highload)
+                          lowload: threshold_at(cap, holiday, :lowload),
+                          normalload: threshold_at(cap, holiday, :normalload),
+                          highload: threshold_at(cap, holiday, :highload)
                         }
                       end
       end
@@ -286,9 +287,9 @@ class UserWorkload
                             active: true,
                             noEstimate: issue.estimated_hours.nil? && !holiday,
                             holiday: holiday,
-                            lowload: threshold_at(assignee, holiday, :lowload),
-                            normalload: threshold_at(assignee, holiday, :normalload),
-                            highload: threshold_at(assignee, holiday, :highload)
+                            lowload: threshold_at(cap, holiday, :lowload),
+                            normalload: threshold_at(cap, holiday, :normalload),
+                            highload: threshold_at(cap, holiday, :highload)
                           }
                         else
                           {
@@ -296,9 +297,9 @@ class UserWorkload
                             active: true,
                             noEstimate: false,
                             holiday: holiday,
-                            lowload: threshold_at(assignee, holiday, :lowload),
-                            normalload: threshold_at(assignee, holiday, :normalload),
-                            highload: threshold_at(assignee, holiday, :highload)
+                            lowload: threshold_at(cap, holiday, :lowload),
+                            normalload: threshold_at(cap, holiday, :normalload),
+                            highload: threshold_at(cap, holiday, :highload)
                           }
                         end
                       else
@@ -307,9 +308,9 @@ class UserWorkload
                           active: false,
                           noEstimate: false,
                           holiday: holiday,
-                          lowload: threshold_at(assignee, holiday, :lowload),
-                          normalload: threshold_at(assignee, holiday, :normalload),
-                          highload: threshold_at(assignee, holiday, :highload)
+                          lowload: threshold_at(cap, holiday, :lowload),
+                          normalload: threshold_at(cap, holiday, :normalload),
+                          highload: threshold_at(cap, holiday, :highload)
                         }
                       end
       end
@@ -362,14 +363,11 @@ class UserWorkload
   ##
   # Calculates the day and user dependent threshold value of the workload.
   #
-  # @param assignee [User|Group|GroupUserDummy|String|Integer] An object representing
-  #                                                            a User, Group, or
-  #                                                            GroupUserDummy.
+  # @param cap [WlDayCapacity] An object able to calculate the workload day capacity.
   # @param holiday [Boolean] Either a true or false value.
   # @param key [Symbol|String] The short form of the threshold: lowload, normalload, highload.
   #
-  def threshold_at(assignee, holiday, key)
-    capacity = WlDayCapacity.new(assignee: assignee, holiday: holiday)
-    capacity.threshold_at(key)
+  def threshold_at(cap, holiday, key)
+    cap.threshold_at(key, holiday)
   end
 end
