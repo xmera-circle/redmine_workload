@@ -28,6 +28,14 @@ class WlDayCapacity
   # Check what kind of assignee should be used.
   #
   def user
-    @user ||= assignee.is_a?(User) ? assignee.wl_user_data || WlDefaultUserData.new : GroupUserDummy.new(group: assignee)
+    @user ||= assignee.is_a?(User) ? single_user(assignee) : group_user(assignee)
+  end
+
+  def single_user(assignee)
+    assignee.wl_user_data || WlDefaultUserData.new
+  end
+
+  def group_user(assignee)
+    GroupUserDummy.new(group: assignee)
   end
 end

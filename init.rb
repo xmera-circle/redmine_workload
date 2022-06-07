@@ -10,8 +10,7 @@ Redmine::Plugin.register :redmine_workload do
               'displays the estimated number of hours users and groups have to work to finish ' \
               'all their assigned issus on time.'
   version '2.0.0'
-  url 'https://github.com/JostBaron/redmine_workload'
-  author_url 'http://netzkönig.de/'
+  url 'https://github.com/xmera-circle/redmine_workload'
 
   menu :top_menu,
        :WorkLoad,
