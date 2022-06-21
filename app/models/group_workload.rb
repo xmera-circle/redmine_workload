@@ -72,7 +72,7 @@ class GroupWorkload
   end
 
   def total_availabilities_of(user)
-    working_days = WlDateTools.working_days_in_time_span(time_span, user.id)
+    working_days = WlDateTools.working_days_in_time_span(time_span, user)
     time_span.each_with_object({}) do |day, hash|
       holiday = working_days.exclude?(day)
       capacity = WlDayCapacity.new(assignee: user)

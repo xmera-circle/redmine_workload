@@ -9,7 +9,7 @@ Issues that have not filled in one of these fields will be shown in the overview
 
 ![Group Workload](screenshots/group-workload-example.png?raw=true "Group Workload Example")
 
-## New Features in Version 2.0.0
+## New Features in Version 2.0.x
 
 Fortunately the German company [MENTOR GmbH & Co. Präzisions-Bauteile KG](https://www.mentor.de.com/) invested in this project to make these features possible:
 
