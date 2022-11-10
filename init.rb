@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'redmine'
-require_dependency 'redmine_workload'
+require File.expand_path('lib/redmine_workload', __dir__)
 
 Redmine::Plugin.register :redmine_workload do
   name 'Redmine workload plugin'
@@ -43,9 +43,11 @@ Redmine::Plugin.register :redmine_workload do
   permission :edit_user_data,        wl_user_datas: :update
 end
 
-plugin = Redmine::Plugin.find(:redmine_workload)
-Rails.application.configure do
-  config.autoload_paths << "#{plugin.directory}/app/presenters"
+if Rails.version < '6'
+  plugin = Redmine::Plugin.find(:redmine_workload)
+  Rails.application.configure do
+    config.autoload_paths << "#{plugin.directory}/app/presenters"
+  end
 end
 
 class RedmineToolbarHookListener < Redmine::Hook::ViewListener

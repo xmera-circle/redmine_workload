@@ -7,15 +7,17 @@ class WlGroupSelectionTest < ActiveSupport::TestCase
            :users, :issue_statuses, :enumerations, :roles
 
   def setup
-    Group.all.delete_all
+    Group.where.not(id: [12, 13]).delete_all
+    @build_in_groups = Group.where(id: [12, 13])
     @groups = 5.times.map { |count| Group.generate! if count }
   end
 
   test 'should return all groups if the current user is admin' do
     admin = users :users_001 # admin
     groups = WlGroupSelection.new(user: admin)
-
-    assert_equal @groups.map(&:id).sort, groups.allowed_to_display.map(&:id).sort
+    expected = (@groups.map(&:id) | @build_in_groups.map(&:id)).uniq.sort
+    current = groups.allowed_to_display.map(&:id).sort
+    assert_equal expected, current
   end
 
   test 'should return all groups when user has permission :view_all_workloads' do
@@ -23,7 +25,7 @@ class WlGroupSelectionTest < ActiveSupport::TestCase
     manager = roles :roles_001 # manager
     manager.add_permission! :view_all_workloads
     groups = WlGroupSelection.new(user: current_user)
-    expected = @groups.map(&:id).sort
+    expected = (@groups.map(&:id) | @build_in_groups.map(&:id)).uniq.sort
     current = groups.allowed_to_display.map(&:id).sort
     assert_equal expected, current
   end
