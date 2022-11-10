@@ -66,11 +66,11 @@ module WorkloadsHelper
   def load_class_for_hours(hours, lowload, normalload, highload)
     hours = hours.to_f
 
-    if hours < lowload
+    if lowload && hours < lowload
       'none'
-    elsif hours < normalload
+    elsif normalload && hours < normalload
       'low'
-    elsif hours < highload
+    elsif highload && hours < highload
       'normal'
     else
       'high'
