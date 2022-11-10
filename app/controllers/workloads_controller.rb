@@ -21,6 +21,7 @@ class WorkloadsController < ApplicationController
     @first_day = sanitizeDateParameter(workload_params[:first_day],  Time.zone.today - 10)
     @last_day  = sanitizeDateParameter(workload_params[:last_day],   Time.zone.today + 50)
     @today     = sanitizeDateParameter(workload_params[:start_date], Time.zone.today)
+    @date_check = @last_day >= @first_day
 
     # if @today ("select as today") is before @first_day take @today as @first_day
     @first_day = [@today, @first_day].min
@@ -30,25 +31,28 @@ class WorkloadsController < ApplicationController
     @last_day = [(@first_day >> 12) - 1, @last_day].min
     @time_span_to_display = @first_day..@last_day
 
-    @groups = WlGroupSelection.new(groups: workload_params[:groups])
-    @users = WlUserSelection.new(users: workload_params[:users], group_selection: @groups)
+    if @date_check
+      @groups = WlGroupSelection.new(groups: workload_params[:groups])
+      @users = WlUserSelection.new(users: workload_params[:users], group_selection: @groups)
 
-    assignees = @users.all_selected
-    user_workload = UserWorkload.new(assignees: assignees,
-                                     time_span: @time_span_to_display,
-                                     today: @today)
+      assignees = @users.all_selected
+      user_workload = UserWorkload.new(assignees: assignees,
+                                       time_span: @time_span_to_display,
+                                       today: @today)
 
-    @months_to_render = WlDateTools.months_in_time_span(@time_span_to_display)
-    @workload_data = user_workload.hours_per_user_issue_and_day
+      @months_to_render = WlDateTools.months_in_time_span(@time_span_to_display)
+      @workload_data = user_workload.hours_per_user_issue_and_day
 
-    @group_workload = GroupWorkload.new(users: @users,
-                                        user_workload: @workload_data,
-                                        time_span: @time_span_to_display)
+      @group_workload = GroupWorkload.new(users: @users,
+                                          user_workload: @workload_data,
+                                          time_span: @time_span_to_display)
 
-    @workload = groups?(@groups) ? @group_workload : user_workload
+      @workload = groups?(@groups) ? @group_workload : user_workload
+    end
 
     respond_to do |format|
       format.html do
+        flash[:error] = l(:error_date_setting) unless @date_check
         render action: :index
       end
       format.csv do

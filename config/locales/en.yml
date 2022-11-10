@@ -99,3 +99,5 @@ en:
   field_reason: Reason
   workload_unscheduled_issues_num: 'Number of unscheduled issues:'
   workload_unscheduled_issues_hours: 'Hours of unscheduled issues:'
+  error_date_setting: 'Please check your data! The end date is before the start date.'
+  

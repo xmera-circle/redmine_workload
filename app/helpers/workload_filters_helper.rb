@@ -3,6 +3,7 @@
 module WorkloadFiltersHelper
   def user_options_for_select(usersToShow, selectedUsers)
     result = ''
+    return unless usersToShow
 
     usersToShow.each do |user|
       selected = selectedUsers.include?(user) ? 'selected="selected"' : ''
@@ -15,6 +16,7 @@ module WorkloadFiltersHelper
 
   def group_options_for_select(groupsToShow, selectedGroups)
     result = ''
+    return unless groupsToShow
 
     groupsToShow.each do |group|
       selected = selectedGroups.include?(group) ? 'selected="selected"' : ''

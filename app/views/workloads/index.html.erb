@@ -6,46 +6,46 @@
 
 <h2><%= l(:workload_show_label) %></h2>
 
-
-<%= error_messages_for 'query' %>
-<div class="wrapper">
-  <table class="data">
-    <thead>
-      <tr class="workload_hdr">
-        <td class="workload_hdr" rowspan="4">&nbsp;<!-- empty space --></td>
-        <%= render :partial => 'month_names_header' %>
-      </tr>
-      <tr class="workload_hdr" >
-        <%= render :partial => 'num_of_week_header' %>
-      </tr>
-      <tr class="workload_hdr">
-        <%= render :partial => 'day_of_month_header' %>
-      </tr>
-      <tr class="workload_hdr">
-        <%= render :partial => 'day_of_week_header' %>
-      </tr>
-    </thead>
-    <% if groups? @groups %>
-      <% @group_workload.by_group.each do |group, data| %>
-        <%= render :partial => 'workload_for_group',
-                   :locals => { :group => group,
-                                :data => data }
-        %>
+<% if @date_check %>
+  <%= error_messages_for 'query' %>
+  <div class="wrapper">
+    <table class="data">
+      <thead>
+        <tr class="workload_hdr">
+          <td class="workload_hdr" rowspan="4">&nbsp;<!-- empty space --></td>
+          <%= render :partial => 'month_names_header' %>
+        </tr>
+        <tr class="workload_hdr" >
+          <%= render :partial => 'num_of_week_header' %>
+        </tr>
+        <tr class="workload_hdr">
+          <%= render :partial => 'day_of_month_header' %>
+        </tr>
+        <tr class="workload_hdr">
+          <%= render :partial => 'day_of_week_header' %>
+        </tr>
+      </thead>
+      <% if groups? @groups %>
+        <% @group_workload&.by_group&.each do |group, data| %>
+          <%= render :partial => 'workload_for_group',
+                    :locals => { :group => group,
+                                  :data => data }
+          %>
+        <% end %>
+      <% else %>
+        <% @workload_data&.keys&.each do |user| %>
+          <%= render :partial => 'workload_for_user',
+                    :locals => { :group => nil,
+                                  :user => user,
+                                  :data => @workload_data[user] }
+          %>
+        <% end %>
       <% end %>
-    <% else %>
-      <% @workload_data.keys.each do |user| %>
-        <%= render :partial => 'workload_for_user',
-                   :locals => { :group => nil,
-                                :user => user,
-                                :data => @workload_data[user] }
-        %>
-      <% end %>
-    <% end %>
-  </table>
-</div>
+    </table>
+  </div>
 
-<%= render partial: 'export', locals: { groups: @groups } %>
-
+  <%= render partial: 'export', locals: { groups: @groups } %>
+<% end %>
 <% content_for :sidebar do %>
 	<%= render partial: 'filters' %>
 <% end %>
