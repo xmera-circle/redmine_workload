@@ -1,6 +1,11 @@
 # English strings go here
 en:
-  permission_view_project_workload: "Show workload of own projects"
+  permission_edit_national_holiday: "Edit national Holidays"
+  permission_edit_user_vacations:   "Edit own vacations"
+  permission_edit_user_data:        "Edit own workload thresholds"
+  permission_view_all_workloads: "View all workloads"
+  permission_view_own_workloads: "View own workloads"
+  permission_view_own_group_workloads: "View own group workloads"
   workload_title: "Workload"
   workload_site_title: "Workload"
   workload_show_label: "Workload"
@@ -70,9 +75,6 @@ en:
   workload_user_data_title:        "My Setup"
   workload_holiday_title:           "Holidays"
   workload_holiday_reason:          "Reason"
-  permission_edit_national_holiday: "Edit national Holidays"
-  permission_edit_user_vacations:   "Edit own vacations"
-  permission_edit_user_data:        "Edit own workload thresholds"
   notice_settings_updated: Settings sucessfully updated
   notice_holiday_updated: Holiday was successfully updated
   notice_holiday_saved: Holiday was successfully saved
