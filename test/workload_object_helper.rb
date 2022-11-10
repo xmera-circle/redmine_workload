@@ -14,6 +14,8 @@ module RedmineWorkload
     #        to be used for setting up vacation for user1 and user2.
     # @param groups [Array(Group)] A list of groups, e.g., given by the method
     #        RedmineWorkload::WorkloadObjectHelper#groups_defined.
+    # @param group_user_dummy_strategy [Boolean] If true, some issues assigned 
+    #        to a group will be created.
     # @return [GroupWorkload] A GroupWorkload object.
     #
     def prepare_group_workload(**params)
@@ -144,6 +146,7 @@ module RedmineWorkload
           next unless user.groups.any?
 
           if group_user_dummy_strategy
+            # some issues are assigned to a group and not to users
             Issue.generate!(author: user,
                             assigned_to: group,
                             status: IssueStatus.find(1), # New, not closed

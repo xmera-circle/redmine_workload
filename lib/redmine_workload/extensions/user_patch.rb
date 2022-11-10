@@ -28,9 +28,10 @@ module RedmineWorkload
   end
 end
 
-# Apply patch
-Rails.configuration.to_prepare do
-  unless User.included_modules.include?(RedmineWorkload::Extensions::UserPatch)
-    User.prepend RedmineWorkload::Extensions::UserPatch
+if Rails.version < '6'
+  Rails.configuration.to_prepare do
+    unless User.included_modules.include?(RedmineWorkload::Extensions::UserPatch)
+      User.prepend RedmineWorkload::Extensions::UserPatch
+    end
   end
 end
