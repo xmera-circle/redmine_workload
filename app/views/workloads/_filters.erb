@@ -31,12 +31,12 @@
   	<legend><%= l(:workload_show_filter_user_legend) %></legend>
     <div class="users">
     	<%= label_tag :workload_users, l(:workload_show_filter_user) %>
-    	<%= select_tag :workload_users, user_options_for_select(@users.allowed_to_display, @users.selected), :name => 'workload[users][]', :multiple => true, :onchange => "this.form.workload_groups.selectedIndex=-1;" %>
+    	<%= select_tag :workload_users, user_options_for_select(@users&.allowed_to_display, @users&.selected), :name => 'workload[users][]', :multiple => true, :onchange => "this.form.workload_groups.selectedIndex=-1;" %>
     </div>
 	<br>
 	<div class="groups">
       <%= label_tag :workload_groups, l(:workload_show_filter_group) %>
-	  <%= select_tag :workload_groups, group_options_for_select(@groups.allowed_to_display, @groups.selected), :name => 'workload[groups][]', :multiple => true, :onchange => "this.form.workload_users.selectedIndex=-1;" %>
+	  <%= select_tag :workload_groups, group_options_for_select(@groups&.allowed_to_display, @groups&.selected), :name => 'workload[groups][]', :multiple => true, :onchange => "this.form.workload_users.selectedIndex=-1;" %>
     </div>
     <%= link_to_function l(:button_apply), 'jQuery("#filter_form").submit()', :class => 'apply icon icon-checked' %>
   </fieldset>

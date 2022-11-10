@@ -99,3 +99,4 @@ de:
   field_reason: Anlass
   workload_unscheduled_issues_num: 'Anzahl ungeplanter Tickets:'
   workload_unscheduled_issues_hours: 'Stunden aus ungeplanten Tickets:'
+  error_date_setting: 'Überprüfen Sie Ihre Eingabe! Das Enddatum (bis) liegt vor dem Startdatum (von).'
