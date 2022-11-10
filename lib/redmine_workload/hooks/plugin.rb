@@ -3,12 +3,12 @@
 module RedmineWorkload
   module Hooks
     class AfterPluginsLoadedHook < Redmine::Hook::Listener
-      def after_plugins_loaded(context = {})
-        if Rails.version > '6'
-          unless User.included_modules.include?(RedmineWorkload::Extensions::UserPatch)
-            User.prepend RedmineWorkload::Extensions::UserPatch
-          end
-        end
+      def after_plugins_loaded(_context = {})
+        return unless Rails.version > '6'
+
+        patch = RedmineWorkload::Extensions::UserPatch
+        klass = User
+        klass.prepend patch unless klass.included_modules.include?(patch)
       end
     end
   end
