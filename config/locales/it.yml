@@ -1,7 +1,11 @@
 # Italian strings go here
 it:
-  permission_view_project_workload: "Mostra il carico di lavoro dei propri progetti"
-
+  permission_edit_national_holiday: "Edit national Holidays"
+  permission_edit_user_vacations:   "Edit own vacations"
+  permission_edit_user_data:        "Edit own workload thresholds"
+  permission_view_all_workloads: "View all workloads"
+  permission_view_own_workloads: "View own workloads"
+  permission_view_own_group_workloads: "View own group workloads"
   workload_title: "Workload"
   workload_site_title: "Workload"
   workload_show_label: "Workload"
