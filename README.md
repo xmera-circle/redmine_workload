@@ -13,6 +13,10 @@ Issues that have not filled in one of these fields will be shown in the overview
 
 Fortunately the German company [MENTOR GmbH & Co. Präzisions-Bauteile KG](https://www.mentor.de.com/) invested in this project to make these features possible:
 
+### support of Redmine 5
+
+Version 2.0.2 supports Redmine 5 and is backward compatible with Redmine 4.
+
 ### style-rework
 
 The actual table has been a bit bulky and sticked out from the formatting of other areas. Especially when using themes like [Purplemine](https://github.com/mrliptontea/PurpleMine2).
