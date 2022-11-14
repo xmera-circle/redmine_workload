@@ -673,6 +673,13 @@ class UserWorkloadTest < ActiveSupport::TestCase
     assert_in_delta 5.4, user_workload.send(:estimated_time_for_issue, grandchild), 1e-4
   end
 
+  test 'load_class_for_hours can handle missing thresholds' do
+    assert_equal 'high', load_class_for_hours(0.05,
+                                              nil,
+                                              nil,
+                                              nil)
+  end
+
   test 'load_class_for_hours returns "none" for workloads below threshold for low workload' do
     settings['threshold_lowload_min'] = 0.1
     settings['threshold_normalload_min'] = 5.0

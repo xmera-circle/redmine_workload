@@ -1,6 +1,11 @@
 # German strings go here
 de:
-  permission_view_project_workload: "Workload der Mitglieder in eigenen Projekten anzeigen"
+  permission_edit_national_holiday: "Feiertage bearbeiten"
+  permission_edit_user_vacations:   "Eigene Urlaube bearbeiten"
+  permission_edit_user_data:        "Eigene Belastungsgrenzen bearbeiten"
+  permission_view_all_workloads: "Alle Workloads anzeigen"
+  permission_view_own_workloads: "Eigene Workloads anzeigen"
+  permission_view_own_group_workloads: "Workloads eigener Gruppen anzeigen"
   workload_title: "Workload"
   workload_site_title: "Workload"
   workload_show_label: "Workload"
@@ -70,9 +75,6 @@ de:
   workload_user_data_title:        "Meine Einstellungen"
   workload_holiday_title:           "Feiertage"
   workload_holiday_reason:          "Anlass"
-  permission_edit_national_holiday: "Feiertage bearbeiten"
-  permission_edit_user_vacations:   "Eigene Urlaube bearbeiten"
-  permission_edit_user_data:        "Eigene Belastungsgrenzen bearbeiten"
   notice_settings_updated: Einstellungen erfolgreich aktualisiert.
   notice_holiday_updated: "Feiertag wurde erfolgreich aktualisiert"
   notice_holiday_saved: "Feiertag wurde erfolgreich gespeichert"
@@ -97,3 +99,4 @@ de:
   field_reason: Anlass
   workload_unscheduled_issues_num: 'Anzahl ungeplanter Tickets:'
   workload_unscheduled_issues_hours: 'Stunden aus ungeplanten Tickets:'
+  error_date_setting: 'Überprüfen Sie Ihre Eingabe! Das Enddatum (bis) liegt vor dem Startdatum (von).'

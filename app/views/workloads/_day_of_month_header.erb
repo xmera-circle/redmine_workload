@@ -3,7 +3,7 @@
 #  dayOfMonth: Any day of the month to render the header for.
 %>
 
-<% @time_span_to_display.each do |currentDay|%>
+<% @time_span_to_display&.each do |currentDay|%>
   <%
     if (currentDay.day == 1) then
       klass = ' firstDayOfMonth'
