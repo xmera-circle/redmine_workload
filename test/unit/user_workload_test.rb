@@ -3,6 +3,7 @@
 require File.expand_path('../test_helper', __dir__)
 
 class UserWorkloadTest < ActiveSupport::TestCase
+  include RedmineWorkload::WorkloadObjectHelper
   include WorkloadsHelper
   include WlUserDataDefaults
 
@@ -17,6 +18,7 @@ class UserWorkloadTest < ActiveSupport::TestCase
 
   def teardown
     User.current = nil
+    Setting.clear_cache
   end
 
   test 'should respond to by_user' do
@@ -625,52 +627,111 @@ class UserWorkloadTest < ActiveSupport::TestCase
     assert workload_data[user].key?(project2)
   end
 
-  test 'estimated_time_for_issue works for issue without children.' do
-    issue = Issue.generate!(estimated_hours: 13.2)
-    first_day = Date.new(2013, 5, 25)
-    last_day = Date.new(2013, 6, 4)
-    user_workload = UserWorkload.new(assignees: [],
-                                     time_span: first_day..last_day,
-                                     today: first_day)
-    assert_in_delta 13.2, user_workload.send(:estimated_time_for_issue, issue), 1e-4
+  test 'estimated_time_for_issue works for issue without children with ignored workload of parent issues' do
+    with_plugin_settings 'workload_of_parent_issues' => '' do
+      issue = Issue.generate!(estimated_hours: 13.2)
+      first_day = Date.new(2013, 5, 25)
+      last_day = Date.new(2013, 6, 4)
+      user_workload = UserWorkload.new(assignees: [],
+                                       time_span: first_day..last_day,
+                                       today: first_day)
+      assert_in_delta 13.2, user_workload.send(:estimated_time_for_issue, issue), 1e-4
+    end
   end
 
-  test 'estimated_time_for_issue works for issue with children.' do
-    parent = Issue.generate!(estimated_hours: 3.6)
-    child1 = Issue.generate!(estimated_hours: 5.0, parent_issue_id: parent.id, done_ratio: 90)
-    child2 = Issue.generate!(estimated_hours: 9.0, parent_issue_id: parent.id)
-
-    # Force parent to reload so the data from the children is incorporated.
-    parent.reload
-    first_day = Date.new(2013, 5, 25)
-    last_day = Date.new(2013, 6, 4)
-    user_workload = UserWorkload.new(assignees: [],
-                                     time_span: first_day..last_day,
-                                     today: first_day)
-
-    assert_in_delta 0.0, user_workload.send(:estimated_time_for_issue, parent), 1e-4
-    assert_in_delta 0.5, user_workload.send(:estimated_time_for_issue, child1), 1e-4
-    assert_in_delta 9.0, user_workload.send(:estimated_time_for_issue, child2), 1e-4
+  test 'estimated_time_for_issue works for issue without children with workload of parent issues' do
+    with_plugin_settings 'workload_of_parent_issues' => 'checked' do
+      issue = Issue.generate!(estimated_hours: 13.2)
+      first_day = Date.new(2013, 5, 25)
+      last_day = Date.new(2013, 6, 4)
+      user_workload = UserWorkload.new(assignees: [],
+                                       time_span: first_day..last_day,
+                                       today: first_day)
+      assert_in_delta 13.2, user_workload.send(:estimated_time_for_issue, issue), 1e-4
+    end
   end
 
-  test 'estimated_time_for_issue works for issue with grandchildren.' do
-    parent = Issue.generate!(estimated_hours: 4.5)
-    child = Issue.generate!(estimated_hours: 5.0, parent_issue_id: parent.id)
-    grandchild = Issue.generate!(estimated_hours: 9.0, parent_issue_id: child.id, done_ratio: 40)
+  test 'estimated_time_for_issue works for issue with children with ignored workload of parent issues' do
+    with_plugin_settings 'workload_of_parent_issues' => '' do
+      parent = Issue.generate!(estimated_hours: 3.6)
+      child1 = Issue.generate!(estimated_hours: 5.0, parent_issue_id: parent.id, done_ratio: 90)
+      child2 = Issue.generate!(estimated_hours: 9.0, parent_issue_id: parent.id)
 
-    # Force parent and child to reload so the data from the children is
-    # incorporated.
-    parent.reload
-    child.reload
-    first_day = Date.new(2013, 5, 25)
-    last_day = Date.new(2013, 6, 4)
-    user_workload = UserWorkload.new(assignees: [],
-                                     time_span: first_day..last_day,
-                                     today: first_day)
+      # Force parent to reload so the data from the children is incorporated.
+      parent.reload
+      first_day = Date.new(2013, 5, 25)
+      last_day = Date.new(2013, 6, 4)
+      user_workload = UserWorkload.new(assignees: [],
+                                       time_span: first_day..last_day,
+                                       today: first_day)
 
-    assert_in_delta 0.0, user_workload.send(:estimated_time_for_issue, parent), 1e-4
-    assert_in_delta 0.0, user_workload.send(:estimated_time_for_issue, child), 1e-4
-    assert_in_delta 5.4, user_workload.send(:estimated_time_for_issue, grandchild), 1e-4
+      assert_in_delta 0.0, user_workload.send(:estimated_time_for_issue, parent), 1e-4
+      assert_in_delta 0.5, user_workload.send(:estimated_time_for_issue, child1), 1e-4
+      assert_in_delta 9.0, user_workload.send(:estimated_time_for_issue, child2), 1e-4
+    end
+  end
+
+  test 'estimated_time_for_issue works for issue with children with workload of parent issues' do
+    with_plugin_settings 'workload_of_parent_issues' => 'checked' do
+      parent = Issue.generate!(estimated_hours: 3.6)
+      child1 = Issue.generate!(estimated_hours: 5.0, parent_issue_id: parent.id, done_ratio: 90)
+      child2 = Issue.generate!(estimated_hours: 9.0, parent_issue_id: parent.id)
+
+      # Force parent to reload so the data from the children is incorporated.
+      parent.reload
+      first_day = Date.new(2013, 5, 25)
+      last_day = Date.new(2013, 6, 4)
+      user_workload = UserWorkload.new(assignees: [],
+                                       time_span: first_day..last_day,
+                                       today: first_day)
+      assert_equal estimated_time(parent), user_workload.send(:estimated_time_for_issue, parent)
+      assert_in_delta 0.5, user_workload.send(:estimated_time_for_issue, child1), 1e-4
+      assert_in_delta 9.0, user_workload.send(:estimated_time_for_issue, child2), 1e-4
+    end
+  end
+
+  test 'estimated_time_for_issue works for issue with grandchildren with ignored workload of parent issues' do
+    with_plugin_settings 'workload_of_parent_issues' => '' do
+      parent = Issue.generate!(estimated_hours: 4.5)
+      child = Issue.generate!(estimated_hours: 5.0, parent_issue_id: parent.id)
+      grandchild = Issue.generate!(estimated_hours: 9.0, parent_issue_id: child.id, done_ratio: 40)
+
+      # Force parent and child to reload so the data from the children is
+      # incorporated.
+      parent.reload
+      child.reload
+      first_day = Date.new(2013, 5, 25)
+      last_day = Date.new(2013, 6, 4)
+      user_workload = UserWorkload.new(assignees: [],
+                                       time_span: first_day..last_day,
+                                       today: first_day)
+
+      assert_in_delta 0.0, user_workload.send(:estimated_time_for_issue, parent), 1e-4
+      assert_in_delta 0.0, user_workload.send(:estimated_time_for_issue, child), 1e-4
+      assert_in_delta 5.4, user_workload.send(:estimated_time_for_issue, grandchild), 1e-4
+    end
+  end
+
+  test 'estimated_time_for_issue works for issue with grandchildren with workload of parent issues' do
+    with_plugin_settings 'workload_of_parent_issues' => 'checked' do
+      parent = Issue.generate!(estimated_hours: 4.5)
+      child = Issue.generate!(estimated_hours: 5.0, parent_issue_id: parent.id)
+      grandchild = Issue.generate!(estimated_hours: 9.0, parent_issue_id: child.id, done_ratio: 40)
+
+      # Force parent and child to reload so the data from the children is
+      # incorporated.
+      parent.reload
+      child.reload
+      first_day = Date.new(2013, 5, 25)
+      last_day = Date.new(2013, 6, 4)
+      user_workload = UserWorkload.new(assignees: [],
+                                       time_span: first_day..last_day,
+                                       today: first_day)
+
+      assert_equal estimated_time(parent), user_workload.send(:estimated_time_for_issue, parent)
+      assert_equal estimated_time(child), user_workload.send(:estimated_time_for_issue, child)
+      assert_in_delta 5.4, user_workload.send(:estimated_time_for_issue, grandchild), 1e-4
+    end
   end
 
   test 'load_class_for_hours can handle missing thresholds' do
