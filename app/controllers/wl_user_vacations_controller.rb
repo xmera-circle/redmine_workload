@@ -23,6 +23,25 @@ class WlUserVacationsController < ApplicationController
     end
   end
 
+  def create
+    @wl_user_vacation = WlUserVacation.new(wl_user_vacations_params)
+    @wl_user_vacation.user_id = User.current.id
+
+    respond_to do |format|
+      if @wl_user_vacation.save
+        format.html do
+          flash[:notice] = l(:notice_user_vacation_saved)
+          redirect_to(action: 'index', params: { year: params[:year] })
+        end
+      else
+        format.html do
+          render action: 'new'
+        end
+        format.api { render_validation_errors(@wl_user_vacation) }
+      end
+    end
+  end
+
   def update
     @wl_user_vacation = begin
       WlUserVacation.find(params[:id])
@@ -39,26 +58,7 @@ class WlUserVacationsController < ApplicationController
         format.html do
           render action: 'edit'
         end
-        format.xml  { render xml: @wl_user_vacation.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def create
-    @wl_user_vacation = WlUserVacation.new(wl_user_vacations_params)
-    @wl_user_vacation.user_id = User.current.id
-
-    respond_to do |format|
-      if @wl_user_vacation.save
-        format.html do
-          flash[:notice] = l(:notice_user_vacation_saved)
-          redirect_to(action: 'index', params: { year: params[:year] })
-        end
-      else
-        format.html do
-          render action: 'new'
-        end
-        format.api { render_validation_errors(@wl_user_vacation) }
+        format.xml { render xml: @wl_user_vacation.errors, status: :unprocessable_entity }
       end
     end
   end
