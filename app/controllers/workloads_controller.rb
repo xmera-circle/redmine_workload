@@ -52,7 +52,7 @@ class WorkloadsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        flash[:error] = l(:error_date_setting) unless @date_check
+        flash.now[:error] = l(:error_date_setting) unless @date_check
         render action: :index
       end
       format.csv do
