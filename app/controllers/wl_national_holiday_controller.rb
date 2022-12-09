@@ -28,6 +28,21 @@ class WlNationalHolidayController < ApplicationController
     end
   end
 
+  def create
+    @wl_national_holiday = WlNationalHoliday.new(wl_national_holiday_params)
+    if @wl_national_holiday.save
+      flash[:notice] = l(:notice_holiday_saved)
+      redirect_to action: 'index', year: params[:year]
+    else
+      respond_to do |format|
+        format.html do
+          render :new
+        end
+        format.api { render_validation_errors(@wl_national_holiday) }
+      end
+    end
+  end
+
   def update
     @wl_national_holiday = begin
       WlNationalHoliday.find(params[:id])
@@ -46,22 +61,7 @@ class WlNationalHolidayController < ApplicationController
         format.html do
           render action: 'edit'
         end
-        format.xml  { render xml: @wl_national_holiday.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def create
-    @wl_national_holiday = WlNationalHoliday.new(wl_national_holiday_params)
-    if @wl_national_holiday.save
-      flash[:notice] = l(:notice_holiday_saved)
-      redirect_to action: 'index', year: params[:year]
-    else
-      respond_to do |format|
-        format.html do
-          render :new
-        end
-        format.api { render_validation_errors(@wl_national_holiday) }
+        format.xml { render xml: @wl_national_holiday.errors, status: :unprocessable_entity }
       end
     end
   end

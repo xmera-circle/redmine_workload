@@ -32,7 +32,8 @@ Redmine::Plugin.register :redmine_workload do
              'general_workday_sunday' => '',
              'threshold_lowload_min' => 0.1,
              'threshold_normalload_min' => 7,
-             'threshold_highload_min' => 8.5
+             'threshold_highload_min' => 8.5,
+             'workload_of_parent_issues' => ''
            }
 
   permission :view_all_workloads, workloads: :index
