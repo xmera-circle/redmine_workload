@@ -176,5 +176,19 @@ module RedmineWorkload
     def last_day
       Date.new(2022, 5, 30) # Monday
     end
+
+    def with_plugin_settings(options, &block)
+      Setting.send("#{plugin_setting_name}=", options)
+      yield if block
+      Setting.find_by(name: plugin_setting_name)&.destroy
+    end
+
+    def plugin_setting_name
+      'plugin_redmine_workload'
+    end
+
+    def estimated_time(issue)
+      issue.estimated_hours * ((100.0 - issue.done_ratio) / 100.0)
+    end
   end
 end

@@ -328,7 +328,7 @@ class UserWorkload
     raise ArgumentError unless issue.is_a?(Issue)
 
     return 0.0 if issue.estimated_hours.nil?
-    return 0.0 if issue.children.any?
+    return 0.0 if issue.children.any? && !consider_parent_issues?
 
     issue.estimated_hours * ((100.0 - issue.done_ratio) / 100.0)
   end
