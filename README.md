@@ -9,6 +9,15 @@ Issues that have not filled in one of these fields will be shown in the overview
 
 ![Group Workload](screenshots/group-workload-example.png?raw=true "Group Workload Example")
 
+## New Features in Version 2.2.0
+
+### how to decide if an issue is overdue
+
+Redefines the overdue state of an issue. Instead of comparing issue.due_date with the User.current.today (as in Issue#overdue?) it will compare by the
+date given by the user.
+
+This change allows a workload analysis independent of the current date leading to more meaningful scenarios.
+
 ## New Features in Version 2.1.0
 
 ### consider workload of parent issues
