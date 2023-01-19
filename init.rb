@@ -5,11 +5,11 @@ require File.expand_path('lib/redmine_workload', __dir__)
 
 Redmine::Plugin.register :redmine_workload do
   name 'Redmine workload plugin'
-  author 'Jost Baron, Liane Hampe'
+  author 'Jost Baron, Liane Hampe, xmera Solutions GmbH'
   description 'This is a plugin for Redmine, originally developed by Rafael Calleja. It ' \
               'displays the estimated number of hours users and groups have to work to finish ' \
               'all their assigned issus on time.'
-  version '2.0.2'
+  version '2.2.0'
   url 'https://github.com/xmera-circle/redmine_workload'
 
   menu :top_menu,
