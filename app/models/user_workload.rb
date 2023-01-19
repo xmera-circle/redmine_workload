@@ -7,6 +7,7 @@
 class UserWorkload
   include Redmine::I18n
   include WlIssueQuery
+  include WlIssueState
 
   attr_reader :assignees, :issues, :time_span, :today
 
@@ -98,10 +99,10 @@ class UserWorkload
         remaining_estimated_hours = estimated_time_for_issue(issue)
 
         # Add the issue to the total workload unless its overdue or unscheduled.
-        # @note issue.overdue? implies there is a due_date. In order to avoid
-        #   double counting a missing start_date will be ignored as criteria of
+        # @note issue_overdue? implies there is a due_date. In order to avoid
+        #   double counting, a missing start_date will be ignored as criteria of
         #   beeing unscheduled.
-        if issue.overdue?
+        if issue_overdue?(issue, today)
           result[assignee][:overdue_hours] += hours_for_issue[first_working_day_from_today_on][:hours]
           result[assignee][:overdue_number] += 1
         elsif issue.due_date.nil?
@@ -137,10 +138,10 @@ class UserWorkload
           end
 
           # Add the issue to the project workload summary unless its overdue or unscheduled.
-          # @note issue.overdue? implies there is a due_date. In order to avoid
-          #   double counting a missing start_date will be ignored as criteria of
+          # @note issue_overdue? implies there is a due_date. In order to avoid
+          #   double counting, a missing start_date will be ignored as criteria of
           #   beeing unscheduled.
-          if issue.overdue?
+          if issue_overdue?(issue, today)
             result[assignee][project][:overdue_hours] += hours_for_issue[first_working_day_from_today_on][:hours]
             result[assignee][project][:overdue_number] += 1
           elsif issue.due_date.nil?
@@ -154,7 +155,7 @@ class UserWorkload
           # Add it to the issues for that project in any case.
           result[assignee][project][issue] = hours_for_issue
         else
-          unless issue.overdue?
+          unless issue_overdue?(issue, today)
             result[assignee][:invisible] =
               add_issue_info_to_summary(result[assignee][:invisible], hours_for_issue, assignee)
           end
