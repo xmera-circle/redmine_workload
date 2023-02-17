@@ -1,0 +1,106 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: ["bug"]
+assignees:
+  - liaham
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: What did you expect?
+      description: Please tell us, what did you expect to happen?
+      placeholder: Tell us what should have happend!
+      value:
+    validations:
+      required: true
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: What has happend instead?
+      description: Please tell us, what has happend instead?
+      placeholder: Tell us what has happend!
+      value:
+    validations:
+      required: true
+  - type: textarea
+    id: possible-solution
+    attributes:
+      label: What could be a possible solution?
+      description: Please tell us, how do you think the problem could be solved?
+      placeholder: Tell us what is your idea for a possible solution!
+      value:
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How can we reproduce the problem?
+      description: Please tell us, what steps to execute to reproduce the issue.
+      placeholder: Tell us step by step what we need to do!
+      value:
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: In what environment are you running the plugin?
+      description: Please copy and paste your environment information as displayed in Administration » Information or run `bin/about` in the root dir of your Redmine instance. 
+      placeholder: Paste your environment information here!
+      value:
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: Version
+      description: What version of our plugin are you running?
+      options:
+        - 1.0.0
+        - 1.0.1
+        - 1.0.2
+        - 1.0.3
+        - 1.1.0
+        - 2.0.0
+        - 2.0.1
+        - 2.0.2
+        - 2.1.0
+        - 2.2.0
+        - 2.2.1 (Latest)
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://circle.xmera.de/projects/contributors-guide/wiki/Code-of-conduct)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
