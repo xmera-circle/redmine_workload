@@ -19,7 +19,8 @@
     </div>
   </th>
   <%
-    data.keys.sort.each do |day|
+
+    data.keys.compact.sort.each do |day|
       dataForDay = data[day]
       hours = dataForDay[:hours]
       lowload = dataForDay[:lowload]
