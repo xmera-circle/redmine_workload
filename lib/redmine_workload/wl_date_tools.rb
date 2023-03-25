@@ -76,7 +76,7 @@ class WlDateTools
   end
 
   def self.holiday?(day)
-    !WlNationalHoliday.where('start <= ? AND end >= ?', day, day).empty?
+    !WlNationalHoliday.where('start <= ? AND "end" >= ?', day, day).empty?
   end
 
   def self.vacation?(day, assignee)
