@@ -4,7 +4,7 @@
 # Holds user related data for workload calculation.
 #
 class WlUserData < ActiveRecord::Base
-  include WlUserDataDefaults
+  include RedmineWorkload::WlUserDataDefaults
 
   belongs_to :user, inverse_of: :wl_user_data, optional: true
   self.table_name = 'wl_user_datas'

@@ -3,7 +3,7 @@
 require File.expand_path('../test_helper', __dir__)
 
 class GroupUserDummyTest < ActiveSupport::TestCase
-  include WlUserDataFinder
+  include RedmineWorkload::WlUserDataFinder
   include WorkloadsHelper
 
   fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,

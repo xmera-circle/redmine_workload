@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'redmine_workload/extensions/user_patch'
-require_relative 'redmine_workload/hooks/plugin'
+require_relative 'redmine_workload/hooks/after_plugins_loaded_hook'
 require_relative 'redmine_workload/group_workload_preparer'
 require_relative 'redmine_workload/user_workload_preparer'
 require_relative 'redmine_workload/wl_calculation_restrictions'

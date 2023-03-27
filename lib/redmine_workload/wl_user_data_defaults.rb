@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+module RedmineWorkload
+
 ##
 # Provides the default values for WlUserData object
 #
@@ -13,4 +15,6 @@ module WlUserDataDefaults
   def settings
     Setting['plugin_redmine_workload']
   end
+end
+
 end

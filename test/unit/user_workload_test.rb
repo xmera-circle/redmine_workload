@@ -5,7 +5,7 @@ require File.expand_path('../test_helper', __dir__)
 class UserWorkloadTest < ActiveSupport::TestCase
   include RedmineWorkload::WorkloadObjectHelper
   include WorkloadsHelper
-  include WlUserDataDefaults
+  include RedmineWorkload::WlUserDataDefaults
 
   fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
            :users, :issue_statuses, :enumerations, :roles

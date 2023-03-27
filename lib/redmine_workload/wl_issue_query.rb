@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+module RedmineWorkload
+
 module WlIssueQuery
   include WlCalculationRestrictions
   ##
@@ -37,4 +39,6 @@ module WlIssueQuery
     # Contains parent and child issues
     issues.split.flatten
   end
+end
+
 end

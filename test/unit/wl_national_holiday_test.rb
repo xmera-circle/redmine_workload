@@ -22,7 +22,7 @@ class WlNationalHolidayTest < ActiveSupport::TestCase
                                     reason: 'Test Holiday')
 
     assert holiday.save, 'Holiday could not be created or saved!'
-    assert WlDateTools.holiday?(holiday[:start]), '2017-05-30 should be a holiday!'
+    assert RedmineWorkload::WlDateTools.holiday?(holiday[:start]), '2017-05-30 should be a holiday!'
     assert holiday.destroy, 'Holiday could not be deleted!'
   end
 
@@ -32,8 +32,8 @@ class WlNationalHolidayTest < ActiveSupport::TestCase
     holiday.save
 
     assert holiday.save, 'Holiday could not be created or saved!'
-    assert WlDateTools.holiday?(holiday[:start]), '2017-05-30 should be a holiday!'
-    assert WlDateTools.holiday?(holiday[:end]), '2017-05-31 should be a holiday!'
+    assert RedmineWorkload::WlDateTools.holiday?(holiday[:start]), '2017-05-30 should be a holiday!'
+    assert RedmineWorkload::WlDateTools.holiday?(holiday[:end]), '2017-05-31 should be a holiday!'
   end
 
   test 'holiday is not workday' do
@@ -60,7 +60,7 @@ class WlNationalHolidayTest < ActiveSupport::TestCase
     holiday1.save
     holiday2.save
 
-    result = WlDateTools.working_days_in_time_span(first_day..last_day, user).to_a
+    result = RedmineWorkload::WlDateTools.working_days_in_time_span(first_day..last_day, user).to_a
 
     assert_equal [first_day, last_day - 1], result, 'Result should only bring 2 workdays!'
 

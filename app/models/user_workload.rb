@@ -6,8 +6,8 @@
 #
 class UserWorkload
   include Redmine::I18n
-  include WlIssueQuery
-  include WlIssueState
+  include RedmineWorkload::WlIssueQuery
+  include RedmineWorkload::WlIssueState
 
   attr_reader :assignees, :issues, :time_span, :today
 
@@ -225,7 +225,7 @@ class UserWorkload
         }
       end
 
-      first_working_day_after_today = WlDateTools.working_days_in_time_span(today..time_span.end, assignee).min
+      first_working_day_after_today = RedmineWorkload::WlDateTools.working_days_in_time_span(today..time_span.end, assignee).min
       result[first_working_day_after_today] = {} if result[first_working_day_after_today].nil?
       result[first_working_day_after_today][:hours] = hours_remaining
 
@@ -271,7 +271,7 @@ class UserWorkload
     else
       # Number of remaining working days for the issue:
       remaining_time_span = [today, issue.start_date].max..issue.due_date
-      number_of_workdays_for_issue = WlDateTools.real_distance_in_days(remaining_time_span, assignee)
+      number_of_workdays_for_issue = RedmineWorkload::WlDateTools.real_distance_in_days(remaining_time_span, assignee)
       hours_per_workday = hours_remaining / number_of_workdays_for_issue.to_f
 
       time_span.each do |day|
@@ -356,7 +356,7 @@ class UserWorkload
   # Collects all working days within a given time span.
   #
   def working_days_in_time_span(assignee:, no_cache: false)
-    WlDateTools.working_days_in_time_span(time_span, assignee, no_cache: no_cache)
+    RedmineWorkload::WlDateTools.working_days_in_time_span(time_span, assignee, no_cache: no_cache)
   end
 
   ##

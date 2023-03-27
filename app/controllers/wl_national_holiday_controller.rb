@@ -3,7 +3,7 @@
 require 'json'
 
 class WlNationalHolidayController < ApplicationController
-  include WlUserDataFinder
+  include RedmineWorkload::WlUserDataFinder
 
   before_action :authorize_global, only: %i[create update destroy]
   before_action :find_user_workload_data

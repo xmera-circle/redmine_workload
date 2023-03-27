@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class WlUserDatasController < ApplicationController
-  include WlUserDataFinder
+  include RedmineWorkload::WlUserDataFinder
 
   helper :workloads
   helper :wl_user_datas

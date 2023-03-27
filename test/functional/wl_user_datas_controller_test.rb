@@ -4,7 +4,7 @@ require File.expand_path('../test_helper', __dir__)
 
 class WlUserDatasControllerTest < ActionDispatch::IntegrationTest
   include RedmineWorkload::AuthenticateUser
-  include WlUserDataFinder
+  include RedmineWorkload::WlUserDataFinder
 
   fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
            :users, :issue_statuses, :enumerations, :roles

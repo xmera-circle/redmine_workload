@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+module RedmineWorkload
+
 require_relative 'wl_user_data_defaults'
 
 class WlDateTools
@@ -84,4 +86,6 @@ class WlDateTools
 
     !WlUserVacation.where('user_id = ? AND date_from <= ? AND date_to >= ?', assignee.id, day, day).empty?
   end
+end
+
 end

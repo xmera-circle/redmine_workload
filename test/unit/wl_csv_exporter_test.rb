@@ -5,7 +5,7 @@ require File.expand_path('../test_helper', __dir__)
 class WlCsvExporterTest < ActiveSupport::TestCase
 
   def setup 
-    @exporter = WlCsvExporter.new(data: nil, params: {})
+    @exporter = RedmineWorkload::WlCsvExporter.new(data: nil, params: {})
   end
 
   test 'should respond to data' do
@@ -22,11 +22,11 @@ class WlCsvExporterTest < ActiveSupport::TestCase
 
   test 'should initialize UserWorkloadPreparer object' do
     data = UserWorkload.new(assignees: [], time_span: 1..5, today: Time.zone.today)
-    assert_equal 'UserWorkloadPreparer', @exporter.send(:initialize_data_object, data).class.name
+    assert_equal 'RedmineWorkload::UserWorkloadPreparer', @exporter.send(:initialize_data_object, data).class.name
   end
 
   test 'should initialize GroupWorkloadPreparer object' do
     data = GroupWorkload.new(users: WlUserSelection.new, user_workload: {}, time_span: 1..5)
-    assert_equal 'GroupWorkloadPreparer', @exporter.send(:initialize_data_object, data).class.name
+    assert_equal 'RedmineWorkload::GroupWorkloadPreparer', @exporter.send(:initialize_data_object, data).class.name
   end
 end

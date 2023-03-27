@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+module RedmineWorkload
+
 module WlIssueState
   ##
   # Redefines the overdue state of an issue. Instead of comparing issue.due_date
@@ -9,4 +11,6 @@ module WlIssueState
   def issue_overdue?(issue, date)
     issue.due_date.present? && (issue.due_date < date) && !issue.closed?
   end
+end
+
 end
