@@ -6,8 +6,8 @@
 
 name: "GitHub CI"
 on:
-  push:
-    branches: ["develop"]
+#  push:
+#    branches: ["develop"]
   pull_request:
     branches: ["develop"]
 jobs:
