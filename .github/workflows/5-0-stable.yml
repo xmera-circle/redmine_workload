@@ -66,12 +66,10 @@ jobs:
       - name: Clone Redmine
         # Get the latest stable Redmine
         run: svn export http://svn.redmine.org/redmine/branches/5.0-stable/ /opt/redmine
-      - name: Checkout code
-        uses: actions/checkout@v3        
-      - name: Link the plugin
-        # Link the plugin to the redmine folder
-        run: | 
-          ln -s $(pwd) /opt/redmine/plugins/redmine_workload
+      - name: Checkout plugin
+        uses: actions/checkout@v2
+        with:
+          path: /opt/redmine/plugins/${{ env.NAME }}
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@0a29871fe2b0200a17a4497bae54fe5df0d973aa # v1.115.3
         with:
@@ -92,7 +90,6 @@ jobs:
       - name: Install Redmine
         # Install Redmine
         run: |
-          cd /opt/redmine
           echo "gem \"webrick\"" > Gemfile.local          
           bundle config set --local without 'rmagick development'
           bundle install
@@ -102,6 +99,7 @@ jobs:
           bundle exec rake redmine:load_default_data
         env:
           REDMINE_LANG: en
+        working-directory: /opt/redmine
       - name: Standard plugin tests
         # Run the tests
         working-directory: /opt/redmine
