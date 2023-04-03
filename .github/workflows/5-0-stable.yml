@@ -69,6 +69,7 @@ jobs:
       - name: Checkout plugin
         uses: actions/checkout@v2
         with:
+          repository: xmera-circle/redmine_workload
           path: /opt/redmine/plugins/${{ env.NAME }}
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@0a29871fe2b0200a17a4497bae54fe5df0d973aa # v1.115.3
