@@ -1,1 +1,0 @@
-Please compare your branch with the **develop** branch!
