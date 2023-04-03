@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+module RedmineWorkload
+
 require 'forwardable'
 
 class WlCsvExporter
@@ -32,7 +34,7 @@ class WlCsvExporter
     return unless data
 
     klass = data.class
-    "#{klass}Preparer".constantize.new(data: data, params: params)
+    "RedmineWorkload::#{klass}Preparer".constantize.new(data: data, params: params)
   end
 
   def planned_line(assignee, workload)
@@ -105,4 +107,6 @@ class WlCsvExporter
   def dynamic_column_names
     data.time_span.map { |date| format_date(date) }
   end
+end
+
 end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+module RedmineWorkload
+
 require 'forwardable'
 
 class GroupWorkloadPreparer
@@ -43,4 +45,6 @@ class GroupWorkloadPreparer
   private
 
   attr_writer :data, :params
+end
+
 end

@@ -3,7 +3,7 @@
 require File.expand_path('../test_helper', __dir__)
 
 class WlUserSelectionTest < ActiveSupport::TestCase
-  include WlUserDataDefaults
+  include RedmineWorkload::WlUserDataDefaults
 
   fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
            :users, :issue_statuses, :enumerations, :roles

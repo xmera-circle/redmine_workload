@@ -42,7 +42,7 @@ class WlUserVacationTest < ActiveSupport::TestCase
 
     vac1.save
 
-    assert WlDateTools::vacation?(day, user1), 'User should have Vacation!'
+    assert RedmineWorkload::WlDateTools::vacation?(day, user1), 'User should have Vacation!'
   end
 
   test 'vacation should not be in working days' do
@@ -59,7 +59,7 @@ class WlUserVacationTest < ActiveSupport::TestCase
     firstDay = Date.new(2017, 5, 29)
     lastDay = Date.new(2017, 6, 1)
 
-    result = WlDateTools.working_days_in_time_span(firstDay..lastDay, user1)
+    result = RedmineWorkload::WlDateTools.working_days_in_time_span(firstDay..lastDay, user1)
 
     assert_equal [firstDay, lastDay], result.to_a, 'Result should only bring 2 workdays!'
   end
