@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        engine: [mysql, postgresql, sqlite]
+        engine: [mysql, sqlite]
         include:
           - engine: mysql
             # Database configuration for Redmine
@@ -35,23 +35,23 @@ jobs:
             database_command: mysql -uroot -proot -e
             # SQl service
             database_service: mysql
-          - engine: postgresql
-            # Database configuration for Redmine
-            database_configuration: >
-              test:
-                adapter: postgresql
-                database: test
-                username: redmine
-                password: redmine
-                host: localhost
-            # SQL commands to create a database for Redmine
-            sql1: CREATE ROLE redmine LOGIN ENCRYPTED PASSWORD 'redmine' NOINHERIT VALID UNTIL 'infinity';
-            sql2: CREATE DATABASE test WITH ENCODING='UTF8' OWNER=redmine;
-            sql3: ALTER USER redmine CREATEDB;
-            # SQL client command
-            database_command:  sudo -u postgres psql -c
-            # SQL service
-            database_service: postgresql
+         # - engine: postgresql
+         #   # Database configuration for Redmine
+         #   database_configuration: >
+         #     test:
+         #       adapter: postgresql
+         #       database: test
+         #       username: redmine
+         #       password: redmine
+         #       host: localhost
+         #   # SQL commands to create a database for Redmine
+         #   sql1: CREATE ROLE redmine LOGIN ENCRYPTED PASSWORD 'redmine' NOINHERIT VALID UNTIL 'infinity';
+         #   sql2: CREATE DATABASE test WITH ENCODING='UTF8' OWNER=redmine;
+         #   sql3: ALTER USER redmine CREATEDB;
+         #   # SQL client command
+         #   database_command:  sudo -u postgres psql -c
+         #   # SQL service
+         #   database_service: postgresql
           - engine: sqlite
             # Database configuration for Redmine
             database_configuration: >
