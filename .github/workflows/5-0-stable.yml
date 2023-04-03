@@ -102,18 +102,18 @@ jobs:
           bundle exec rake redmine:load_default_data
         env:
           REDMINE_LANG: en
-      - name: Standard tests
+      - name: Standard plugin tests
         # Run the tests
+        working-directory: /opt/redmine
         run: |
-          cd /opt/redmine
           bundle exec rake redmine:plugins:test:units
           bundle exec rake redmine:plugins:test:functionals
           bundle exec rake redmine:plugins:test:integration
       - name: Cleanup
         # Rollback plugin's changes to the database
         # Stop the database engine
+        working-directory: /opt/redmine
         run: |
-          cd /opt/redmine
           bundle exec rake redmine:plugins:migrate VERSION=0
           if [[ "${{matrix.database_service}}" ]]; then
             sudo systemctl stop ${{matrix.engine}}
