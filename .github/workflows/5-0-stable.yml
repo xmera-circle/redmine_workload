@@ -65,12 +65,11 @@ jobs:
     steps:
       - name: Clone Redmine
         # Get the latest stable Redmine
-        run: svn export http://svn.redmine.org/redmine/branches/5.0-stable/ /opt/redmine
+        run: svn export http://svn.redmine.org/redmine/branches/5.0-stable/ redmine
       - name: Checkout plugin
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          repository: xmera-circle/redmine_workload
-          path: /opt/redmine/plugins/${{ env.NAME }}
+          path: redmine/plugins/${{ env.NAME }}
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@0a29871fe2b0200a17a4497bae54fe5df0d973aa # v1.115.3
         with:
@@ -100,10 +99,10 @@ jobs:
           bundle exec rake redmine:load_default_data
         env:
           REDMINE_LANG: en
-        working-directory: /opt/redmine
+        working-directory: redmine
       - name: Standard plugin tests
         # Run the tests
-        working-directory: /opt/redmine
+        working-directory: redmine
         run: |
           bundle exec rake redmine:plugins:test:units
           bundle exec rake redmine:plugins:test:functionals
@@ -111,7 +110,7 @@ jobs:
       - name: Cleanup
         # Rollback plugin's changes to the database
         # Stop the database engine
-        working-directory: /opt/redmine
+        working-directory: redmine
         run: |
           bundle exec rake redmine:plugins:migrate VERSION=0
           if [[ "${{matrix.database_service}}" ]]; then
