@@ -2,27 +2,28 @@
 
 require File.expand_path('../test_helper', __dir__)
 
-class GroupUserDummyTest < ActiveSupport::TestCase
-  include RedmineWorkload::WlUserDataFinder
-  include WorkloadsHelper
+module RedmineWorkload
+  class GroupUserDummyTest < ActiveSupport::TestCase
+    include RedmineWorkload::WlUserDataFinder
+    include WorkloadsHelper
 
-  fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
-           :users, :issue_statuses, :enumerations, :roles
+    fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
+             :users, :issue_statuses, :enumerations, :roles
 
-  def setup
-    @group = Group.generate!
-    @user1 = User.generate!
-    @user1.groups << @group
-    @user1_wl_data = find_user_workload_data(@user1.id)
-    @user1_wl_data.main_group = @group.id
-    @user1_wl_data.save
-    @user2 = User.generate!
-    @user2.groups << @group
-    @user2_wl_data = find_user_workload_data(@user2.id)
-    @user2_wl_data.main_group = @group.id
-    @user2_wl_data.save
-    @dummy = GroupUserDummy.new(group: @group)
-  end
+    def setup
+      @group = Group.generate!
+      @user1 = User.generate!
+      @user1.groups << @group
+      @user1_wl_data = find_user_workload_data(@user1.id)
+      @user1_wl_data.main_group = @group.id
+      @user1_wl_data.save
+      @user2 = User.generate!
+      @user2.groups << @group
+      @user2_wl_data = find_user_workload_data(@user2.id)
+      @user2_wl_data.main_group = @group.id
+      @user2_wl_data.save
+      @dummy = GroupUserDummy.new(group: @group)
+    end
 
     test 'should respond to group' do
       assert @dummy.respond_to? :group

@@ -7,7 +7,7 @@ module RedmineWorkload
     include RedmineWorkload::AuthenticateUser
 
     fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
-            :users, :issue_statuses, :enumerations, :roles
+             :users, :issue_statuses, :enumerations, :roles
 
     test 'should not get index when not allowed to' do
       log_user('jsmith', 'jsmith')

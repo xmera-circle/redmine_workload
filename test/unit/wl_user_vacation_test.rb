@@ -5,7 +5,7 @@ require File.expand_path('../test_helper', __dir__)
 module RedmineWorkload
   class WlUserVacationTest < ActiveSupport::TestCase
     fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
-            :users, :issue_statuses, :enumerations, :roles
+             :users, :issue_statuses, :enumerations, :roles
 
     setup do
       # reset default settings
@@ -43,8 +43,8 @@ module RedmineWorkload
 
       vac1.save
 
-    assert RedmineWorkload::WlDateTools::vacation?(day, user1), 'User should have Vacation!'
-  end
+      assert RedmineWorkload::WlDateTools::vacation?(day, user1), 'User should have Vacation!'
+    end
 
     test 'vacation should not be in working days' do
       user1 = User.first
@@ -60,7 +60,7 @@ module RedmineWorkload
       firstDay = Date.new(2017, 5, 29)
       lastDay = Date.new(2017, 6, 1)
 
-    result = RedmineWorkload::WlDateTools.working_days_in_time_span(firstDay..lastDay, user1)
+      result = RedmineWorkload::WlDateTools.working_days_in_time_span(firstDay..lastDay, user1)
 
       assert_equal [firstDay, lastDay], result.to_a, 'Result should only bring 2 workdays!'
     end

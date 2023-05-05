@@ -2,12 +2,13 @@
 
 require File.expand_path('../../test_helper', __dir__)
 
-class WlIssueQueryTest < ActiveSupport::TestCase
-  include RedmineWorkload::WorkloadObjectHelper
-  include RedmineWorkload::WlIssueQuery
+module RedmineWorkload
+  class WlIssueQueryTest < ActiveSupport::TestCase
+    include RedmineWorkload::WorkloadObjectHelper
+    include RedmineWorkload::WlIssueQuery
 
     fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
-            :users, :issue_statuses, :enumerations, :roles
+             :users, :issue_statuses, :enumerations, :roles
 
     def setup
       @manager = roles :roles_001
@@ -21,9 +22,9 @@ class WlIssueQueryTest < ActiveSupport::TestCase
                                       status: @status_new,
                                       project: @project1)
       @child_issue = Issue.generate!(assigned_to: @user1,
-                                    status: @status_new,
-                                    project: @project1,
-                                    parent_issue_id: @parent_issue.id)
+                                     status: @status_new,
+                                     project: @project1,
+                                     parent_issue_id: @parent_issue.id)
     end
 
     def teardown

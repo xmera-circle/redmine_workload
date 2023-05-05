@@ -7,7 +7,7 @@ module RedmineWorkload
     include RedmineWorkload::AuthenticateUser
 
     fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
-            :users, :issue_statuses, :enumerations, :roles
+             :users, :issue_statuses, :enumerations, :roles
 
     test 'should get index' do
       log_user('jsmith', 'jsmith')
@@ -29,8 +29,7 @@ module RedmineWorkload
       log_user('jsmith', 'jsmith')
 
       post wl_national_holiday_index_path,
-          params: { wl_national_holiday:
-                      { start: today, end: tomorrow, reason: 'Eastern' } }
+           params: { wl_national_holiday: { start: today, end: tomorrow, reason: 'Eastern' } }
       assert_redirected_to wl_national_holiday_index_path
     end
 

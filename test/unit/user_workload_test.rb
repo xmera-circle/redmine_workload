@@ -2,19 +2,20 @@
 
 require File.expand_path('../test_helper', __dir__)
 
-class UserWorkloadTest < ActiveSupport::TestCase
-  include RedmineWorkload::WorkloadObjectHelper
-  include WorkloadsHelper
-  include RedmineWorkload::WlUserDataDefaults
+module RedmineWorkload
+  class UserWorkloadTest < ActiveSupport::TestCase
+    include WorkloadObjectHelper
+    include WorkloadsHelper
+    include WlUserDataDefaults
 
-  fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
-           :users, :issue_statuses, :enumerations, :roles
+    fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
+            :users, :issue_statuses, :enumerations, :roles
 
-  def setup
-    @manager = roles :roles_001
-    @jsmith = users :users_002
-    @cap = WlDayCapacity.new(assignee: @jsmith)
-  end
+    def setup
+      @manager = roles :roles_001
+      @jsmith = users :users_002
+      @cap = WlDayCapacity.new(assignee: @jsmith)
+    end
 
     def teardown
       User.current = nil

@@ -5,7 +5,7 @@ require File.expand_path('../test_helper', __dir__)
 module RedmineWorkload
   class WlGroupSelectionTest < ActiveSupport::TestCase
     fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
-            :users, :issue_statuses, :enumerations, :roles
+             :users, :issue_statuses, :enumerations, :roles
 
     def setup
       Group.where.not(id: [12, 13]).delete_all
