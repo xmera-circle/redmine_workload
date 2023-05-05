@@ -1,5 +1,7 @@
 # Workload Plugin for Redmine
 
+![Redmine Workload Version](https://img.shields.io/badge/Redmine_Plugin-v2.2.2-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v5.0.z-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de,_fr,_es,_it-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important) ![ci](https://github.com/xmera-circle/redmine_workload/actions/workflows/5-0-stable.yml/badge.svg)
+
 A complete rewrite of the original workload-plugin from Rafael Calleja.
 The plugin calculates how much work each user would have to do per day in order to hit the deadlines for all his issues.
 It also calculates this information for a [group](https://www.redmine.org/projects/redmine/wiki/RedmineGroups).
