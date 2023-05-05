@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-module RedmineWorkload
-
 require 'forwardable'
 
 module RedmineWorkload
@@ -39,6 +37,4 @@ module RedmineWorkload
 
     attr_writer :data, :params
   end
-end
-
 end

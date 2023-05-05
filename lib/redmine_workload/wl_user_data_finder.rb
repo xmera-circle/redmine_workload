@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 module RedmineWorkload
-
-##
-# Finder method for WLUserData
-#
-module WlUserDataFinder
   ##
   # Finder method for WLUserData
   #
@@ -20,6 +15,4 @@ module WlUserDataFinder
       @user_workload_data
     end
   end
-end
-
 end

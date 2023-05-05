@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-module RedmineWorkload
-
 require 'forwardable'
 
 module RedmineWorkload
@@ -109,6 +107,4 @@ module RedmineWorkload
       data.time_span.map { |date| format_date(date) }
     end
   end
-end
-
 end

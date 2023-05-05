@@ -1,21 +1,20 @@
 # frozen_string_literal: true
 
 module RedmineWorkload
-
-module WlIssueQuery
-  include WlCalculationRestrictions
-  ##
-  # Returns all issues that fulfill the following conditions:
-  #  * They are open
-  #  * The project they belong to is active
-  #  * They have no children if consider_parent_issues? is false
-  #  * They are parent or child isse if consider_parent_issues? is true
-  #
-  # @param users [Array(User)] An array of user objects.
-  # @return [Array(Issue)] The set of issues meeting the conditions above.
-  #
-  def open_issues_for_users(users, issues = nil)
-    return issues if issues
+  module WlIssueQuery
+    include WlCalculationRestrictions
+    ##
+    # Returns all issues that fulfill the following conditions:
+    #  * They are open
+    #  * The project they belong to is active
+    #  * They have no children if consider_parent_issues? is false
+    #  * They are parent or child isse if consider_parent_issues? is true
+    #
+    # @param users [Array(User)] An array of user objects.
+    # @return [Array(Issue)] The set of issues meeting the conditions above.
+    #
+    def open_issues_for_users(users, issues = nil)
+      return issues if issues
 
       raise ArgumentError unless users.is_a?(Array)
 
@@ -40,6 +39,4 @@ module WlIssueQuery
       issues.split.flatten
     end
   end
-end
-
 end
