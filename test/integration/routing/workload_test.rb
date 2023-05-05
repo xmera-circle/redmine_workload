@@ -2,8 +2,10 @@
 
 require File.expand_path('../../test_helper', __dir__)
 
-class RoutingWorkloadTest < Redmine::RoutingTest
-  def test_workloads
-    should_route 'GET  /workloads' => 'workloads#index'
+module RedmineWorkload
+  class RoutingWorkloadTest < Redmine::RoutingTest
+    def test_workloads
+      should_route 'GET  /workloads' => 'workloads#index'
+    end
   end
 end

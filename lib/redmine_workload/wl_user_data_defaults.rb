@@ -12,8 +12,9 @@ module WlUserDataDefaults
       threshold_highload_min: settings['threshold_highload_min'] }
   end
 
-  def settings
-    Setting['plugin_redmine_workload']
+    def settings
+      Setting['plugin_redmine_workload']
+    end
   end
 end
 

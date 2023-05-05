@@ -7,8 +7,9 @@ module WlCalculationRestrictions
     settings['workload_of_parent_issues'].present?
   end
 
-  def settings
-    Setting.plugin_redmine_workload
+    def settings
+      Setting.plugin_redmine_workload
+    end
   end
 end
 

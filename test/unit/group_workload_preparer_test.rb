@@ -2,8 +2,9 @@
 
 require File.expand_path('../test_helper', __dir__)
 
-class GroupWorkloadPreparerTest < ActiveSupport::TestCase
-  include Redmine::I18n
+module RedmineWorkload
+  class GroupWorkloadPreparerTest < ActiveSupport::TestCase
+    include Redmine::I18n
 
   test 'should respond to user_workload' do
     preparer = RedmineWorkload::GroupWorkloadPreparer.new(data: {}, params: {})
