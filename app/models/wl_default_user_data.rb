@@ -4,7 +4,7 @@
 # Holds default user related data for workload calculation.
 #
 class WlDefaultUserData
-  include WlUserDataDefaults
+  include RedmineWorkload::WlUserDataDefaults
 
   def threshold_lowload_min
     default_attributes[:threshold_lowload_min].to_f

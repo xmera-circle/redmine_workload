@@ -11,7 +11,7 @@ class WorkloadsController < ApplicationController
   helper :workloads
 
   include QueriesHelper
-  include WlUserDataFinder
+  include RedmineWorkload::WlUserDataFinder
   include WorkloadsHelper
 
   before_action :authorize_global, only: %i[index]
@@ -40,7 +40,7 @@ class WorkloadsController < ApplicationController
                                        time_span: @time_span_to_display,
                                        today: @today)
 
-      @months_to_render = WlDateTools.months_in_time_span(@time_span_to_display)
+      @months_to_render = RedmineWorkload::WlDateTools.months_in_time_span(@time_span_to_display)
       @workload_data = user_workload.hours_per_user_issue_and_day
 
       @group_workload = GroupWorkload.new(users: @users,
