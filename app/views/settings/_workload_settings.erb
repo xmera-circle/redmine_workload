@@ -81,13 +81,13 @@
 	<p>
 	  <label><%= l(:workload_settings_general_workdays_sunday) %></label>
 	  <input type="hidden"
-	         name="settings[workload_of_parent_issues]"
+	         name="settings[general_workday_sunday]"
 	         value=""
 	  >
 	  <input type="checkbox"
-	         name="settings[workload_of_parent_issues]"
+	         name="settings[general_workday_sunday]"
 	         value="checked"
-	         <%= "checked" if settings['workload_of_parent_issues'] != '' %>
+	         <%= "checked" if settings['general_workday_sunday'] != '' %>
 	  >
 	</p>
 </fieldset>

@@ -76,8 +76,15 @@ module RedmineWorkload
       working_days_in_time_span(time_span, assignee).size
     end
 
+    # Uses beginless and endless range
     def self.holiday?(day)
-      !WlNationalHoliday.where(start: ..day).where(end: day..).empty?
+      return false unless WlNationalHoliday.any?
+
+      if RUBY_VERSION < '3.1'
+        !WlNationalHoliday.where('start <= ?', day).where('end >= ?', day).empty?
+      else
+        !WlNationalHoliday.where(start: ..day).where(end: day..).empty?
+      end
     end
 
     def self.vacation?(day, assignee)
