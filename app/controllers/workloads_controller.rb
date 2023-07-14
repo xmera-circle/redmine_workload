@@ -16,6 +16,9 @@ class WorkloadsController < ApplicationController
 
   before_action :authorize_global, only: %i[index]
   before_action :find_user_workload_data
+  before_action :valid_encoding?, only: %i[index]
+
+  accept_api_auth :index
 
   def index
     @first_day = sanitizeDateParameter(workload_params[:first_day],  Time.zone.today - 10)
@@ -55,13 +58,37 @@ class WorkloadsController < ApplicationController
         flash.now[:error] = l(:error_date_setting) unless @date_check
         render action: :index
       end
+
       format.csv do
-        send_data(workloads_to_csv(@workload, params), type: 'text/csv; header=present', filename: 'workload.csv')
+        send_data(workloads_to_csv(@workload, params),
+                  type: 'text/csv; header=present',
+                  filename: 'workload.csv')
       end
     end
   end
 
   private
+
+  def valid_encoding?
+    return index unless params[:encoding]
+
+    valid = encoding_options.any? { |option| params[:encoding].casecmp(option).zero? }
+    return index if valid
+
+    flash.now[:error] = l(:error_encoding_setting, encoding_options.join(', '))
+    params[:encoding] = nil
+    index
+  end
+
+  def encoding_options
+    utf8 = %w[UTF-8 UTF8]
+    general_csv_encoding = [l(:general_csv_encoding), l(:general_csv_encoding).delete('-')]
+    if general_csv_encoding.all? { |encoding| encoding.casecmp('UTF-8').zero? }
+      utf8
+    else
+      [general_csv_encoding, utf8].flatten
+    end
+  end
 
   ##
   # Prepares workload params based on params[:workload] and params[:filter_type]
