@@ -61,7 +61,7 @@ module RedmineWorkload
       holiday1.save
       holiday2.save
 
-      result = RedmineWorkload::WlDateTools.working_days_in_time_span(first_day..last_day, user).to_a
+      result = RedmineWorkload::WlDateTools.working_days_in_time_span(first_day..last_day, user, no_cache: true).to_a
 
       assert_equal [first_day, last_day - 1], result, 'Result should only bring 2 workdays!'
 

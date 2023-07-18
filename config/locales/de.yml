@@ -100,6 +100,7 @@ de:
   workload_unscheduled_issues_num: 'Anzahl ungeplanter Tickets:'
   workload_unscheduled_issues_hours: 'Stunden aus ungeplanten Tickets:'
   error_date_setting: 'Überprüfen Sie Ihre Eingabe! Das Enddatum (bis) liegt vor dem Startdatum (von).'
+  error_encoding_setting: 'Zeichenkodierung nicht erlaubt. Gültige Werte: %{value}.'
   label_workload_calculation: Workloadberechnung
   label_include_parent_tasks: Hauptaufgaben einbeziehen
   info_include_parent_tasks: Werden Hauptaufgaben nicht einbezogen, wird lediglich der geschätzte Aufwand von Unteraufgaben berücksichtigt!

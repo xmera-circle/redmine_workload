@@ -33,5 +33,15 @@ module RedmineWorkload
       get workloads_path(format: 'csv')
       assert_response :success
     end
+
+    test 'should display error when requesting index as csv with invalid encoding' do
+      manager = roles :roles_001
+      manager.add_permission! :view_all_workloads
+      log_user('jsmith', 'jsmith')
+
+      get workloads_path(format: 'csv', params: { encoding: 'UTF88' })
+
+      assert flash[:error].match(/Character encoding not allowed./)
+    end
   end
 end

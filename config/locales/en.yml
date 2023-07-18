@@ -100,6 +100,7 @@ en:
   workload_unscheduled_issues_num: 'Number of unscheduled issues:'
   workload_unscheduled_issues_hours: 'Hours of unscheduled issues:'
   error_date_setting: 'Please check your data! The end date is before the start date.'
+  error_encoding_setting: 'Character encoding not allowed. Valid values: %{value}.'
   label_workload_calculation: Workload calculation
   label_include_parent_tasks: Include parent tasks
   info_include_parent_tasks: If parent tasks would not be considered then only estimated times of child issues will be included in the workload calculation!

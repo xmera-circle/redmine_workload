@@ -1,15 +1,37 @@
 # Workload Plugin for Redmine
 
-![Redmine Workload Version](https://img.shields.io/badge/Redmine_Plugin-v2.2.2-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v5.0.z-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de,_fr,_es,_it-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important) ![ci](https://github.com/xmera-circle/redmine_workload/actions/workflows/5-0-stable.yml/badge.svg)
+![Redmine Workload Version](https://img.shields.io/badge/Redmine_Plugin-v3.0.0-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v5.0.z-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de,_fr,_es,_it-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important) ![ci](https://github.com/xmera-circle/redmine_workload/actions/workflows/5-0-stable.yml/badge.svg)
 
 A complete rewrite of the original workload-plugin from Rafael Calleja.
 The plugin calculates how much work each user would have to do per day in order to hit the deadlines for all his issues.
+
 It also calculates this information for a [group](https://www.redmine.org/projects/redmine/wiki/RedmineGroups).
 It calculates issues (number and hours) that are behind schedule and calculates issues that are unplanned (number and hours) so far.
+
 To be able to do all this calculations, the issues start date, due date and estimated time must be filled in.
 Issues that have not filled in one of these fields will be shown in the overview, but the workload resulting from these issues will be ignored.
 
 ![Group Workload](screenshots/group-workload-example.png?raw=true "Group Workload Example")
+
+## New Features in Version 3.0.0 ( :warning: Possible Breaking Change for PostgreSQL user)
+
+### API support for workload CSV export
+
+When you have your API enabled in `Administration » Settings » API » Rest web service` then you can download your CSV export via CronJob for example. 
+
+With `curl` you would get your data with:
+
+```shell
+curl -X GET -H "X-Redmine-API-Key: <your-api-token>" https://<domain.tld>/workloads.csv?encoding=<encoding> > workloads.csv
+```
+
+The encoding options are the same as on the page itself and might depend on your language choice.
+
+### workday settings
+
+Workday settings are fixed now (see [#27](https://github.com/xmera-circle/redmine_workload/issues/27)) but lead to restrictions for PostgreSQL user.
+
+ :warning: **With PostgreSQL installed you need to run Ruby 3.1.z!**
 
 ## New Features in Version 2.2.0
 

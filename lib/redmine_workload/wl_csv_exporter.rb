@@ -32,9 +32,13 @@ module RedmineWorkload
     def initialize_data_object(data)
       return unless data
 
-    klass = data.class
-    "RedmineWorkload::#{klass}Preparer".constantize.new(data: data, params: params)
-  end
+      klass = data.class
+      "RedmineWorkload::#{klass}Preparer".constantize.new(data: data, params: params)
+    end
+
+    def validate_params
+
+    end
 
     def planned_line(assignee, workload)
       [l(:label_planned),
