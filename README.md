@@ -1,6 +1,6 @@
 # Workload Plugin for Redmine
 
-![Redmine Workload Version](https://img.shields.io/badge/Redmine_Plugin-v3.0.0-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v5.0.z-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de,_fr,_es,_it-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important) ![ci](https://github.com/xmera-circle/redmine_workload/actions/workflows/5-0-stable.yml/badge.svg)
+![Redmine Workload Version](https://img.shields.io/badge/Redmine_Plugin-v3.0.1-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v5.0.z-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de,_fr,_es,_it-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important) ![ci](https://github.com/xmera-circle/redmine_workload/actions/workflows/5-0-stable.yml/badge.svg)
 
 A complete rewrite of the original workload-plugin from Rafael Calleja.
 The plugin calculates how much work each user would have to do per day in order to hit the deadlines for all his issues.
@@ -13,7 +13,9 @@ Issues that have not filled in one of these fields will be shown in the overview
 
 ![Group Workload](screenshots/group-workload-example.png?raw=true "Group Workload Example")
 
-## New Features in Version 3.0.0 ( :warning: Possible Breaking Change for PostgreSQL user)
+## New Features in Version 3.0.0
+
+:warning: **[Possible Breaking Change for PostgreSQL user](#workday-settings)**
 
 ### API support for workload CSV export
 
@@ -77,6 +79,10 @@ The result now is shown close to overdue issues.
 The only way to have a look on the data was the workload page.
 There has been no way to transfer data, e.g. to excel, to draw some charts.
 Now there is a feature to export the workload per user and per role to build charts external.
+
+## Changelog
+
+See [CHANGELOG](/CHANGELOG.md) for a comprehensive overview of all changes.
 
 ## Installation / Uninstallation
 
