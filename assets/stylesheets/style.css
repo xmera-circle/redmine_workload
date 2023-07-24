@@ -315,7 +315,6 @@ legend {
 .controller-workloads .data .holiday.today {
     background-color: var(--lightgray);
     border-right: 2px dashed red;
-    border-right: 1px solid var(--mediumgray);
 }
 
 .controller-workloads .data .holiday span {
