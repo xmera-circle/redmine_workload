@@ -19,9 +19,9 @@ class WorkloadsController < ApplicationController
   accept_api_auth :index
 
   def index
-    @first_day = sanitizeDateParameter(workload_params[:first_day],  Time.zone.today - 10)
-    @last_day  = sanitizeDateParameter(workload_params[:last_day],   Time.zone.today + 50)
-    @today     = sanitizeDateParameter(workload_params[:start_date], Time.zone.today)
+    @first_day = sanitize_date_parameter(workload_params[:first_day],  Time.zone.today - 10)
+    @last_day  = sanitize_date_parameter(workload_params[:last_day],   Time.zone.today + 50)
+    @today     = sanitize_date_parameter(workload_params[:start_date], Time.zone.today)
     @date_check = @last_day >= @first_day
 
     # if @today ("select as today") is before @first_day take @today as @first_day
@@ -114,7 +114,7 @@ class WorkloadsController < ApplicationController
     groups ? { groups: WlGroupSelection.new.all_group_ids } : { users: WlUserSelection.new.all_user_ids }
   end
 
-  def sanitizeDateParameter(parameter, default)
+  def sanitize_date_parameter(parameter, default)
     return default unless parameter.respond_to?(:to_date)
 
     parameter.to_date

@@ -5,6 +5,8 @@
 # the group user dummy.
 #
 class GroupWorkload
+  include RedmineWorkload::WlUserSorting
+
   attr_reader :time_span, :user_workload
 
   ##
@@ -52,11 +54,12 @@ class GroupWorkload
   end
 
   ##
-  # Sorting of users lastname and their class name in order to ensure that the
-  # GroupUserDummy will come first.
+  # Sorting by the class name first ensures that the GroupUserDummy comes
+  # before the real users. Within a class the name is used as rendered by
+  # Redmine, see RedmineWorkload::WlUserSorting.
   #
   def sorted_user_workload
-    user_workload_with_availabilities.sort_by { |user, _data| [user.class.name, user.lastname] }.to_h
+    user_workload_with_availabilities.sort_by { |user, _data| [user.class.name, *user_sort_key(user)] }.to_h
   end
 
   ##

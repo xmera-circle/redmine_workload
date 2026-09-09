@@ -9,13 +9,7 @@ module RedmineWorkload
 
     setup do
       # reset default settings
-      Setting['plugin_redmine_workload']['general_workday_monday'] = 'checked'
-      Setting['plugin_redmine_workload']['general_workday_tuesday'] = 'checked'
-      Setting['plugin_redmine_workload']['general_workday_wednesday'] = 'checked'
-      Setting['plugin_redmine_workload']['general_workday_thursday'] = 'checked'
-      Setting['plugin_redmine_workload']['general_workday_friday'] = 'checked'
-      Setting['plugin_redmine_workload']['general_workday_saturday'] = ''
-      Setting['plugin_redmine_workload']['general_workday_sunday'] = ''
+      Setting.non_working_week_days = %w[6 7]
     end
 
     test 'single holiday' do

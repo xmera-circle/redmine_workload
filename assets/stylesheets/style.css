@@ -146,6 +146,15 @@
     margin-right: 4px;
 }
 
+.controller-workloads .data .trigger svg {
+    vertical-align: middle;
+    transition: transform 0.15s ease-in-out;
+}
+
+.controller-workloads .data .trigger.opened svg {
+    transform: rotate(90deg);
+}
+
 .controller-workloads table dt.mt-5,
 .controller-workloads table dd.mt-5 {
     margin-top: 5px;

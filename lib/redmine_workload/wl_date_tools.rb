@@ -37,18 +37,10 @@ module RedmineWorkload
 
     # Returns a list of all regular working weekdays.
     # 1 is monday, 7 is sunday (same as in Date::cwday)
+    #
+    # Taken from Redmine's own 'Non-working days' setting so that both agree.
     def self.working_days
-      result = Set.new
-
-      result.add(1) if settings['general_workday_monday'] != ''
-      result.add(2) if settings['general_workday_tuesday'] != ''
-      result.add(3) if settings['general_workday_wednesday'] != ''
-      result.add(4) if settings['general_workday_thursday'] != ''
-      result.add(5) if settings['general_workday_friday'] != ''
-      result.add(6) if settings['general_workday_saturday'] != ''
-      result.add(7) if settings['general_workday_sunday'] != ''
-
-      result
+      Set.new((1..7).to_a - Array(Setting.non_working_week_days).map(&:to_i))
     end
 
     def self.working_days_in_time_span(time_span, assignee, no_cache: false)

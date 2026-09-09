@@ -788,16 +788,10 @@ module RedmineWorkload
 
     private
 
-    # Set Saturday, Sunday and Wednesday to be a holiday, all others to be a
-    # working day.
+    # Set Saturday, Sunday and Wednesday to be a non-working day, all others to
+    # be a working day.
     def define_saturday_sunday_and_wednesday_as_holiday
-      settings['general_workday_monday'] = 'checked'
-      settings['general_workday_tuesday'] = 'checked'
-      settings['general_workday_wednesday'] = ''
-      settings['general_workday_thursday'] = 'checked'
-      settings['general_workday_friday'] = 'checked'
-      settings['general_workday_saturday'] = ''
-      settings['general_workday_sunday'] = ''
+      Setting.non_working_week_days = %w[3 6 7]
     end
 
     def assert_issue_times_hash_equals(expected, actual)

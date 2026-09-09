@@ -3,7 +3,9 @@
 # Parameters:
 # trigger_for: set as "data-for"-attribute
 #
-# &#x25b6; is a right-pointing filled triangle.
+# The icon is rendered once as 'angle-right'. The opened state is expressed by
+# the 'opened' css class, which rotates it by 90 degrees. Do not swap the icon
+# in JavaScript; the class is the single source of truth for the state.
 %>
 
-<span class="trigger closed" data-for="<%= trigger_for %>">&#x25b6;</span>
+<span class="trigger closed" data-for="<%= trigger_for %>"><%= sprite_icon('angle-right') %></span>

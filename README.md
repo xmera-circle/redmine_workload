@@ -1,6 +1,6 @@
 # Workload Plugin for Redmine
 
-![Redmine Workload Version](https://img.shields.io/badge/Redmine_Plugin-v4.0.0-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v6.1.z-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de,_fr,_es,_it-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important) ![ci](https://github.com/xmera-circle/redmine_workload/actions/workflows/6-1-stable.yml/badge.svg)
+![Redmine Workload Version](https://img.shields.io/badge/Redmine_Plugin-v4.1.0-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v6.1.z-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de,_fr,_es,_it-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important) ![ci](https://github.com/xmera-circle/redmine_workload/actions/workflows/6-1-stable.yml/badge.svg)
 
 A complete rewrite of the original workload-plugin from Rafael Calleja.
 The plugin calculates how much work each user would have to do per day in order to hit the deadlines for all his issues.
@@ -12,6 +12,22 @@ To be able to do all this calculations, the issues start date, due date and esti
 Issues that have not filled in one of these fields will be shown in the overview, but the workload resulting from these issues will be ignored.
 
 ![Group Workload](screenshots/group-workload-example.png?raw=true "Group Workload Example")
+
+## New Features in Version 4.1.0
+
+Order users by Redmine's display name format\
+Read the working days from Redmine's own configuration
+
+## New Features in Version 4.0.0
+
+### support of Redmine 6
+
+Version 4.0.0 supports Redmine 6.1.z and is **not** backward compatible: the
+database migrations are on `ActiveRecord::Migration[7.2]`, which Redmine 5
+(Rails 6.1) cannot load. Installations on Redmine 5 stay on the 3.x line.
+
+Redmine 6.0.z ships the same Rails 7.2 and is likely to work, but it is not
+covered by the test workflow and therefore not claimed as supported.
 
 ## New Features in Version 3.0.0
 
@@ -31,21 +47,10 @@ The encoding options are the same as on the page itself and might depend on your
 
 ### workday settings
 
-Workday settings are fixed now (see [#27](https://github.com/xmera-circle/redmine_workload/issues/27)) but lead to restrictions for PostgreSQL user.
+Workday settings were fixed in this version (see [#27](https://github.com/xmera-circle/redmine_workload/issues/27)) but led to restrictions for PostgreSQL user. Since 4.1.0 the working days come from Redmine's own configuration, see below.
 
  :warning: **PostgreSQL requires Ruby 3.1 or newer.** Redmine 6.1 requires Ruby 3.2
 or newer anyway, so this is no longer a separate constraint for the 4.x line.
-
-## New Features in Version 4.0.0
-
-### support of Redmine 6
-
-Version 4.0.0 supports Redmine 6.1.z and is **not** backward compatible: the
-database migrations are on `ActiveRecord::Migration[7.2]`, which Redmine 5
-(Rails 6.1) cannot load. Installations on Redmine 5 stay on the 3.x line.
-
-Redmine 6.0.z ships the same Rails 7.2 and is likely to work, but it is not
-covered by the test workflow and therefore not claimed as supported.
 
 ## New Features in Version 2.2.0
 
@@ -109,7 +114,16 @@ Please refer to [redmine.org -> Plugins](https://www.redmine.org/projects/redmin
 There are three places where this plugin might be configured:
 
 1. In the plugin settings, available in the administration area under `plugins`.
-You can configure working days, thresholds here and set global holidays.
+You can configure thresholds here and set global holidays. The working days
+are **not** configured here: they are read from Redmine's own
+`Administration -> Settings -> Issue tracking -> Non-working days`, so that the
+workload calculation and the rest of Redmine agree on which days are worked.
+
+:warning: Changing the working days does not show up in the workload view right
+away. `WlDateTools.working_days_in_time_span` caches its result per user and
+time span for up to 12 hours. Restart Redmine or clear its cache
+(`rake tmp:cache:clear`, or remove `tmp/cache`) to apply the change
+immediately. The same applies to global holidays and vacations.
 
 2. In the roles section of the administration area, the plugin adds new permissions as described below.
 There is no need to configure this plugin on project level.

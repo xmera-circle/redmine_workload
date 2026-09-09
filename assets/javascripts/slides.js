@@ -6,8 +6,6 @@
 
 $(document).ready(function() {
 	$('.trigger').click(function() {
-		var OPENED = '&#x25bc;'
-		var CLOSED = '&#x25b6;'
 		$(this).toggleClass('closed opened');
 
 		identifier = $(this).attr('data-for');
@@ -44,7 +42,6 @@ $(document).ready(function() {
 				$(this).show(); // but keep its 'children' closed if any
 				$(this).siblings('.invisible-issues-summary.' + identifierClasses).show();
 			});
-			$(this).html(OPENED);
 		}
 		else {
 			lowerHierarchieLevelClasses = bottomUpHierarchieChain.get(currentHierarchieLevel);
@@ -54,11 +51,10 @@ $(document).ready(function() {
 				$(css).hide();
 				$(css).siblings('.invisible-issues-summary.' + identifierClasses).hide();
 				currentHierarchieLevel = $(css).find('span.trigger.opened');
-				currentHierarchieLevel.html(CLOSED);
+				currentHierarchieLevel.removeClass('opened').addClass('closed');
 				currentHierarchieLevel.siblings('dl').hide();
 			})
 			$(this).siblings().hide();
-			$(this).html(CLOSED);
 		}
 	});
 });

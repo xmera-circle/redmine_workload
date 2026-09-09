@@ -46,6 +46,8 @@ de:
   workload_overdue_issues_hours: "Stunden aus überfälligen Tickets:"
   workload_settings_general_workdays: "Wöchentliche Arbeitstage"
   workload_settings_general_workdays_explanation: "Diese Tage werden bei der Berechnung der Arbeitsbelastung als Arbeitstage angenommen:"
+  workload_settings_general_workdays_from_core: "Die Arbeitstage stammen aus Redmines eigener Konfiguration, damit beide übereinstimmen. Dort ändern:"
+  workload_settings_general_workdays_cache_hint: "Eine Änderung wirkt nicht sofort: die Berechnung wird je Anwender und Zeitraum bis zu 12 Stunden zwischengespeichert. Für eine sofortige Wirkung Redmine neu starten oder den Cache leeren."
   workload_settings_general_workdays_monday:    "Montag"
   workload_settings_general_workdays_tuesday:   "Dienstag"
   workload_settings_general_workdays_wednesday: "Mittwoch"

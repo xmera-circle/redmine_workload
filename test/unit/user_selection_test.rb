@@ -43,6 +43,14 @@ module RedmineWorkload
       (@fixture_group_member_ids + @group_member_ids.flatten).uniq.sort
     end
 
+    ##
+    # Ids in the order WlUserSelection would render them.
+    #
+    def displayed_ids(current_user)
+      groups = WlGroupSelection.new(user: current_user, groups: [@group1.id, @group2.id, @group3.id])
+      WlUserSelection.new(user: current_user, group_selection: groups).allowed_to_display.map(&:id)
+    end
+
     test 'should return all users if the current user is admin' do
       current_user = User.generate!(admin: true)
       groups = WlGroupSelection.new(user: current_user, groups: [@group1.id, @group2.id, @group3.id])
@@ -78,6 +86,24 @@ module RedmineWorkload
       expected = [@user1, @user3].map(&:id).sort
       current = users.allowed_to_display.map(&:id).sort
       assert_equal expected, current
+    end
+
+    test 'should order users by the display name format' do
+      current_user = User.generate!(admin: true)
+      zoe_adams = User.generate!(firstname: 'Zoe', lastname: 'Adams')
+      adam_zimmer = User.generate!(firstname: 'Adam', lastname: 'Zimmer')
+      [zoe_adams, adam_zimmer].each { |user| user.groups << @group1 }
+      ids = [zoe_adams.id, adam_zimmer.id]
+
+      # A new selection per block, otherwise User#name serves its memoized value
+      # from before the setting changed.
+      with_settings user_format: 'lastname_comma_firstname' do
+        assert_equal [zoe_adams.id, adam_zimmer.id], displayed_ids(current_user) & ids
+      end
+
+      with_settings user_format: 'firstname_lastname' do
+        assert_equal [adam_zimmer.id, zoe_adams.id], displayed_ids(current_user) & ids
+      end
     end
 
     test 'should return the current user if allowed to :view_own_workloads' do

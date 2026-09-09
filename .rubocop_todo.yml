@@ -41,26 +41,3 @@ Metrics/MethodLength:
 # Configuration parameters: IgnoredMethods.
 Metrics/PerceivedComplexity:
   Max: 32
-
-# Offense count: 3
-# Configuration parameters: EnforcedStyle, AllowedPatterns, IgnoredPatterns.
-# SupportedStyles: snake_case, camelCase
-Naming/MethodName:
-  Exclude:
-    - 'app/controllers/workloads_controller.rb'
-    - 'app/models/wl_national_holiday.rb'
-    - 'app/models/wl_user_vacation.rb'
-
-# Offense count: 4
-# Configuration parameters: MinNameLength, AllowNamesEndingInNumbers, AllowedNames, ForbiddenNames.
-# AllowedNames: at, by, db, id, in, io, ip, of, on, os, pp, to
-Naming/MethodParameterName:
-  Exclude:
-    - 'app/helpers/workload_filters_helper.rb'
-
-# Offense count: 8
-# Configuration parameters: EnforcedStyle, AllowedIdentifiers.
-# SupportedStyles: snake_case, camelCase
-Naming/VariableName:
-  Exclude:
-    - 'app/helpers/workload_filters_helper.rb'

@@ -6,8 +6,8 @@ class WlNationalHoliday < ActiveRecord::Base
   validates :start, :end, :reason, presence: true
   validate :check_datum
 
-  after_destroy :clearCache
-  after_save :clearCache
+  after_destroy :clear_cache
+  after_save :clear_cache
 
   def check_datum
     errors.add :end, :greater_than_start_date if workload_end_before_start?
@@ -19,7 +19,7 @@ class WlNationalHoliday < ActiveRecord::Base
     start && self.end && (start_changed? || end_changed?) && self.end < start
   end
 
-  def clearCache
+  def clear_cache
     Rails.cache.clear
   end
 end

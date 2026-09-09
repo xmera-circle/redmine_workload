@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module WorkloadFiltersHelper
-  def user_options_for_select(usersToShow, selectedUsers)
+  def user_options_for_select(users_to_show, selected_users)
     result = ''
-    return unless usersToShow
+    return unless users_to_show
 
-    usersToShow.each do |user|
-      selected = selectedUsers.include?(user) ? 'selected="selected"' : ''
+    users_to_show.each do |user|
+      selected = selected_users.include?(user) ? 'selected="selected"' : ''
 
       result += "<option value=\"#{h(user.id)}\" #{selected}>#{h(user.name)}</option>"
     end
@@ -14,12 +14,12 @@ module WorkloadFiltersHelper
     result.html_safe
   end
 
-  def group_options_for_select(groupsToShow, selectedGroups)
+  def group_options_for_select(groups_to_show, selected_groups)
     result = ''
-    return unless groupsToShow
+    return unless groups_to_show
 
-    groupsToShow.each do |group|
-      selected = selectedGroups.include?(group) ? 'selected="selected"' : ''
+    groups_to_show.each do |group|
+      selected = selected_groups.include?(group) ? 'selected="selected"' : ''
 
       result += "<option value=\"#{h(group&.id)}\" #{selected}>#{h(group.lastname)}</option>"
     end

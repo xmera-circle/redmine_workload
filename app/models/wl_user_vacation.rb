@@ -9,8 +9,8 @@ class WlUserVacation < ActiveRecord::Base
   validates :date_from, :date_to, presence: true
   validate :check_datum
 
-  after_destroy :clearCache
-  after_save :clearCache
+  after_destroy :clear_cache
+  after_save :clear_cache
 
   def check_datum
     errors.add :date_to, :greater_than_start_date if workload_end_before_start?
@@ -22,7 +22,7 @@ class WlUserVacation < ActiveRecord::Base
     date_from && date_to && (date_from_changed? || date_to_changed?) && date_to < date_from
   end
 
-  def clearCache
+  def clear_cache
     Rails.cache.clear
   end
 end

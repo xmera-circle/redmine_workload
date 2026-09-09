@@ -4,6 +4,8 @@
 # Presenter organising users to be used in views/workloads/_filers.erb.
 #
 class WlUserSelection
+  include RedmineWorkload::WlUserSorting
+
   attr_reader :groups
 
   ##
@@ -36,7 +38,7 @@ class WlUserSelection
   # Prepares users to be used in filters
   # @return [Array(User)] An array of user objects.
   def allowed_to_display
-    users_allowed_to_display.sort_by(&:lastname)
+    users_allowed_to_display.sort_by { |user| user_sort_key(user) }
   end
 
   def all_user_ids

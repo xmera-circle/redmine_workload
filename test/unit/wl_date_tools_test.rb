@@ -12,15 +12,15 @@ module RedmineWorkload
 
     test 'working_days_in_time_span works if start and end day are equal and no holiday.' do
       # Set friday to be a working day.
-      Setting['plugin_redmine_workload']['general_workday_friday'] = 'checked'
+      Setting.non_working_week_days = %w[6 7]
 
       date = Date.new(2005, 12, 30) # A friday
       assert_equal Set.new([date]), RedmineWorkload::WlDateTools.working_days_in_time_span(date..date, @user, no_cache: true)
     end
 
     test 'working_days_in_time_span works if start and end day are equal and a holiday.' do
-      # Set friday to be a holiday.
-      Setting['plugin_redmine_workload']['general_workday_friday'] = ''
+      # Set friday to be a non-working day.
+      Setting.non_working_week_days = %w[5 6 7]
 
       date = Date.new(2005, 12, 30) # A friday
       assert_equal Set.new, RedmineWorkload::WlDateTools.working_days_in_time_span(date..date, @user, no_cache: true)
@@ -33,9 +33,8 @@ module RedmineWorkload
     end
 
     test 'working_days_in_time_span works if both days follow each other and are holidays.' do
-      # Set wednesday and thursday to be a holiday.
-      Setting['plugin_redmine_workload']['general_workday_wednesday'] = ''
-      Setting['plugin_redmine_workload']['general_workday_thursday'] = ''
+      # Set wednesday and thursday to be non-working days.
+      Setting.non_working_week_days = %w[3 4]
 
       start_date = Date.new(2005, 12, 28) # A wednesday
       end_date = Date.new(2005, 12, 29) # A thursday
@@ -43,14 +42,8 @@ module RedmineWorkload
     end
 
     test 'working_days_in_time_span works if only weekends and mondays are holidays and startday is thursday, endday is tuesday.' do
-      # Set saturday, sunday and monday to be a holiday, all others to be a working day.
-      Setting['plugin_redmine_workload']['general_workday_monday'] = ''
-      Setting['plugin_redmine_workload']['general_workday_tuesday'] = 'checked'
-      Setting['plugin_redmine_workload']['general_workday_wednesday'] = 'checked'
-      Setting['plugin_redmine_workload']['general_workday_thursday'] = 'checked'
-      Setting['plugin_redmine_workload']['general_workday_friday'] = 'checked'
-      Setting['plugin_redmine_workload']['general_workday_saturday'] = ''
-      Setting['plugin_redmine_workload']['general_workday_sunday'] = ''
+      # Set saturday, sunday and monday to be non-working days.
+      Setting.non_working_week_days = %w[1 6 7]
 
       start_date = Date.new(2005, 12, 29) # A thursday
       end_date = Date.new(2006, 1, 3) # A tuesday
@@ -65,16 +58,16 @@ module RedmineWorkload
     end
 
     test 'working_days returns the working days.' do
-      # Set saturday, sunday and monday to be a holiday, all others to be a working day.
-      Setting['plugin_redmine_workload']['general_workday_monday'] = ''
-      Setting['plugin_redmine_workload']['general_workday_tuesday'] = 'checked'
-      Setting['plugin_redmine_workload']['general_workday_wednesday'] = 'checked'
-      Setting['plugin_redmine_workload']['general_workday_thursday'] = 'checked'
-      Setting['plugin_redmine_workload']['general_workday_friday'] = 'checked'
-      Setting['plugin_redmine_workload']['general_workday_saturday'] = ''
-      Setting['plugin_redmine_workload']['general_workday_sunday'] = ''
+      # Set saturday, sunday and monday to be non-working days.
+      Setting.non_working_week_days = %w[1 6 7]
 
       assert_equal Set.new([2, 3, 4, 5]), RedmineWorkload::WlDateTools.working_days
+    end
+
+    test 'working_days returns all days when Redmine has no non-working days.' do
+      Setting.non_working_week_days = []
+
+      assert_equal Set.new([1, 2, 3, 4, 5, 6, 7]), RedmineWorkload::WlDateTools.working_days
     end
 
     test 'getMonthsBetween returns [] if last day after first day' do

@@ -45,6 +45,8 @@ it:
 
   workload_settings_general_workdays: "Giorni lavorativi settimanali"
   workload_settings_general_workdays_explanation: "I seguenti giorni settimanali saranno considerati come lavorativi:"
+  workload_settings_general_workdays_from_core: "I giorni lavorativi provengono dalla configurazione di Redmine, in modo che coincidano. Modificali qui:"
+  workload_settings_general_workdays_cache_hint: "Una modifica non ha effetto immediato: il calcolo viene memorizzato nella cache per utente e periodo fino a 12 ore. Per applicarla subito, riavvia Redmine o svuota la cache."
   workload_settings_general_workdays_monday:    "Lunedì:"
   workload_settings_general_workdays_tuesday:   "Martedì:"
   workload_settings_general_workdays_wednesday: "Mercoledì:"

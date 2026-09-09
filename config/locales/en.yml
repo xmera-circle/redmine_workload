@@ -46,6 +46,8 @@ en:
   workload_overdue_issues_hours: "Hours from overdue issues:"
   workload_settings_general_workdays: "Weekly working days"
   workload_settings_general_workdays_explanation: "The following days will be considered as working days when computing the workload:"
+  workload_settings_general_workdays_from_core: "Working days are taken from Redmine's own configuration so that both agree. Change them there:"
+  workload_settings_general_workdays_cache_hint: "Changing them does not show up right away: the calculation is cached per user and time span for up to 12 hours. Restart Redmine or clear its cache to apply the change immediately."
   workload_settings_general_workdays_monday:    "Monday:"
   workload_settings_general_workdays_tuesday:   "Tuesday:"
   workload_settings_general_workdays_wednesday: "Wednesday:"
