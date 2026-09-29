@@ -1,0 +1,47 @@
+<div class="contextual">
+  <%= link_to sprite_icon('settings', l(:label_settings)), plugin_settings_path(:redmine_workload), class: 'icon icon-settings' %>
+</div>
+
+<h2><%= l(:label_workload_group_settings) %></h2>
+
+<% if @custom_field.nil? %>
+  <p class="warning"><%= l(:text_workload_group_field_missing) %></p>
+  <%= form_tag wl_group_settings_custom_field_path, method: :post do %>
+    <p><%= submit_tag l(:button_workload_group_field_create) %></p>
+  <% end %>
+<% else %>
+  <p><%= l(:text_workload_group_settings_explanation, field: @custom_field.name) %></p>
+
+  <% if @groups.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <%= form_tag wl_group_settings_path, method: :put do %>
+      <div class="autoscroll">
+        <table class="list groups">
+          <thead>
+            <tr>
+              <th><%= l(:label_group) %></th>
+              <th><%= l(:label_user_plural) %></th>
+              <th><%= @custom_field.name %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @groups.each do |group| %>
+              <tr>
+                <td class="name"><%= link_to group.name, edit_group_path(group) %></td>
+                <td class="user_count"><%= group.users.count %></td>
+                <td class="checkbox">
+                  <%= check_box_tag 'excluded_group_ids[]', group.id, @excluded_ids.include?(group.id),
+                                    id: "excluded_group_#{group.id}" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <p><%= submit_tag l(:button_save) %></p>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% html_title l(:label_workload_group_settings) %>

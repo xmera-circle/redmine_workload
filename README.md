@@ -111,6 +111,21 @@ Please refer to [redmine.org -> Plugins](https://www.redmine.org/projects/redmin
 
 ## Configuration
 
+### keeping groups out of the group filter
+
+Not every group is a team anyone plans capacity for. Administrators can mark a
+group as excluded from the workload group filter. The mark is a boolean group
+custom field, *Exclude from workload planning*, which the plugin creates on
+install. It can be set in two places that write the same value:
+
+* on the group itself, in `Administration -> Groups -> <group>`, like any other
+  custom field
+* collected for all groups on one page, linked from the plugin settings
+
+The field is looked up by id, so it may be renamed. If it is deleted the plugin
+excludes nothing and the settings page offers to recreate it. Rolling the
+plugin's migrations back destroys the field and its values.
+
 There are three places where this plugin might be configured:
 
 1. In the plugin settings, available in the administration area under `plugins`.

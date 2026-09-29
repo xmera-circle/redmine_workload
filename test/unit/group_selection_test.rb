@@ -61,6 +61,55 @@ module RedmineWorkload
       assert_equal expected, current
     end
 
+    test 'should leave out groups marked as excluded' do
+      field = RedmineWorkload::WlGroupExclusion.ensure_custom_field!
+      excluded = @groups.first
+      excluded.custom_field_values = { field.id.to_s => '1' }
+      excluded.save!
+
+      admin = users :users_001 # admin
+      groups = WlGroupSelection.new(user: admin)
+
+      assert_not_includes groups.allowed_to_display.map(&:id), excluded.id
+      assert_not_includes groups.all_group_ids, excluded.id
+      assert_equal @groups.size - 1, groups.allowed_to_display.size
+    end
+
+    test 'should apply the exclusion to a users own groups as well' do
+      field = RedmineWorkload::WlGroupExclusion.ensure_custom_field!
+      visible = Group.generate!
+      hidden = Group.generate!
+      hidden.custom_field_values = { field.id.to_s => '1' }
+      hidden.save!
+
+      current_user = users :users_002 # jsmith
+      current_user.groups << [visible, hidden]
+      manager = roles :roles_001 # manager
+      manager.add_permission! :view_own_group_workloads
+
+      groups = WlGroupSelection.new(user: current_user)
+      assert_equal [visible.id], groups.allowed_to_display.map(&:id)
+    end
+
+    test 'should not select an excluded group even when asked for by id' do
+      field = RedmineWorkload::WlGroupExclusion.ensure_custom_field!
+      excluded = @groups.first
+      excluded.custom_field_values = { field.id.to_s => '1' }
+      excluded.save!
+
+      admin = users :users_001 # admin
+      groups = WlGroupSelection.new(user: admin, groups: [excluded.id])
+      assert_empty groups.selected
+    end
+
+    test 'should exclude nothing when the custom field is missing' do
+      RedmineWorkload::WlGroupExclusion.ensure_custom_field!.destroy
+
+      admin = users :users_001 # admin
+      groups = WlGroupSelection.new(user: admin)
+      assert_equal @groups.map(&:id).sort, groups.allowed_to_display.map(&:id).sort
+    end
+
     test 'should return an empty array if the current user has no permission to view workloads' do
       groups = WlGroupSelection.new(user: User.anonymous)
 

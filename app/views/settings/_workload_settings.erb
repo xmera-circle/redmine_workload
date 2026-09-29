@@ -45,6 +45,17 @@
 		<%= link_to l(:workload_settings_holiday_setup), :controller => 'wl_national_holiday', :action => "index" %>	
 </fieldset>	
 
+<fieldset class="box">
+	<legend><%= l(:label_group_plural) %></legend>
+
+	<p><em class="info"><%= l(:workload_settings_group_explanation) %></em></p>
+	<p><%= link_to l(:workload_settings_group_setup), wl_group_settings_path %></p>
+
+	<%# Redmine replaces the whole settings hash on save; carry the id along so it survives. %>
+	<%= hidden_field_tag 'settings[exclude_group_custom_field_id]',
+	                     settings['exclude_group_custom_field_id'], id: nil %>
+</fieldset>
+
 <fieldset class='box'>
 	<legend><%= l(:label_workload_calculation) %></legend>
 	<p>

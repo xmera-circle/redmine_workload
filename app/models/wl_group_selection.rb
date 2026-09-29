@@ -30,7 +30,7 @@ class WlGroupSelection
   end
 
   def all_group_ids
-    all_groups.map(&:id)
+    RedmineWorkload::WlGroupExclusion.reject_excluded(all_groups).map(&:id)
   end
 
   private
@@ -50,6 +50,14 @@ class WlGroupSelection
   #                        is not allowed to view any group.
   #
   def groups_allowed_to_display
+    RedmineWorkload::WlGroupExclusion.reject_excluded(groups_by_permission)
+  end
+
+  ##
+  # Groups the user may see according to the workload permissions, before
+  # administrators' exclusions are applied.
+  #
+  def groups_by_permission
     return all_groups if user.admin? || allowed_to?(:view_all_workloads)
 
     return own_groups if allowed_to?(:view_own_group_workloads)
