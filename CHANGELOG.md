@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 4.2.0 - unreleased
+
+### Added
+
+* Administrators can keep groups out of the workload group filter. The mark is
+  a boolean group custom field, "Exclude from workload planning", created on
+  install and editable both on the group form and collected on a new page
+  linked from the plugin settings. If the field is deleted nothing is
+  excluded; the page offers to recreate it
+
+### Changed
+
+* The built-in pseudo groups (non member, anonymous) no longer appear in the
+  group filter
+
+## 4.1.0 - 2026-09-09
+
+### Changed
+
+* The working days are read from Redmine's own 'Non-working days' setting
+  instead of the plugin's weekday checkboxes, so both always agree (#30).
+  Installations whose plugin setting differed from Redmine's get Redmine's
+  days; the default (Monday to Friday) is unchanged. The settings page notes
+  that changes take up to 12 hours to show because the calculation is cached
+* The user list follows Redmine's 'Users display format' setting instead of
+  always sorting by last name (#2)
+* The expand/collapse trigger uses Redmine's sprite icon instead of a unicode
+  character that rendered differently across browsers (#3)
+* camelCase methods, parameters and variables renamed to snake_case; the
+  corresponding Rubocop exclusions removed (#4)
+
+### Fixed
+
+* Collapsing a level left the triggers below it marked as opened, so the next
+  click on them appeared to do nothing (#3)
+
 ## 4.0.0 - 2026-08-27
 
 ### Changed
