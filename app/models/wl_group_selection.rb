@@ -57,8 +57,13 @@ class WlGroupSelection
     []
   end
 
+  ##
+  # Only real groups. Group is an STI class whose subclasses include the
+  # built-in pseudo groups (non member, anonymous); nobody plans capacity for
+  # those, so they are left out.
+  #
   def all_groups
-    Group.includes(users: :wl_user_data).distinct.all.to_a
+    Group.givable.includes(users: :wl_user_data).distinct.to_a
   end
 
   def own_groups
