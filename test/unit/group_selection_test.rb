@@ -4,6 +4,8 @@ require File.expand_path('../test_helper', __dir__)
 
 module RedmineWorkload
   class WlGroupSelectionTest < ActiveSupport::TestCase
+    include WlUserDataDefaults
+
     fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
              :users, :issue_statuses, :enumerations, :roles
 
@@ -62,10 +64,7 @@ module RedmineWorkload
     end
 
     test 'should leave out groups marked as excluded' do
-      field = RedmineWorkload::WlGroupExclusion.ensure_custom_field!
-      excluded = @groups.first
-      excluded.custom_field_values = { field.id.to_s => '1' }
-      excluded.save!
+      excluded = mark_excluded(@groups.first)
 
       admin = users :users_001 # admin
       groups = WlGroupSelection.new(user: admin)
@@ -76,11 +75,8 @@ module RedmineWorkload
     end
 
     test 'should apply the exclusion to a users own groups as well' do
-      field = RedmineWorkload::WlGroupExclusion.ensure_custom_field!
       visible = Group.generate!
-      hidden = Group.generate!
-      hidden.custom_field_values = { field.id.to_s => '1' }
-      hidden.save!
+      hidden = mark_excluded(Group.generate!)
 
       current_user = users :users_002 # jsmith
       current_user.groups << [visible, hidden]
@@ -92,14 +88,20 @@ module RedmineWorkload
     end
 
     test 'should not select an excluded group even when asked for by id' do
-      field = RedmineWorkload::WlGroupExclusion.ensure_custom_field!
-      excluded = @groups.first
-      excluded.custom_field_values = { field.id.to_s => '1' }
-      excluded.save!
+      # groups_by_params only returns groups having members with workload data,
+      # so give both groups one -- otherwise `selected` is empty for the wrong
+      # reason and the test proves nothing.
+      excluded = mark_excluded(@groups.first)
+      allowed = @groups.second
+      [excluded, allowed].each do |group|
+        member = User.generate!
+        member.groups << group
+        member.create_wl_user_data(default_attributes.merge(main_group: group.id))
+      end
 
       admin = users :users_001 # admin
-      groups = WlGroupSelection.new(user: admin, groups: [excluded.id])
-      assert_empty groups.selected
+      groups = WlGroupSelection.new(user: admin, groups: [excluded.id, allowed.id])
+      assert_equal [allowed.id], groups.selected.map(&:id)
     end
 
     test 'should exclude nothing when the custom field is missing' do
@@ -114,6 +116,21 @@ module RedmineWorkload
       groups = WlGroupSelection.new(user: User.anonymous)
 
       assert_equal [], groups.allowed_to_display
+    end
+
+    private
+
+    ##
+    # Marks a group as excluded. Reloads it first: acts_as_customizable
+    # memoizes the custom fields known when the object was last saved, and
+    # groups created before the field existed would silently ignore the value.
+    #
+    def mark_excluded(group)
+      field = RedmineWorkload::WlGroupExclusion.ensure_custom_field!
+      group = group.reload
+      group.custom_field_values = { field.id.to_s => '1' }
+      group.save!
+      group
     end
   end
 end
