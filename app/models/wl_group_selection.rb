@@ -30,7 +30,7 @@ class WlGroupSelection
   end
 
   def all_group_ids
-    all_groups.map(&:id)
+    RedmineWorkload::WlGroupExclusion.reject_excluded(all_groups).map(&:id)
   end
 
   private
@@ -50,6 +50,14 @@ class WlGroupSelection
   #                        is not allowed to view any group.
   #
   def groups_allowed_to_display
+    RedmineWorkload::WlGroupExclusion.reject_excluded(groups_by_permission)
+  end
+
+  ##
+  # Groups the user may see according to the workload permissions, before
+  # administrators' exclusions are applied.
+  #
+  def groups_by_permission
     return all_groups if user.admin? || allowed_to?(:view_all_workloads)
 
     return own_groups if allowed_to?(:view_own_group_workloads)
@@ -57,8 +65,13 @@ class WlGroupSelection
     []
   end
 
+  ##
+  # Only real groups. Group is an STI class whose subclasses include the
+  # built-in pseudo groups (non member, anonymous); nobody plans capacity for
+  # those, so they are left out.
+  #
   def all_groups
-    Group.includes(users: :wl_user_data).distinct.all.to_a
+    Group.givable.includes(users: :wl_user_data).distinct.to_a
   end
 
   def own_groups

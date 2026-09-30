@@ -155,6 +155,19 @@
     transform: rotate(90deg);
 }
 
+/* Group settings page: Redmine's table.list shrinks non-name columns to their
+   content, which leaves the checkbox column a sliver. Spread the columns. */
+.controller-wl_group_settings table.wl-group-settings th.name,
+.controller-wl_group_settings table.wl-group-settings td.name { width: 46%; text-align: left; }
+.controller-wl_group_settings table.wl-group-settings th.user_count,
+.controller-wl_group_settings table.wl-group-settings td.user_count { width: 12%; }
+.controller-wl_group_settings table.wl-group-settings th.main_group_count,
+.controller-wl_group_settings table.wl-group-settings td.main_group_count { width: 18%; }
+.controller-wl_group_settings table.wl-group-settings th.exclude,
+.controller-wl_group_settings table.wl-group-settings td.exclude { width: 24%; }
+.controller-wl_group_settings table.wl-group-settings th { white-space: normal; }
+.controller-wl_group_settings table.wl-group-settings td.main_group_count .icon-warning svg { vertical-align: middle; }
+
 .controller-workloads table dt.mt-5,
 .controller-workloads table dd.mt-5 {
     margin-top: 5px;

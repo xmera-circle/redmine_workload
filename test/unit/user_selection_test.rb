@@ -106,6 +106,34 @@ module RedmineWorkload
       end
     end
 
+    test 'should not grant a view on members of an excluded group' do
+      # jsmith is in @group1 (his team) and in an "all team leads" group that
+      # also contains @user2 and @user3. Excluding that group must leave him
+      # with his team only.
+      team_leads = Group.generate!
+      [@user2, @user3].each { |u| u.groups << team_leads }
+      current_user = users :users_002 # jsmith
+      current_user.groups << [@group1, team_leads]
+      manager = roles :roles_001 # manager
+      manager.add_permission! :view_own_group_workloads
+
+      field = RedmineWorkload::WlGroupExclusion.ensure_custom_field!
+      groups = WlGroupSelection.new(user: current_user, groups: [])
+
+      visible = WlUserSelection.new(user: current_user, group_selection: groups).allowed_to_display.map(&:id)
+      assert_includes visible, @user2.id, 'without exclusion the team leads group widens the view'
+      assert_includes visible, @user3.id
+
+      team_leads = Group.find(team_leads.id)
+      team_leads.custom_field_values = { field.id.to_s => '1' }
+      team_leads.save!
+
+      visible = WlUserSelection.new(user: current_user, group_selection: groups).allowed_to_display.map(&:id)
+      assert_includes visible, @user1.id, 'the own team stays visible'
+      assert_not_includes visible, @user2.id, 'the excluded group grants no view on its members'
+      assert_not_includes visible, @user3.id
+    end
+
     test 'should return the current user if allowed to :view_own_workloads' do
       current_user = users :users_002 # jsmith
       manager = roles :roles_001 # manager
