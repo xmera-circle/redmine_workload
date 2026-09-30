@@ -122,6 +122,11 @@ install. It can be set in two places that write the same value:
   custom field
 * collected for all groups on one page, linked from the plugin settings
 
+An excluded group also grants no view: with `view_own_group_workloads` a user
+sees the members of the groups they belong to, and excluded groups do not count
+towards that. Mark a company-wide or "all team leads" group as excluded and a
+team lead sees their own team only.
+
 The field is looked up by id, so it may be renamed. If it is deleted the plugin
 excludes nothing and the settings page offers to recreate it. Rolling the
 plugin's migrations back destroys the field and its values.

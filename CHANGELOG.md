@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   a boolean group custom field, "Exclude from workload planning", created on
   install and editable both on the group form and collected on a new page
   linked from the plugin settings. If the field is deleted nothing is
-  excluded; the page offers to recreate it
+  excluded; the page offers to recreate it. An excluded group also grants no
+  view: with `view_own_group_workloads` its members are not visible through it
 
 ### Changed
 

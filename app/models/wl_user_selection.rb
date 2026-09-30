@@ -113,6 +113,11 @@ class WlUserSelection
   ##
   # Get all active users of groups where the current user has a membership.
   #
+  # Groups marked as excluded from workload planning do not count here: being
+  # a member of one grants no view on its other members. Otherwise a single
+  # company-wide or "all team leads" group would make view_own_group_workloads
+  # equivalent to view_all_workloads.
+  #
   # @param permission [String|Symbol] Permission name.
   # @return [Array(User)] An array of user objects.
   #
@@ -121,7 +126,7 @@ class WlUserSelection
   def group_members_allowed_to(permission)
     return [] unless allowed_to?(permission)
 
-    user.groups.map(&:users)
+    RedmineWorkload::WlGroupExclusion.reject_excluded(user.groups.to_a).map(&:users)
   end
 
   ##
