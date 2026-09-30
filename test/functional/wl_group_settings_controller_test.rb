@@ -5,6 +5,7 @@ require File.expand_path('../test_helper', __dir__)
 module RedmineWorkload
   class WlGroupSettingsControllerTest < ActionDispatch::IntegrationTest
     include RedmineWorkload::AuthenticateUser
+    include WlUserDataDefaults
 
     fixtures :users, :roles, :groups_users
 
@@ -20,12 +21,33 @@ module RedmineWorkload
       assert_response :forbidden
     end
 
-    test 'should list the groups' do
+    test 'should list the groups with their user and main group counts' do
+      member = User.generate!
+      member.groups << @group
+      member.create_wl_user_data(default_attributes.merge(main_group: @group.id))
       log_user('admin', 'admin')
 
       get wl_group_settings_path
       assert_response :success
       assert_select "input#excluded_group_#{@group.id}[type=checkbox]"
+      assert_select 'tr', text: /#{Regexp.escape(@group.name)}/ do
+        assert_select 'td.user_count', text: '1'
+        assert_select 'td.main_group_count', text: /1/
+      end
+    end
+
+    test 'should warn where an excluded group is still a main group' do
+      member = User.generate!
+      member.groups << @group
+      member.create_wl_user_data(default_attributes.merge(main_group: @group.id))
+      group = Group.find(@group.id)
+      group.custom_field_values = { @field.id.to_s => '1' }
+      group.save!
+      log_user('admin', 'admin')
+
+      get wl_group_settings_path
+      assert_response :success
+      assert_select 'td.main_group_count span.icon-warning', count: 1
     end
 
     test 'should mark and unmark a group' do
