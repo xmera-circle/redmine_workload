@@ -9,7 +9,7 @@ Redmine::Plugin.register :redmine_workload do
   description 'This is a plugin for Redmine, originally developed by Rafael Calleja. It ' \
               'displays the estimated number of hours users and groups have to work to finish ' \
               'all their assigned issus on time.'
-  version '4.1.0'
+  version '4.2.0'
   url 'https://github.com/xmera-circle/redmine_workload'
   requires_redmine version_or_higher: '6.1'
 
@@ -45,6 +45,7 @@ class RedmineToolbarHookListener < Redmine::Hook::ViewListener
     wl_user_datas
     wl_user_vacations
     wl_national_holiday
+    wl_group_settings
   ].freeze
 
   def view_layouts_base_html_head(context = {})

@@ -1,0 +1,58 @@
+<div class="contextual">
+  <%= link_to sprite_icon('settings', l(:label_settings)), plugin_settings_path(:redmine_workload), class: 'icon icon-settings' %>
+</div>
+
+<h2><%= l(:label_workload_group_settings) %></h2>
+
+<% if @custom_field.nil? %>
+  <p class="warning"><%= l(:text_workload_group_field_missing) %></p>
+  <%= form_tag wl_group_settings_custom_field_path, method: :post do %>
+    <p><%= submit_tag l(:button_workload_group_field_create) %></p>
+  <% end %>
+<% else %>
+  <p><%= l(:text_workload_group_settings_explanation, field: @custom_field.name) %></p>
+  <p><em class="info"><%= l(:text_workload_group_settings_main_group_hint) %></em></p>
+
+  <% if @groups.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <%= form_tag wl_group_settings_path, method: :put do %>
+      <div class="autoscroll">
+        <table class="list wl-group-settings">
+          <thead>
+            <tr>
+              <th class="name"><%= l(:label_group) %></th>
+              <th class="user_count"><%= l(:label_user_plural) %></th>
+              <th class="main_group_count"><%= l(:label_workload_main_group_of) %></th>
+              <th class="exclude"><%= link_to @custom_field.name, edit_custom_field_path(@custom_field) %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @groups.each do |group| %>
+              <% excluded = @excluded_ids.include?(group.id) %>
+              <% main_group_of = @main_group_counts[group.id].to_i %>
+              <tr>
+                <td class="name"><%= link_to group.name, edit_group_path(group) %></td>
+                <td class="user_count"><%= @user_counts[group.id].to_i %></td>
+                <td class="main_group_count">
+                  <%= main_group_of %>
+                  <% if excluded && main_group_of.positive? %>
+                    <span class="icon icon-warning" title="<%= l(:text_workload_excluded_but_main_group, count: main_group_of) %>">
+                      <%= sprite_icon('warning') %>
+                    </span>
+                  <% end %>
+                </td>
+                <td class="exclude">
+                  <%= check_box_tag 'excluded_group_ids[]', group.id, excluded, id: "excluded_group_#{group.id}" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <p><%= submit_tag l(:button_save) %></p>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% html_title l(:label_workload_group_settings) %>

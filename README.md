@@ -1,6 +1,6 @@
 # Workload Plugin for Redmine
 
-![Redmine Workload Version](https://img.shields.io/badge/Redmine_Plugin-v4.1.0-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v6.1.z-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de,_fr,_es,_it-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important) ![ci](https://github.com/xmera-circle/redmine_workload/actions/workflows/6-1-stable.yml/badge.svg)
+![Redmine Workload Version](https://img.shields.io/badge/Redmine_Plugin-v4.2.0-red) ![Redmine Version](https://img.shields.io/badge/Redmine-v6.1.z-blue) ![Language Support](https://img.shields.io/badge/Languages-en,_de,_fr,_es,_it-green) ![Version Stage](https://img.shields.io/badge/Stage-release-important) ![ci](https://github.com/xmera-circle/redmine_workload/actions/workflows/6-1-stable.yml/badge.svg)
 
 A complete rewrite of the original workload-plugin from Rafael Calleja.
 The plugin calculates how much work each user would have to do per day in order to hit the deadlines for all his issues.
@@ -12,6 +12,20 @@ To be able to do all this calculations, the issues start date, due date and esti
 Issues that have not filled in one of these fields will be shown in the overview, but the workload resulting from these issues will be ignored.
 
 ![Group Workload](screenshots/group-workload-example.png?raw=true "Group Workload Example")
+
+## New Features in Version 4.2.0
+
+### exclude groups from workload planning
+
+Administrators can exclude a group from the workload group filter. Excluded
+groups are not offered in the filter or as main group, and being a member of one
+grants no view on its other members through `view_own_group_workloads`. The mark
+is a boolean group custom field, editable on the group form and collected for
+all groups on a page linked from the plugin settings. Details under
+[Configuration](#keeping-groups-out-of-the-group-filter).
+
+The built-in pseudo groups (non member, anonymous) no longer appear in the
+filter.
 
 ## New Features in Version 4.1.0
 
@@ -110,6 +124,33 @@ Please refer to [redmine.org -> Plugins](https://www.redmine.org/projects/redmin
 ![Workload Calculation Process](screenshots/workload_calculation.png?raw=true "Workload Caclulation Process")
 
 ## Configuration
+
+### keeping groups out of the group filter
+
+Not every group is a team anyone plans capacity for. Administrators can mark a
+group as excluded from the workload group filter. The mark is a boolean group
+custom field, *Exclude from workload planning*, which the plugin creates on
+install. It can be set in two places that write the same value:
+
+* on the group itself, in `Administration -> Groups -> <group>`, like any other
+  custom field
+* collected for all groups on one page, linked from the plugin settings
+
+An excluded group also grants no view: with `view_own_group_workloads` a user
+sees the members of the groups they belong to, and excluded groups do not count
+towards that. Mark a company-wide or "all team leads" group as excluded and a
+team lead sees their own team only.
+
+An excluded group is not offered as main group either. A group that is
+already someone's main group can still be excluded -- those users then appear
+in no group view. The collected page shows how many users have each group as
+main group and warns where that collides with an exclusion. The group form
+shows no such warning, so after excluding a group there, check the collected
+page.
+
+The field is looked up by id, so it may be renamed. If it is deleted the plugin
+excludes nothing and the settings page offers to recreate it. Rolling the
+plugin's migrations back destroys the field and its values.
 
 There are three places where this plugin might be configured:
 

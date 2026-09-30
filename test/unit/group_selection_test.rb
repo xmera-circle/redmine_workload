@@ -4,19 +4,23 @@ require File.expand_path('../test_helper', __dir__)
 
 module RedmineWorkload
   class WlGroupSelectionTest < ActiveSupport::TestCase
+    include WlUserDataDefaults
+
     fixtures :trackers, :projects, :projects_trackers, :members, :member_roles,
              :users, :issue_statuses, :enumerations, :roles
 
     def setup
       Group.where.not(id: [12, 13]).delete_all
-      @build_in_groups = Group.where(id: [12, 13])
+      # 12 and 13 are the built-in pseudo groups (non member, anonymous). They
+      # must never show up in the filter.
+      @built_in_groups = Group.where(id: [12, 13])
       @groups = 5.times.map { |count| Group.generate! if count }
     end
 
     test 'should return all groups if the current user is admin' do
       admin = users :users_001 # admin
       groups = WlGroupSelection.new(user: admin)
-      expected = (@groups.map(&:id) | @build_in_groups.map(&:id)).uniq.sort
+      expected = @groups.map(&:id).sort
       current = groups.allowed_to_display.map(&:id).sort
       assert_equal expected, current
     end
@@ -26,9 +30,16 @@ module RedmineWorkload
       manager = roles :roles_001 # manager
       manager.add_permission! :view_all_workloads
       groups = WlGroupSelection.new(user: current_user)
-      expected = (@groups.map(&:id) | @build_in_groups.map(&:id)).uniq.sort
+      expected = @groups.map(&:id).sort
       current = groups.allowed_to_display.map(&:id).sort
       assert_equal expected, current
+    end
+
+    test 'should never return the built-in groups' do
+      admin = users :users_001 # admin
+      groups = WlGroupSelection.new(user: admin)
+      assert_empty groups.allowed_to_display.map(&:id) & @built_in_groups.map(&:id)
+      assert_empty groups.all_group_ids & @built_in_groups.map(&:id)
     end
 
     test 'should return current users groups when allowed to :view_own_group_workloads' do
@@ -52,10 +63,74 @@ module RedmineWorkload
       assert_equal expected, current
     end
 
+    test 'should leave out groups marked as excluded' do
+      excluded = mark_excluded(@groups.first)
+
+      admin = users :users_001 # admin
+      groups = WlGroupSelection.new(user: admin)
+
+      assert_not_includes groups.allowed_to_display.map(&:id), excluded.id
+      assert_not_includes groups.all_group_ids, excluded.id
+      assert_equal @groups.size - 1, groups.allowed_to_display.size
+    end
+
+    test 'should apply the exclusion to a users own groups as well' do
+      visible = Group.generate!
+      hidden = mark_excluded(Group.generate!)
+
+      current_user = users :users_002 # jsmith
+      current_user.groups << [visible, hidden]
+      manager = roles :roles_001 # manager
+      manager.add_permission! :view_own_group_workloads
+
+      groups = WlGroupSelection.new(user: current_user)
+      assert_equal [visible.id], groups.allowed_to_display.map(&:id)
+    end
+
+    test 'should not select an excluded group even when asked for by id' do
+      # groups_by_params only returns groups having members with workload data,
+      # so give both groups one -- otherwise `selected` is empty for the wrong
+      # reason and the test proves nothing.
+      excluded = mark_excluded(@groups.first)
+      allowed = @groups.second
+      [excluded, allowed].each do |group|
+        member = User.generate!
+        member.groups << group
+        member.create_wl_user_data(default_attributes.merge(main_group: group.id))
+      end
+
+      admin = users :users_001 # admin
+      groups = WlGroupSelection.new(user: admin, groups: [excluded.id, allowed.id])
+      assert_equal [allowed.id], groups.selected.map(&:id)
+    end
+
+    test 'should exclude nothing when the custom field is missing' do
+      RedmineWorkload::WlGroupExclusion.ensure_custom_field!.destroy
+
+      admin = users :users_001 # admin
+      groups = WlGroupSelection.new(user: admin)
+      assert_equal @groups.map(&:id).sort, groups.allowed_to_display.map(&:id).sort
+    end
+
     test 'should return an empty array if the current user has no permission to view workloads' do
       groups = WlGroupSelection.new(user: User.anonymous)
 
       assert_equal [], groups.allowed_to_display
+    end
+
+    private
+
+    ##
+    # Marks a group as excluded. Reloads it first: acts_as_customizable
+    # memoizes the custom fields known when the object was last saved, and
+    # groups created before the field existed would silently ignore the value.
+    #
+    def mark_excluded(group)
+      field = RedmineWorkload::WlGroupExclusion.ensure_custom_field!
+      group = group.reload
+      group.custom_field_values = { field.id.to_s => '1' }
+      group.save!
+      group
     end
   end
 end
