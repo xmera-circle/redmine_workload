@@ -16,6 +16,9 @@ class WlGroupSettingsController < ApplicationController
     @custom_field = RedmineWorkload::WlGroupExclusion.custom_field
     @groups = Group.givable.sorted
     @excluded_ids = RedmineWorkload::WlGroupExclusion.excluded_group_ids
+    @user_counts = User.active.joins(:groups).where(groups_users: { group_id: @groups.map(&:id) })
+                       .group('groups_users.group_id').count
+    @main_group_counts = WlUserData.where(main_group: @groups.map(&:id)).group(:main_group).count
   end
 
   def update

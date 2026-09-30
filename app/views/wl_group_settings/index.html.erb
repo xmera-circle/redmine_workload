@@ -11,28 +11,39 @@
   <% end %>
 <% else %>
   <p><%= l(:text_workload_group_settings_explanation, field: @custom_field.name) %></p>
+  <p><em class="info"><%= l(:text_workload_group_settings_main_group_hint) %></em></p>
 
   <% if @groups.empty? %>
     <p class="nodata"><%= l(:label_no_data) %></p>
   <% else %>
     <%= form_tag wl_group_settings_path, method: :put do %>
       <div class="autoscroll">
-        <table class="list groups">
+        <table class="list wl-group-settings">
           <thead>
             <tr>
-              <th><%= l(:label_group) %></th>
-              <th><%= l(:label_user_plural) %></th>
-              <th><%= @custom_field.name %></th>
+              <th class="name"><%= l(:label_group) %></th>
+              <th class="user_count"><%= l(:label_user_plural) %></th>
+              <th class="main_group_count"><%= l(:label_workload_main_group_of) %></th>
+              <th class="exclude"><%= link_to @custom_field.name, edit_custom_field_path(@custom_field) %></th>
             </tr>
           </thead>
           <tbody>
             <% @groups.each do |group| %>
+              <% excluded = @excluded_ids.include?(group.id) %>
+              <% main_group_of = @main_group_counts[group.id].to_i %>
               <tr>
                 <td class="name"><%= link_to group.name, edit_group_path(group) %></td>
-                <td class="user_count"><%= group.users.count %></td>
-                <td class="checkbox">
-                  <%= check_box_tag 'excluded_group_ids[]', group.id, @excluded_ids.include?(group.id),
-                                    id: "excluded_group_#{group.id}" %>
+                <td class="user_count"><%= @user_counts[group.id].to_i %></td>
+                <td class="main_group_count">
+                  <%= main_group_of %>
+                  <% if excluded && main_group_of.positive? %>
+                    <span class="icon icon-warning" title="<%= l(:text_workload_excluded_but_main_group, count: main_group_of) %>">
+                      <%= sprite_icon('warning') %>
+                    </span>
+                  <% end %>
+                </td>
+                <td class="exclude">
+                  <%= check_box_tag 'excluded_group_ids[]', group.id, excluded, id: "excluded_group_#{group.id}" %>
                 </td>
               </tr>
             <% end %>

@@ -127,6 +127,13 @@ sees the members of the groups they belong to, and excluded groups do not count
 towards that. Mark a company-wide or "all team leads" group as excluded and a
 team lead sees their own team only.
 
+An excluded group is not offered as main group either. A group that is
+already someone's main group can still be excluded -- those users then appear
+in no group view. The collected page shows how many users have each group as
+main group and warns where that collides with an exclusion. The group form
+shows no such warning, so after excluding a group there, check the collected
+page.
+
 The field is looked up by id, so it may be renamed. If it is deleted the plugin
 excludes nothing and the settings page offers to recreate it. Rolling the
 plugin's migrations back destroys the field and its values.

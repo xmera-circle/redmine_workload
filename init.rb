@@ -45,6 +45,7 @@ class RedmineToolbarHookListener < Redmine::Hook::ViewListener
     wl_user_datas
     wl_user_vacations
     wl_national_holiday
+    wl_group_settings
   ].freeze
 
   def view_layouts_base_html_head(context = {})
